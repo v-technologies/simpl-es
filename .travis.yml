@@ -3,5 +3,3 @@ language: php
 php:
   - 5.3
   - 5.4
-
-before_script: ./bin/ci/install_dependencies.sh
