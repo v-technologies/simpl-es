@@ -7,4 +7,4 @@ php:
 before_script:
   - ./tests/bin/elasticsearch.sh
 
-script: phpunit -c tests/
+script: phpunit tests/

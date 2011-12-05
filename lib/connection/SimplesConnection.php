@@ -120,6 +120,11 @@ class SimplesConnection extends SimplesBase {
 	 * @return string			HTTP response to the call, not parsed
 	 */
 	public function call($url, $method = 'GET', $data = null) {
+		// Autoconnect
+		if (!$this->connected()) {
+			$this->connect() ;
+		}
+		
 		curl_setopt($this->_connection, CURLOPT_CUSTOMREQUEST, strtoupper($method));
 		curl_setopt($this->_connection, CURLOPT_URL, $this->url($url)) ;
 		
