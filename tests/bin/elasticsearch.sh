@@ -7,7 +7,6 @@ tar -xzf elasticsearch-0.18.5.tar.gz
 sed 's/# index.number_of_shards: 1/index.number_of_shards: 1/' elasticsearch-0.18.5/config/elasticsearch.yml > elasticsearch-0.18.5/config/elasticsearch.yml
 sed 's/# index.number_of_replicas: 0/index.number_of_replicas: 0/' elasticsearch-0.18.5/config/elasticsearch.yml > elasticsearch-0.18.5/config/elasticsearch.yml
 sed 's/# discovery.zen.ping.multicast.enabled: false/discovery.zen.ping.multicast.enabled: false/' elasticsearch-0.18.5/config/elasticsearch.yml > elasticsearch-0.18.5/config/elasticsearch.yml
-elasticsearch-0.18.5/bin/plugin install mapper-attachments
 
 export JAVA_OPTS="-server"
 elasticsearch-0.18.5/bin/elasticsearch &
