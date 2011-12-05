@@ -1,5 +1,4 @@
 <?php
-require_once(SIMPLES_ROOT . 'lib' . DIRECTORY_SEPARATOR . 'connection' . DIRECTORY_SEPARATOR . 'SimplesConnectionException.php') ;
 
 /**
  * ElasticSearch connection class : connect to a server, check its configuration, and exchange requests
@@ -9,9 +8,8 @@ require_once(SIMPLES_ROOT . 'lib' . DIRECTORY_SEPARATOR . 'connection' . DIRECTO
  * 
  * @author Sébastien Charrier <scharrier@gmail.com>
  * @package	Simples
- * @subpackage lib.connection 
  */
-class SimplesConnection extends SimplesBase {
+class Simples_Transport_Http extends Simples_Transport {
 	
 	/**
 	 * Connection configuration, with defaults.
@@ -29,7 +27,7 @@ class SimplesConnection extends SimplesBase {
 	/**
 	 * Current connection.
 	 * 
-	 * @var SimplesConnection
+	 * @var Simples_Transport
 	 */
 	protected $_connection ;
 	
@@ -41,12 +39,10 @@ class SimplesConnection extends SimplesBase {
 	public function __construct(array $config = null) {
 		// Check : curl installed ?
 		if (!extension_loaded('curl')) {
-			throw new SimplesConnectionException('Curl is not installed (curl_init function doesn\'t exists).') ;
+			throw new Simples_Transport_Exception('Curl is not installed (curl_init function doesn\'t exists).') ;
 		}
 		
-		if (isset($config)) {
-			$this->config($config) ;
-		}
+		return parent::__construct($config) ;
 	}
 	
 	/**
@@ -62,12 +58,12 @@ class SimplesConnection extends SimplesBase {
 		
 		// Check if it's an ES server
 		if ($this->config('check')) {
-			$res = json_decode($this->call('/_status'), true) ;
+			$res = $this->call() ;
 			if (!isset($res)) {
-				throw new SimplesConnectionException('Invalid JSON or empty response') ;
+				throw new Simples_Transport_Exception('Invalid JSON or empty response') ;
 			}
 			if (!isset($res['ok']) || (isset($res['ok']) && $res['ok'] !== true)) {
-				throw new SimplesConnectionException('Bad response from ElasticSearch server. Are you sure you\'re calling the good guy ?') ;
+				throw new Simples_Transport_Exception('Bad response from ElasticSearch server. Are you sure you\'re calling the good guy ?') ;
 			}
 		}
 		
@@ -77,7 +73,7 @@ class SimplesConnection extends SimplesBase {
 	/**
 	 * Close the current connection.
 	 * 
-	 * @return \SimplesConnection 
+	 * @return \SSimples_Transport
 	 */
 	public function disconnect() {
 		curl_close($this->_connection);
@@ -85,16 +81,7 @@ class SimplesConnection extends SimplesBase {
 		
 		return $this ;
 	}
-	
-	/**
-	 * Check if the instance is currently connected.
-	 * 
-	 * @return bool		Am I or not ?
-	 */
-	public function connected() {
-		return isset($this->_connection) ;
-	}
-	
+		
 	/**
 	 * Generates a full url.
 	 * 
@@ -119,7 +106,7 @@ class SimplesConnection extends SimplesBase {
 	 * @param mixed	 $data		Optionnal data
 	 * @return string			HTTP response to the call, not parsed
 	 */
-	public function call($url, $method = 'GET', $data = null) {
+	public function call($url = null, $method = 'GET', $data = null) {
 		// Autoconnect
 		if (!$this->connected()) {
 			$this->connect() ;
@@ -138,11 +125,13 @@ class SimplesConnection extends SimplesBase {
 		$return = curl_exec($this->_connection);
 		
 		if ($return === false) {
-			throw new SimplesConnectionException(
+			throw new Simples_Transport_Exception(
 				'Error during the request (' . curl_errno($this->_connection) . ') : ' .
 				curl_error($this->_connection)
 			);
 		}
+		
+		$return = json_decode($return, true) ;
 		
 		return $return ;
 	}

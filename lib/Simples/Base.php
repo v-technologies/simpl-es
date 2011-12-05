@@ -1,6 +1,6 @@
 <?php
 
-abstract class SimplesBase {
+abstract class Simples_Base {
 	/**
 	 * Configuration .
 	 * 
