@@ -30,7 +30,14 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @var string 
 	 */
-	protected $_method ;
+	protected $_method = self::GET ;
+	
+	/**
+	 * Response class name
+	 * 
+	 * @var string 
+	 */
+	protected $_response ;
 	
 	/**
 	 * Method GET 
@@ -52,7 +59,7 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct(SimplesTransport $transport = null) {
+	public function __construct(Simples_Transport $transport = null) {
 		if (isset($transport)) {
 			$this->_client = $transport ;
 		}
@@ -76,6 +83,16 @@ abstract class Simples_Request extends Simples_Base {
 		return $this->_method ;
 	}
 	
+	/**
+	 * Transport client setter/getter : if $client is given, sets $this->_client. Else,
+	 * returns the current $this->_client.
+	 * 
+	 * This permits chained calls :
+	 * $request->client($client)->execute() ;
+	 * 
+	 * @param Simples_Transport $client		Setter mode : the client
+	 * @return \Simples_Request				setter mode : current request. Getter mode : current client.
+	 */
 	public function client(Simples_Transport $client = null) {
 		if (isset($client)) {
 			$this->_client = $client ;
@@ -86,15 +103,17 @@ abstract class Simples_Request extends Simples_Base {
 	}
 	
 	/**
-	 * Execute the request and returns the response.
+	 * Executes the request and returns the response.
 	 * 
 	 * @return null 
 	 */
 	public function execute() {
+		$response = array() ;
+		
 		if (isset($this->_client)) {
-			return $this->_client->call($this->_path, $this->_method) ;
+			$response = $this->_client->call($this->_path, $this->_method) ;
 		}
 		
-		return null ;
+		return new Simples_Response($response) ;
 	}
 }

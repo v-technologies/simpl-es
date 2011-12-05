@@ -23,10 +23,10 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 	public function testExecute() {
 		$request = new Simples_Request_Custom() ;
 		$res = $request->execute() ;
-		$this->assertNull($request->execute()) ;
+		$this->assertTrue($request->execute() instanceof Simples_Response) ;
 		
 		$res = $request->client(new Simples_Transport_Http())->execute() ;
-		$this->assertTrue($res['ok'] === true) ;
+		$this->assertTrue($res->get('ok') === true) ;
 	}
 }
 

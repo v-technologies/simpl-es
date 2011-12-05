@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
-class Simples_Transport_Http_HttpTest extends PHPUnit_Framework_TestCase {
+class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 
     public function testConnection() {
 		try {
