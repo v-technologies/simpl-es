@@ -37,7 +37,7 @@ class Simples {
 	 * @param array		$config		[optionnal] Configuration
 	 * @return \Simple_Transport	Connection client instance 
 	 */
-	public function connect(array $config = array()) {
+	static public function connect(array $config = array()) {
 		if (!self::connected()) {
 			self::_client($config)->connect() ;
 		}
@@ -50,14 +50,14 @@ class Simples {
 	 * 
 	 * @return bool
 	 */
-	public function connected() {
+	static public function connected() {
 		return isset(self::$_client) && self::$_client->connected() ;
 	}
 	
 	/**
 	 * Disconnect from the ES instance. 
 	 */
-	public function disconnect() {
+	static public function disconnect() {
 		if (self::connected()) {
 			self::_client()->disconnect() ;
 		}
@@ -68,7 +68,7 @@ class Simples {
 	 * 
 	 * @return \Simple_Transport
 	 */
-	public function current() {
+	static public function current() {
 		return self::_client() ;
 	}
 	
@@ -78,7 +78,7 @@ class Simples {
 	 * @param array		$config		[optionnal] Client configuration
 	 * @return \Simples_Client 
 	 */
-	protected function _client(array $config = array()) {
+	static protected function _client(array $config = array()) {
 		if (!isset(self::$_client)) {
 			$driver = 'http' ;
 			if (isset($config['driver'])) {
@@ -95,7 +95,7 @@ class Simples {
 	 * 
 	 * @return \Simple_Factory
 	 */
-	protected function _factory() {
+	static protected function _factory() {
 		if (!isset(self::$_factory)) {
 			self::$_factory = new Simples_Factory() ;
 		}
