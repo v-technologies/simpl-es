@@ -59,6 +59,11 @@ abstract class Simples_Request extends Simples_Base {
 	const GET = 'GET' ;
 	
 	/**
+	 * Method POST 
+	 */
+	const POST = 'POST' ;
+	
+	/**
 	 * Method PUT 
 	 */
 	const PUT = 'PUT' ;
@@ -88,7 +93,18 @@ abstract class Simples_Request extends Simples_Base {
 	 * @return string 
 	 */
 	public function path() {
-		return $this->_path ;
+		$path = array() ;
+		if ($this->_index) {
+			$path[] = trim($this->index(),'/') ;
+			if ($this->_type) {
+				$path[] = trim($this->type(), '/') ;
+			}
+		}
+		if ($this->_path) {
+			$path[] = trim($this->_path, '/') ;
+		}
+		
+		return '/' . implode('/', $path) . '/' ;
 	}
 	
 	/**
@@ -101,7 +117,7 @@ abstract class Simples_Request extends Simples_Base {
 	}
 	
 	/**
-	 * getter / setter : current index/indices.
+	 * Getter / setter : current index/indices.
 	 * 
 	 * @param type $index
 	 * @return \Simples_Request 
@@ -115,7 +131,25 @@ abstract class Simples_Request extends Simples_Base {
 			}
 			return $this ;
 		}
-		return $this->_index ;
+		return implode(',', $this->_index) ;
+	}
+	
+	/**
+	 * Getter / setter : current type(s)
+	 * 
+	 * @param mixed		$type		Type (string) or types (array)
+	 * @return \Simples_Request 
+	 */
+	public function type($type = null) {
+		if (isset($type)) {
+			if (!is_array($type)) {
+				$this->_type = array($type) ;
+			} else {
+				$this->_type = $type ;
+			}
+			return $this ;
+		}
+		return implode(',', $this->_type) ;
 	}
 	
 	/**
@@ -146,7 +180,7 @@ abstract class Simples_Request extends Simples_Base {
 		$response = array() ;
 		
 		if (isset($this->_client)) {
-			$response = $this->_client->call($this->_path, $this->_method, $this->_toJson()) ;
+			$response = $this->_client->call($this->path(), $this->_method, $this->_toJson()) ;
 		}
 
 		$this->_response = new Simples_Response($response) ;

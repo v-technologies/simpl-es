@@ -10,7 +10,7 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 	
 	public function testPath() {
 		$request = new Simples_Request_Custom() ;
-		$this->assertEquals('/_status', $request->path()) ;
+		$this->assertEquals('/_status/', $request->path()) ;
 		
 	}
 	
@@ -46,6 +46,19 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 			$this->fail('No exception !') ;
 		} catch (Exception $e) {
 		}
+	}
+	
+	public function testIndicesTypes() {
+		$request = new Simples_Request_Custom() ;
+		$request->index('twitter')->type('tweet') ;
+		$this->assertEquals('twitter', $request->index()) ;
+		$this->assertEquals('tweet', $request->type()) ;
+		
+		$request->type(array('tweet','user')) ;
+		$this->assertEquals('tweet,user', $request->type()) ;
+		
+		$this->assertEquals('/twitter/tweet,user/_status/', $request->path()) ;
+		
 	}
 }
 

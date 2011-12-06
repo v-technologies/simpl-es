@@ -36,7 +36,7 @@ class Simples_Transport_Http extends Simples_Transport {
 	 * 
 	 * @param array $config		[optionnal] Connection configuration.
 	 */
-	public function __construct(Simples_Factory $factory, array $config = null) {
+	public function __construct(Simples_Factory $factory = null, array $config = null) {
 		// Check : curl installed ?
 		if (!extension_loaded('curl')) {
 			throw new Simples_Transport_Exception('Curl is not installed (curl_init function doesn\'t exists).') ;
@@ -122,16 +122,23 @@ class Simples_Transport_Http extends Simples_Transport {
 			curl_setopt($this->_connection, CURLOPT_POSTFIELDS, $data);
 		}
 		
-		$return = curl_exec($this->_connection);
+		$response = curl_exec($this->_connection);
 		
-		if ($return === false) {
+		if ($response === false) {
 			throw new Simples_Transport_Exception(
 				'Error during the request (' . curl_errno($this->_connection) . ') : ' .
 				curl_error($this->_connection)
 			);
 		}
+		if (!strlen($response)) {
+			throw new Simples_Transport_Exception('Empty response ! WTF ?') ;
+		}
 		
-		$return = json_decode($return, true) ;
+		$return = json_decode($response, true) ;
+		
+		if ($return === null) {
+			throw new Simples_Transport_Exception('Cannot JSON decode the response : ' . $response) ;
+		}
 		
 		return $return ;
 	}
