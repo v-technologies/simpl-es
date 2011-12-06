@@ -30,7 +30,9 @@ class Simples_Factory extends Simples_Base {
 	static protected $_baseMapping = array(
 		'Request' => array(
 			'status' => 'Simples_Request_Status',
-			'stats' => 'Simples_Request_Stats'
+			'stats' => 'Simples_Request_Stats',
+			'index' => 'Simples_Request_Index',
+			'get' => 'Simples_Request_Get'
 		),
 		'Response' => array(
 		),
@@ -138,6 +140,7 @@ class Simples_Factory extends Simples_Base {
 	public function request($alias) {
 		$params = func_get_args() ;
 		array_shift($params) ;
+		var_dump($params) ;
 		return $this->_new('Request.' . $alias, $params) ;
 	}
 	

@@ -77,6 +77,13 @@ abstract class Simples_Transport extends Simples_Base {
 		return isset($this->_connection) ;
 	}
 	
+	/**
+	 * Here is the magic ! 
+	 * 
+	 * @param string	$request	Request alias
+	 * @param array		$params		Params
+	 * @return \Simples_Request 
+	 */
 	public function __call($request, $params) {
 		if ($this->_factory->valid('Request.' . $request)) {
 			// Add request alias + transport instance
