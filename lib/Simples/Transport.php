@@ -11,6 +11,8 @@
  */
 abstract class Simples_Transport extends Simples_Base {
 	
+	protected $_factory ;
+	
 	/**
 	 * Connection configuration, with defaults.
 	 * 
@@ -30,7 +32,9 @@ abstract class Simples_Transport extends Simples_Base {
 	 * 
 	 * @param array $config		[optionnal] Connection configuration.
 	 */
-	public function __construct(array $config = null) {
+	public function __construct(Simples_Factory $factory, array $config = null) {
+		$this->_factory = $factory ;
+		
 		if (isset($config)) {
 			$this->config($config) ;
 		}
@@ -67,5 +71,13 @@ abstract class Simples_Transport extends Simples_Base {
 	 */
 	public function connected() {
 		return isset($this->_connection) ;
+	}
+	
+	public function __call($request, $params) {
+		if ($this->_factory->valid('Request.' . $request)) {
+			// Add request alias + transport instance
+			$params = array_merge(array($request, $this), $params) ;
+			return call_user_func_array(array($this->_factory, 'request'), $params) ;
+		}
 	}
 }

@@ -5,6 +5,9 @@ if (!defined('SIMPLES_ROOT')) {
 	define('SIMPLES_ROOT', dirname(__FILE__) . DIRECTORY_SEPARATOR) ;
 }
 
+// Static class
+
+
 /**
  * Simples autoload method.
  * 

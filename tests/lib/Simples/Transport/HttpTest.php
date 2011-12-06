@@ -5,7 +5,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 
     public function testConnection() {
 		try {
-			$transport = new Simples_Transport_Http() ;
+			$transport = new Simples_Transport_Http(new Simples_Factory()) ;
 			$transport->connect() ;
 			
 			$this->assertTrue($transport instanceof Simples_Transport_Http) ;
@@ -15,7 +15,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testCheck() {
-		$transport = new Simples_Transport_Http() ;
+		$transport = new Simples_Transport_Http(new Simples_Factory()) ;
 		
 		$transport->config(array(
 			'host' => 'www.google.com',
@@ -32,7 +32,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testUrl() {
-		$transport = new Simples_Transport_Http() ;
+		$transport = new Simples_Transport_Http(new Simples_Factory()) ;
 		$this->assertEquals('http://127.0.0.1/', $transport->url()) ;
 		
 		$transport->config('host', 'farhost') ;
@@ -43,9 +43,17 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testCall() {
-		$transport = new Simples_Transport_Http() ;
+		$transport = new Simples_Transport_Http(new Simples_Factory()) ;
 		$res = $transport->call() ;
 		$this->assertTrue($res['ok']);
 		$this->assertTrue(isset($res['version']['number'])) ;
+	}
+	
+	public function testMagicCall() {
+		$transport = new Simples_Transport_Http(new Simples_Factory()) ;
+		$status = $transport->status() ;
+		$this->assertTrue($status instanceof Simples_Request_Status) ; 
+		$response = $transport->status()->execute() ;
+		$this->assertTrue($response instanceof Simples_Response) ; 
 	}
 }

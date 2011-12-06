@@ -33,11 +33,25 @@ abstract class Simples_Request extends Simples_Base {
 	protected $_method = self::GET ;
 	
 	/**
-	 * Response class name
+	 * Index (or indices)
+	 * 
+	 * @var mixed	String or array
+	 */
+	protected $_index ;
+	
+	/**
+	 * Current response
 	 * 
 	 * @var string 
 	 */
 	protected $_response ;
+	
+	/**
+	 * Request properties
+	 * 
+	 * @var array 
+	 */
+	protected $_properties = array() ;
 	
 	/**
 	 * Method GET 
@@ -59,9 +73,12 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct(Simples_Transport $transport = null) {
+	public function __construct(Simples_Transport $transport = null, $properties = null) {
 		if (isset($transport)) {
 			$this->_client = $transport ;
+		}
+		if (isset($properties)) {
+			$this->properties($properties) ;
 		}
 	}
 	
@@ -81,6 +98,24 @@ abstract class Simples_Request extends Simples_Base {
 	 */
 	public function method() {
 		return $this->_method ;
+	}
+	
+	/**
+	 * getter / setter : current index/indices.
+	 * 
+	 * @param type $index
+	 * @return \Simples_Request 
+	 */
+	public function index($index = null) {
+		if (isset($index)) {
+			if (!is_array($index)) {
+				$this->_index = array($index) ;
+			} else {
+				$this->_index = $index ;
+			}
+			return $this ;
+		}
+		return $this->_index ;
 	}
 	
 	/**
@@ -111,9 +146,88 @@ abstract class Simples_Request extends Simples_Base {
 		$response = array() ;
 		
 		if (isset($this->_client)) {
-			$response = $this->_client->call($this->_path, $this->_method) ;
+			$response = $this->_client->call($this->_path, $this->_method, $this->_toJson()) ;
+		}
+
+		$this->_response = new Simples_Response($response) ;
+		
+		return $this->_response ;
+	}
+	
+	/**
+	 * Check if the request has been executed.
+	 * 
+	 * @return bool
+	 */
+	public function executed() {
+		return isset($this->_response) ;
+	}
+	
+	/**
+	 * Getter / setter : properties of the request.
+	 * 
+	 * @param array		$properties		Setter : properties
+	 * @return \Simples_Request|array	Setter : $this . Getter : current properties.
+	 */
+	public function properties(array $properties = null) {
+		if (isset($properties)) {
+			$this->_properties = $properties + $this->_properties ;
+			return $this ;
+		}
+		return $this->_properties ;
+	}
+	
+	/**
+	 * Here the magic happens ! You can directly call a response value from the request. If
+	 * the request hasn't been executed, execute it and then asks your value to the response
+	 * object.
+	 * 
+	 * Yea, you can call :
+	 * $status->version->number
+	 * 
+	 * @param string	$name		Var name
+	 * @return mixed 
+	 */
+	public function __get($name) {
+		if (!$this->executed()) {
+			$this->execute() ;
+		}
+		return $this->_response->get($name) ;
+	}
+	
+	/**
+	 * Wrapper for format transformation : gives the request in the asked
+	 * format.
+	 * 
+	 * Actually supported : array, json
+	 * 
+	 * @param string	$format		Asked format
+	 * @return mixed				Formated request 
+	 */
+	public function to($format) {
+		$method =  '_to' . ucfirst($format) ;
+		if (method_exists($this, $method)) {
+			return $this->{$method}() ;
 		}
 		
-		return new Simples_Response($response) ;
+		throw new Simples_Request_Exception('Unsupported request transformation format : "' . $format . '"') ;
+	}
+	
+	/**
+	 * Json transformation
+	 * 
+	 * @return string	Request in json 
+	 */
+	protected function _toJson() {
+		return json_encode($this->_properties) ;
+	}
+	
+	/**
+	 * Array transformation
+	 * 
+	 * @return array 
+	 */
+	protected function _toArray() {
+		return $this->_properties ;
 	}
 }

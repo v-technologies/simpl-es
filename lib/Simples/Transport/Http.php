@@ -36,13 +36,13 @@ class Simples_Transport_Http extends Simples_Transport {
 	 * 
 	 * @param array $config		[optionnal] Connection configuration.
 	 */
-	public function __construct(array $config = null) {
+	public function __construct(Simples_Factory $factory, array $config = null) {
 		// Check : curl installed ?
 		if (!extension_loaded('curl')) {
 			throw new Simples_Transport_Exception('Curl is not installed (curl_init function doesn\'t exists).') ;
 		}
 		
-		return parent::__construct($config) ;
+		return parent::__construct($factory, $config) ;
 	}
 	
 	/**

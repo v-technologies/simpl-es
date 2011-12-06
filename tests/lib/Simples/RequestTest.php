@@ -25,8 +25,27 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 		$res = $request->execute() ;
 		$this->assertTrue($request->execute() instanceof Simples_Response) ;
 		
-		$res = $request->client(new Simples_Transport_Http())->execute() ;
+		$res = $request->client(new Simples_Transport_Http(new Simples_Factory()))->execute() ;
 		$this->assertTrue($res->get('ok') === true) ;
+	}
+	
+	public function testTo() {
+		$request = new Simples_Request_Custom() ;
+		$this->assertTrue(is_string($request->to('json'))) ;
+		
+		
+		$request->properties(array(
+			'hey' => 'ho'
+		)) ;
+		$res = $request->to('array') ;
+		$this->assertTrue(is_array($res)) ;
+		$this->assertEquals('ho', $res['hey']) ;
+		
+		try {
+			$request->to('somethingbad') ;
+			$this->fail('No exception !') ;
+		} catch (Exception $e) {
+		}
 	}
 }
 
