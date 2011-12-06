@@ -33,7 +33,11 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @param array $config		[optionnal] Connection configuration.
 	 */
 	public function __construct(Simples_Factory $factory, array $config = null) {
-		$this->_factory = $factory ;
+		if (isset($factory)) {
+			$this->_factory = $factory ;
+		} else {
+			$this->_factory = new Simples_Factory() ;
+		}
 		
 		if (isset($config)) {
 			$this->config($config) ;
