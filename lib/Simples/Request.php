@@ -40,6 +40,13 @@ abstract class Simples_Request extends Simples_Base {
 	protected $_index ;
 	
 	/**
+	 * Type (or types)
+	 * 
+	 * @var mixed	String or array 
+	 */
+	protected $_type ;
+	
+	/**
 	 * Current response
 	 * 
 	 * @var string 
