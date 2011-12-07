@@ -48,4 +48,52 @@ abstract class Simples_Base {
 		}
 		return $this->_config ;
 	}
+	
+	/**
+	 * Wrapper for format transformation : gives the request in the asked
+	 * format.
+	 * 
+	 * Actually supported : array, json
+	 * 
+	 * @param string	$format		Asked format
+	 * @return mixed				Formated request 
+	 */
+	public function to($format) {
+		$method =  '_to' . ucfirst($format) ;
+		if (method_exists($this, $method)) {
+			return $this->{$method}($this->_data()) ;
+		}
+		
+		throw new Simples_Request_Exception('Unsupported request transformation format : "' . $format . '"') ;
+	}
+	
+	/**
+	 * Base data getter.
+	 * 
+	 * @return array
+	 */
+	protected function _data() {
+		if (isset($this->_data)) {
+			return $this->_data ;
+		}
+		return array() ;
+	}
+	
+	/**
+	 * Json transformation
+	 * 
+	 * @return string	Request in json 
+	 */
+	protected function _toJson(array $data) {
+		return !empty($data) ? json_encode($data) : '' ;
+	}
+	
+	/**
+	 * Array transformation
+	 * 
+	 * @return array 
+	 */
+	protected function _toArray(array $data) {
+		return $data ;
+	}
 }

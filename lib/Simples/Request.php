@@ -239,38 +239,11 @@ abstract class Simples_Request extends Simples_Base {
 	}
 	
 	/**
-	 * Wrapper for format transformation : gives the request in the asked
-	 * format.
+	 * Exporter custom data.
 	 * 
-	 * Actually supported : array, json
-	 * 
-	 * @param string	$format		Asked format
-	 * @return mixed				Formated request 
+	 * @return array
 	 */
-	public function to($format) {
-		$method =  '_to' . ucfirst($format) ;
-		if (method_exists($this, $method)) {
-			return $this->{$method}($this->body()) ;
-		}
-		
-		throw new Simples_Request_Exception('Unsupported request transformation format : "' . $format . '"') ;
-	}
-	
-	/**
-	 * Json transformation
-	 * 
-	 * @return string	Request in json 
-	 */
-	protected function _toJson(array $body) {
-		return !empty($body) ? json_encode($body) : '' ;
-	}
-	
-	/**
-	 * Array transformation
-	 * 
-	 * @return array 
-	 */
-	protected function _toArray(array $body) {
-		return $body ;
+	protected function _data() {
+		return $this->body() ;
 	}
 }
