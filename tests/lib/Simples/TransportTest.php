@@ -10,18 +10,21 @@ class Simples_TransportTest extends PHPUnit_Framework_TestCase {
 			'type' => 'tweet'
 		)) ;
 		
-		$body = $client->get(array('id' => 1))->body() ;
-		$this->assertEquals('twitter',$body['index']) ;
-		$this->assertEquals('tweet',$body['type']) ;
+		$request = $client->get(array('id' => 1)) ;
+		$body = $request->body() ;
+		$this->assertEquals('twitter',$request->index()) ;
+		$this->assertEquals('tweet',$request->type()) ;
 		
 		$client->config('index', 'facebook') ;
-		$body = $client->get(array('id' => 2))->body() ;
-		$this->assertEquals('facebook',$body['index']) ;
+		$request = $client->get(array('id' => 2)) ;
+		$body = $request->body() ;
+		$this->assertEquals('facebook',$request->index()) ;
 		
 		// Magic params
-		$body = $client->get(666)->body() ;
-		$this->assertEquals('facebook',$body['index']) ;
-		$this->assertEquals('tweet',$body['type']) ;
+		$request = $client->get(666) ;
+		$body = $request->body() ;
+		$this->assertEquals('facebook',$request->index()) ;
+		$this->assertEquals('tweet',$request->type()) ;
 		$this->assertEquals(666,$body['id']) ;
 		
 		try {

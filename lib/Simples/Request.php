@@ -217,7 +217,7 @@ abstract class Simples_Request extends Simples_Base {
 			$this->_body = $body + $this->_body ;
 			return $this ;
 		}
-		return $this->_body ;
+		return array_diff_key($this->_body, array('index' => true, 'type' => true)) ;
 	}
 	
 	/**
@@ -262,7 +262,7 @@ abstract class Simples_Request extends Simples_Base {
 	 * @return string	Request in json 
 	 */
 	protected function _toJson(array $body) {
-		return json_encode($body) ;
+		return !empty($body) ? json_encode($body) : '' ;
 	}
 	
 	/**
