@@ -18,7 +18,10 @@ abstract class Simples_Transport extends Simples_Base {
 	 * 
 	 * @var array
 	 */
-	protected $_config = array() ;
+	protected $_config = array(
+		'index' => null,
+		'type' => null
+	) ;
 	
 	/**
 	 * Current connection.
@@ -85,9 +88,27 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @return \Simples_Request 
 	 */
 	public function __call($request, $params) {
-		if ($this->_factory->valid('Request.' . $request)) {
+		$path = 'Request.' . $request ;
+		if ($this->_factory->valid($path)) {
+			// Automatically add index / type if defined
+			$base = array() ;
+			if (isset($this->_config['index'])) {
+				$base['index'] = $this->_config['index'] ;
+			}
+			if (isset($this->_config['type'])) {
+				$base['type'] = $this->_config['type'] ;
+			}
+			
 			// Add request alias + transport instance
 			$body = isset($params[0]) ? $params[0] : array() ;
+			
+			// Magic param
+			if (!is_array($body)) {
+				$key = $this->_factory->defaultParam($path) ;
+				$body = array($key => $body) ;
+			}
+			
+			$body = $base + $body ;
 			return $this->_factory->request($request, $body, $this) ;
 		}
 	}

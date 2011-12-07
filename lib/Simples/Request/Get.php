@@ -27,6 +27,13 @@ class Simples_Request_Get extends Simples_Request {
 	);
 	
 	/**
+	 * Default param.
+	 * 
+	 * @var string
+	 */
+	protected $_default = 'id' ;
+	
+	/**
 	 * Path : id management.
 	 * 
 	 * @return string	API path

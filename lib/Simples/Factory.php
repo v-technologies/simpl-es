@@ -170,6 +170,19 @@ class Simples_Factory extends Simples_Base {
 	}
 	
 	/**
+	 * Returns the default param of a class. Used by Simples_Transport when
+	 * it gets a first param wich is not an array.
+	 * 
+	 * @param string	$path		Class path
+	 * @return string				Name of the first param 
+	 */
+	public function defaultParam($path) {
+		$class = $this->mapping($path) ;
+		$properties = $this->_reflect($class)->getDefaultProperties() ;
+		return isset($properties['_default']) ? $properties['_default'] : null ;
+	}
+	
+	/**
 	 * Generates a new object.
 	 * 
 	 * @param string	$path		Path to load
@@ -178,9 +191,21 @@ class Simples_Factory extends Simples_Base {
 	 */
 	protected function _new($path, $params) {
 		$class = $this->mapping($path) ;
+		
+		return $this->_reflect($class)->newInstanceArgs($params);
+	}
+	
+	/**
+	 * Generates (or returns if it exists) a reflection class for 
+	 * the given classe name. 
+	 * 
+	 * @param string	$class		Class name
+	 * @return \ReflectionClass		Reflection class
+	 */
+	protected function _reflect($class) {
 		if (!isset($this->_reflection[$class])) {
 			$this->_reflection[$class] = new ReflectionClass($class) ;
 		}
-		return $this->_reflection[$class]->newInstanceArgs($params);
+		return $this->_reflection[$class] ;
 	}
 }

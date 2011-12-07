@@ -56,6 +56,14 @@ abstract class Simples_Request extends Simples_Base {
 	 */
 	protected $_required = array() ;
 	
+	
+	/**
+	 * Default param.
+	 * 
+	 * @var string
+	 */
+	protected $_default ;
+	
 	/**
 	 * Method GET 
 	 */

@@ -16,4 +16,11 @@ class Simples_Request_Status extends Simples_Request {
 	 * @var string
 	 */
 	protected $_path = '/_status' ;	
+	
+	/**
+	 * Default param.
+	 * 
+	 * @var string
+	 */
+	protected $_default = 'index' ;
 }
