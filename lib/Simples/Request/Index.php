@@ -39,6 +39,10 @@ class Simples_Request_Index extends Simples_Request {
 		'data' => null
 	) ;
 	
+	protected $_params = array(
+		'refresh'
+	);
+	
 	/**
 	 * Path : id management.
 	 * 
@@ -49,7 +53,7 @@ class Simples_Request_Index extends Simples_Request {
 		
 		// Object id transmited : we had it to the url.
 		if (isset($this->_body['id'])) {
-			$path .= $this->_body['id'] . '/' ;
+			$path->directory($this->_body['id']) ;
 		}
 		
 		return $path ;

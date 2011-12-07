@@ -1,69 +1,34 @@
 <?php
 
 /**
- * Search. Oh yea, here it is.
+ * The search query.
  * 
  * @author Sébastien Charrier <scharrier@gmail.com>
  * @package	Simples
  * @subpackage Request
  */
-class Simples_Request_Search extends Simples_Request {
+class Simples_Request_Search_Query extends Simples_Base {
 	
-	/**
-	 * API path.
-	 * 
-	 * @var string
-	 */
-	protected $_path = '_search' ;
+	protected $_query = array() ;
 	
-	/**
-	 * Call method.
-	 * 
-	 * @var string
-	 */
-	protected $_method = self::GET ;
-	
-	/**
-	 * Default body values.
-	 * 
-	 * @var array
-	 */
-	protected $_body = array(
-		'index' => null,
-		'type' => null,
-		'query' => null,
-		'filter' => null,
-		'facets' => null,
-		'from' => null,
-		'size' => null,
-		'sort' => null,
-		'highlight' => null,
-		'fields' => null,
-		'script_fields' => null,
-		'explain' => false,
-		'version' => null,
-		'min_score' => null
-	);
-	
-	/**
-	 * Default param.
-	 * 
-	 * @var string
-	 */
-	protected $_default = 'query' ;
-	
-	/**
-	 * Body without null values.
-	 * 
-	 * @param array $body
-	 * @return type 
-	 */
-	public function body(array $body = null) {
-		if (isset($body)) {
-			return parent::body($body) ;
+	public function __construct($query = null) {
+		if (isset($query)) {
+			$this->set($query) ;
 		}
-		
-		return array_filter(parent::body()) ;
 	}
 	
+	public function set($query) {
+		if (is_string($query)) {
+			$query = array('query_string' => array('query' => $query)) ;
+		}
+		$this->_query = $query ;
+		return $this ;
+	}
+	
+	protected function _data() {
+		if (!empty($this->_query)) {
+			return $this->_query ;
+		}
+		return array('match_all' => array()) ;
+	}
 }

@@ -56,6 +56,12 @@ abstract class Simples_Request extends Simples_Base {
 	 */
 	protected $_required = array() ;
 	
+	/**
+	 * Wich body keys are params and should not be sent in the body (but added to the path)
+	 * 
+	 * @var array
+	 */
+	protected $_params = array() ;
 	
 	/**
 	 * Default param.
@@ -105,20 +111,28 @@ abstract class Simples_Request extends Simples_Base {
 	 * @return string 
 	 */
 	public function path() {
-		$path = array() ;
+		$path = new Simples_Path() ;
+		
 		$index = $this->index() ;
+		
 		if ($index) {
-			$path[] = trim($index,'/') ;
+			$path->directory(trim($index,'/')) ;
 			$type = $this->type() ;
 			if ($type) {
-				$path[] = trim($type, '/') ;
+				$path->directory(trim($type, '/')) ;
 			}
 		}
+		
 		if ($this->_path) {
-			$path[] = trim($this->_path, '/') ;
+			$path->directory(trim($this->_path, '/')) ;
 		}
 		
-		return '/' . implode('/', $path) . '/' ;
+		if ($this->_params) {
+			$path->params($this->params()) ;
+			
+		}
+
+		return $path ;
 	}
 	
 	/**
@@ -217,7 +231,13 @@ abstract class Simples_Request extends Simples_Base {
 			$this->_body = $body + $this->_body ;
 			return $this ;
 		}
-		return array_diff_key($this->_body, array('index' => true, 'type' => true)) ;
+		$delete = array('index' => true, 'type' => true) + array_flip($this->_params) ;
+		return array_diff_key($this->_body, $delete) ;
+	}
+	
+	public function params() {
+		$params = array_intersect_key($this->_body, array_flip($this->_params)) ;
+		return $params ;
 	}
 	
 	/**

@@ -21,7 +21,7 @@ class Simples_Request_Search extends Simples_Request {
 	 * 
 	 * @var string
 	 */
-	protected $_method = self::GET ;
+	protected $_method = self::POST ;
 	
 	/**
 	 * Default body values.
@@ -60,10 +60,27 @@ class Simples_Request_Search extends Simples_Request {
 	 */
 	public function body(array $body = null) {
 		if (isset($body)) {
+			if (isset($body['query'])) {
+				$this->query($body['query']) ;
+			}
 			return parent::body($body) ;
 		}
 		
-		return array_filter(parent::body()) ;
+		$body = array_filter(parent::body()) ;
+		$body['query'] = $this->query()->to('array') ;
+		
+		return $body ;
+	}
+	
+	public function query($query = null) {
+		if (!isset($this->_query)) {
+			$this->_query = new Simples_Request_Search_Query() ;
+		}
+		if (isset($query)) {
+			$this->_query->set($query) ;
+			return $this ;
+		}
+		return $this->_query ;
 	}
 	
 }

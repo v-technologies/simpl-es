@@ -19,22 +19,22 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 			)
 		))->execute();
 		
-		$client->index(array(
+		$index = $client->index(array(
 			'id' => '2',
+			'refresh' => true,
 			'data' => array(
 				'content' => 'Second',
 				'user' => 'scharrier'
 			)
-		))->execute();
+		)) ;
+		var_dump($index->path()) ;
+		var_dump($index->to('json')) ;
+		$index->execute() ;
 		
-		sleep(2) ;
+		//$request = $client->search('scharrier') ;
+		//$body = $request->body() ;
 		
-		$request = $client->search('first') ;
-		$res = $request->execute() ;
-		
-		//var_dump($request->path()) ;
-		//var_dump($request->to('json')) ;
-		var_dump($res) ;
+		//$res = $request->execute() ;		
 		
 	}
 
