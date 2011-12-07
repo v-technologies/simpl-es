@@ -61,7 +61,7 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 		))) ;
 		$this->assertEquals('tweet,user', $request->type()) ;
 		
-		$this->assertEquals('/twitter/tweet,user/_status/', $request->path()) ;
+		$this->assertEquals('/twitter/tweet,user/_status/', (string) $request->path()) ;
 		
 	}
 }

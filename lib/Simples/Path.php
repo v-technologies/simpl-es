@@ -90,7 +90,7 @@ class Simples_Path {
 		}
 		
 		if (!empty($this->_directories)) {
-			$path .= implode('/', array_map('urlencode', $this->_directories)) . '/' ;
+			$path .= implode('/', $this->_directories) . '/' ;
 		}
 		
 		if (!empty($this->_params)) {
