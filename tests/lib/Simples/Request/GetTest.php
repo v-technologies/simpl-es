@@ -6,11 +6,19 @@ class Simples_Request_GetTest extends PHPUnit_Framework_TestCase {
 
 	public function testGet() {
 		$client = new Simples_Transport_Http();
-		$this->assertTrue($client->index('twitter', 'tweet', array(
-			'_id' => 'test_get',
-			'content' => 'I\'m there.'
+		$this->assertTrue($client->index(array(
+			'index' => 'twitter', 
+			'type' => 'tweet',
+			'id' => 'test_get',
+			'data' => array(
+				'content' => 'I\'m there.'
+			)
 		))->ok);
-		$this->assertEquals('I\'m there.', $client->get('twitter', 'tweet', 'test_get')->_source->content);
+		$this->assertEquals('I\'m there.', $client->get(array(
+			'index' => 'twitter', 
+			'type' => 'tweet', 
+			'id' => 'test_get'
+		))->_source->content);
 	}
 
 }

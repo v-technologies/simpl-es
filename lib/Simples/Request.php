@@ -33,18 +33,14 @@ abstract class Simples_Request extends Simples_Base {
 	protected $_method = self::GET ;
 	
 	/**
-	 * Index (or indices)
+	 * Request body.
 	 * 
-	 * @var mixed	String or array
+	 * @var array
 	 */
-	protected $_index ;
-	
-	/**
-	 * Type (or types)
-	 * 
-	 * @var mixed	String or array 
-	 */
-	protected $_type ;
+	protected $_body = array(
+		'index' => null,
+		'type' => null
+	) ;
 	
 	/**
 	 * Current response
@@ -54,11 +50,11 @@ abstract class Simples_Request extends Simples_Base {
 	protected $_response ;
 	
 	/**
-	 * Request properties
+	 * Request required parameters. Has to be overriden in the requests.
 	 * 
 	 * @var array 
 	 */
-	protected $_properties = array() ;
+	protected $_required = array() ;
 	
 	/**
 	 * Method GET 
@@ -85,12 +81,13 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct(Simples_Transport $transport = null, $properties = null) {
+	public function __construct(Simples_Transport $transport = null, $body = null) {
 		if (isset($transport)) {
 			$this->_client = $transport ;
 		}
-		if (isset($properties)) {
-			$this->properties($properties) ;
+		
+		if (isset($body)) {
+			$this->body($body) ;
 		}
 	}
 	
@@ -101,10 +98,12 @@ abstract class Simples_Request extends Simples_Base {
 	 */
 	public function path() {
 		$path = array() ;
-		if ($this->_index) {
-			$path[] = trim($this->index(),'/') ;
-			if ($this->_type) {
-				$path[] = trim($this->type(), '/') ;
+		$index = $this->index() ;
+		if ($index) {
+			$path[] = trim($index,'/') ;
+			$type = $this->type() ;
+			if ($type) {
+				$path[] = trim($type, '/') ;
 			}
 		}
 		if ($this->_path) {
@@ -124,21 +123,16 @@ abstract class Simples_Request extends Simples_Base {
 	}
 	
 	/**
-	 * Getter / setter : current index/indices.
+	 * Get the current index / indices
 	 * 
 	 * @param type $index
 	 * @return \Simples_Request 
 	 */
-	public function index($index = null) {
-		if (isset($index)) {
-			if (!is_array($index)) {
-				$this->_index = array($index) ;
-			} else {
-				$this->_index = $index ;
-			}
-			return $this ;
+	public function index() {
+		if (is_array($this->_body['index'])) {
+			return implode(',', $this->_body['index']) ;
 		}
-		return implode(',', $this->_index) ;
+		return $this->_body['index'] ;
 	}
 	
 	/**
@@ -147,16 +141,11 @@ abstract class Simples_Request extends Simples_Base {
 	 * @param mixed		$type		Type (string) or types (array)
 	 * @return \Simples_Request 
 	 */
-	public function type($type = null) {
-		if (isset($type)) {
-			if (!is_array($type)) {
-				$this->_type = array($type) ;
-			} else {
-				$this->_type = $type ;
-			}
-			return $this ;
+	public function type() {
+		if (is_array($this->_body['type'])) {
+			return implode(',', $this->_body['type']) ;
 		}
-		return implode(',', $this->_type) ;
+		return $this->_body['type'] ;
 	}
 	
 	/**
@@ -187,7 +176,7 @@ abstract class Simples_Request extends Simples_Base {
 		$response = array() ;
 		
 		if (isset($this->_client)) {
-			$response = $this->_client->call($this->path(), $this->_method, $this->_toJson()) ;
+			$response = $this->_client->call($this->path(), $this->_method, $this->to('json')) ;
 		}
 
 		$this->_response = new Simples_Response($response) ;
@@ -205,17 +194,22 @@ abstract class Simples_Request extends Simples_Base {
 	}
 	
 	/**
-	 * Getter / setter : properties of the request.
+	 * Getter / setter : body of the request.
 	 * 
-	 * @param array		$properties		Setter : properties
-	 * @return \Simples_Request|array	Setter : $this . Getter : current properties.
+	 * @param array		$body		Setter : body
+	 * @return \Simples_Request|array	Setter : $this . Getter : current body.
 	 */
-	public function properties(array $properties = null) {
-		if (isset($properties)) {
-			$this->_properties = $properties + $this->_properties ;
+	public function body(array $body = null) {
+		if (isset($body)) {
+			foreach($this->_required as $required) {
+				if (!isset($body[$required])) {
+					throw new Simples_Request_Exception('Required param "' . $required . '" missing') ;
+				}
+			} 
+			$this->_body = $body + $this->_body ;
 			return $this ;
 		}
-		return $this->_properties ;
+		return $this->_body ;
 	}
 	
 	/**
@@ -248,7 +242,7 @@ abstract class Simples_Request extends Simples_Base {
 	public function to($format) {
 		$method =  '_to' . ucfirst($format) ;
 		if (method_exists($this, $method)) {
-			return $this->{$method}() ;
+			return $this->{$method}($this->body()) ;
 		}
 		
 		throw new Simples_Request_Exception('Unsupported request transformation format : "' . $format . '"') ;
@@ -259,8 +253,8 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @return string	Request in json 
 	 */
-	protected function _toJson() {
-		return json_encode($this->_properties) ;
+	protected function _toJson(array $body) {
+		return json_encode($body) ;
 	}
 	
 	/**
@@ -268,7 +262,7 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @return array 
 	 */
-	protected function _toArray() {
-		return $this->_properties ;
+	protected function _toArray(array $body) {
+		return $body ;
 	}
 }
