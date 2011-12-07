@@ -49,7 +49,7 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testIndicesTypes() {
-		$request = new Simples_Request_Custom(null, array(
+		$request = new Simples_Request_Custom(array(
 			'index' => 'twitter',
 			'type' => 'tweet'
 		)) ;

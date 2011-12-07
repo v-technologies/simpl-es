@@ -81,13 +81,13 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct(Simples_Transport $transport = null, $body = null) {
-		if (isset($transport)) {
-			$this->_client = $transport ;
-		}
-		
+	public function __construct($body = null, Simples_Transport $transport = null) {
 		if (isset($body)) {
 			$this->body($body) ;
+		}
+		
+		if (isset($transport)) {
+			$this->_client = $transport ;
 		}
 	}
 	

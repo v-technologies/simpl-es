@@ -87,8 +87,8 @@ abstract class Simples_Transport extends Simples_Base {
 	public function __call($request, $params) {
 		if ($this->_factory->valid('Request.' . $request)) {
 			// Add request alias + transport instance
-			$params = array_merge(array($request, $this), $params) ;
-			return call_user_func_array(array($this->_factory, 'request'), $params) ;
+			$body = isset($params[0]) ? $params[0] : array() ;
+			return $this->_factory->request($request, $body, $this) ;
 		}
 	}
 }
