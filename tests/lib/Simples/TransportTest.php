@@ -23,6 +23,13 @@ class Simples_TransportTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('facebook',$body['index']) ;
 		$this->assertEquals('tweet',$body['type']) ;
 		$this->assertEquals(666,$body['id']) ;
+		
+		try {
+			$client->stats('ouch') ;
+			$this->fail() ;
+		} catch (Exception $e) {
+			return ;
+		}
 	}
 }
 
