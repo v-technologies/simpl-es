@@ -114,14 +114,19 @@ class Simples_Transport_Http extends Simples_Transport {
 		
 		curl_setopt($this->_connection, CURLOPT_CUSTOMREQUEST, strtoupper($method));
 		curl_setopt($this->_connection, CURLOPT_URL, $this->url($url)) ;
+		curl_setopt($this->_connection, CURLOPT_FORBID_REUSE, 1) ;
 		
-		if (is_array($data)) {
+		
+		if (is_array($data) && !empty($data)) {
 			$data = json_encode($data) ;
 		}
-		if (isset($data)) {
-			curl_setopt($this->_connection, CURLOPT_POSTFIELDS, $data);
-		}
 		
+		if (!empty($data)) {
+			curl_setopt($this->_connection, CURLOPT_POSTFIELDS, $data);
+		} else {
+			curl_setopt($this->_connection, CURLOPT_POSTFIELDS, null);
+		}
+
 		$response = curl_exec($this->_connection);
 		
 		if ($response === false) {
@@ -131,7 +136,7 @@ class Simples_Transport_Http extends Simples_Transport {
 			);
 		}
 		if (!strlen($response)) {
-			throw new Simples_Transport_Exception('Empty response ! WTF ?') ;
+			throw new Simples_Transport_Exception('The ES server returned an empty response.') ;
 		}
 		
 		$return = json_decode($response, true) ;
