@@ -164,8 +164,8 @@ class Simples_Factory extends Simples_Base {
 	 */
 	public function transport($alias) {
 		$params = func_get_args() ;
-		array_shift($params) ;
-		$params = array_merge(array($this), $params) ;
+		$params = isset($params[1]) ? $params[1] : array() ;	
+		$params = array($params, $this) ;
 		return $this->_new('Transport.' . $alias, $params) ;
 	}
 	
