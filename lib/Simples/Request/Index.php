@@ -24,7 +24,7 @@ class Simples_Request_Index extends Simples_Request {
 	 * @var array
 	 */
 	protected $_required = array(
-		'index','type'
+		'index','type', 'data'
 	) ;
 	
 	/**
@@ -55,6 +55,12 @@ class Simples_Request_Index extends Simples_Request {
 		return $path ;
 	}
 	
+	/**
+	 * Returns only the data key.
+	 * 
+	 * @param array $body	Request body (setter mode)
+	 * @return mixed		Getter : request body. Setter : request instance.
+	 */
 	public function body(array $body = null) {
 		if (isset($body)) {
 			return parent::body($body) ;
