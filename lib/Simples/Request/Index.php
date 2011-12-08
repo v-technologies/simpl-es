@@ -27,12 +27,6 @@ class Simples_Request_Index extends Simples_Request {
 		)
 	) ;
 	
-	public function __construct($body = null, $options = null, Simples_Transport $transport = null) {
-		var_dump($body) ;
-		var_dump($options) ;
-		parent::__construct($body, $options, $transport);
-	}
-	
 	/**
 	 * Path : id management.
 	 * 
