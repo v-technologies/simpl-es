@@ -25,18 +25,40 @@ class Simples_Request_Definition {
 		)
 	) ;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param array $definition  Array of definition.
+	 */
 	public function __construct(array $definition) {
 		$this->_definition = $this->_merge(self::$_base, $definition) ;
 	}
 	
+	/**
+	 * Returns the method.
+	 * 
+	 * @return string
+	 */
 	public function method() {
 		return $this->_definition['method'] ;
 	}
 	
+	/**
+	 * Returns the path.
+	 * 
+	 * @return string
+	 */
 	public function path() {
 		return $this->_definition['path'] ;
 	}
 	
+	/**
+	 * Returns the required elements. If $name given, returns the required keys for 
+	 * the $name type.
+	 * 
+	 * @param string	$name		[optionnal] Type name
+	 * @return array 
+	 */
 	public function required($name = null) {
 		if (isset($name)) {
 			return isset($this->_definition['required'][$name]) ? $this->_definition['required'][$name] : array() ;
@@ -44,6 +66,13 @@ class Simples_Request_Definition {
 		return $this->_definition['required'] ;
 	}
 	
+	/**
+	 * Returns the to inject elements. If $name given, returns the keys for 
+	 * the $name type only.
+	 * 
+	 * @param string	$name		[optionnal] Type name
+	 * @return array 
+	 */
 	public function inject($name = null) {
 		if (isset($name)) {
 			return isset($this->_definition['inject'][$name]) ? $this->_definition['inject'][$name] : array() ;
@@ -51,6 +80,13 @@ class Simples_Request_Definition {
 		return $this->_definition['inject'] ;
 	}
 	
+	/**
+	 * Merge two arrays recursivly.
+	 * 
+	 * @param array $base		Base array
+	 * @param array $merge		Array to merge
+	 * @return array			Merged.
+	 */
 	protected function _merge(array $base, array $merge) {
 		foreach ($merge as $key => $val)	 {
 			if (is_array($val) && isset($base[$key]) && is_array($base[$key])) {
