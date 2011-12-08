@@ -15,18 +15,14 @@
 class Simples_Request_Delete extends Simples_Request {
 	
 	/**
-	 * Call method.
+	 * Definition
 	 * 
-	 * @var string
+	 * @var array
 	 */
-	protected $_method = self::DELETE ;
-	
-	protected $_body = array(
-		'index' => null,
-		'type' => null,
-		'id' => null
+	protected $_definition = array(
+		'method' => self::DELETE,
+		'magic' => 'id'
 	) ;
-	
 	
 	/**
 	 * Path : id management.

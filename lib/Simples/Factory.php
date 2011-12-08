@@ -180,7 +180,7 @@ class Simples_Factory extends Simples_Base {
 	public function defaultParam($path) {
 		$class = $this->mapping($path) ;
 		$properties = $this->_reflect($class)->getDefaultProperties() ;
-		return isset($properties['_default']) ? $properties['_default'] : null ;
+		return isset($properties['_definition']['magic']) ? $properties['_definition']['magic'] : null ;
 	}
 	
 	/**

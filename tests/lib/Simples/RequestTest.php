@@ -8,6 +8,12 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($request instanceof Simples_Request) ;
 	}
 	
+	public function testDefinition() {
+		$request = new Simples_Request_Custom() ;
+		$this->assertTrue($request->definition() instanceof Simples_Request_Definition) ;
+		$this->assertEquals('_status', $request->definition()->path()) ;
+	}
+	
 	public function testPath() {
 		$request = new Simples_Request_Custom() ;
 		$this->assertEquals('/_status/', $request->path()) ;
@@ -49,14 +55,14 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testIndicesTypes() {
-		$request = new Simples_Request_Custom(array(
+		$request = new Simples_Request_Custom(null, array(
 			'index' => 'twitter',
 			'type' => 'tweet'
 		)) ;
 		$this->assertEquals('twitter', $request->index()) ;
 		$this->assertEquals('tweet', $request->type()) ;
 		
-		$request->body(array('type' => array(
+		$request->options(array('type' => array(
 			'tweet','user'
 		))) ;
 		$this->assertEquals('tweet,user', $request->type()) ;
@@ -71,4 +77,9 @@ class Simples_Request_Custom extends Simples_Request {
 	protected $_path = '/_status' ;
 	
 	protected $_method = Simples_Request::GET ;
+	
+	protected $_definition = array(
+		'method' => Simples_Request::GET,
+		'path' => '_status'
+	) ;
 }

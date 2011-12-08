@@ -91,12 +91,13 @@ abstract class Simples_Transport extends Simples_Base {
 		$path = 'Request.' . $request ;
 		if ($this->_factory->valid($path)) {
 			// Automatically add index / type if defined
-			$base = array() ;
-			if (isset($this->_config['index'])) {
-				$base['index'] = $this->_config['index'] ;
-			}
-			if (isset($this->_config['type'])) {
-				$base['type'] = $this->_config['type'] ;
+			$options = array(
+				'index' => isset($this->_config['index']) ? $this->_config['index'] : null,
+				'type' => isset($this->_config['type']) ? $this->_config['type'] : null,
+			) ;
+			
+			if (isset($params[1])) {
+				$options = $params[1] + $options ;
 			}
 			
 			// Add request alias + transport instance
@@ -111,8 +112,7 @@ abstract class Simples_Transport extends Simples_Base {
 				$body = array($key => $body) ;
 			}
 			
-			$body = $base + $body ;
-			return $this->_factory->request($request, $body, $this) ;
+			return $this->_factory->request($request, $body, $options, $this) ;
 		}
 	}
 }

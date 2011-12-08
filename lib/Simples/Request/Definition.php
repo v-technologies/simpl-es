@@ -15,6 +15,7 @@ class Simples_Request_Definition {
 	static protected $_base = array(
 		'method' => null,
 		'path' => null,
+		'magic' => null,
 		'required' => array(
 			'body' => array(),
 			'options' => array()
@@ -32,6 +33,10 @@ class Simples_Request_Definition {
 	 */
 	public function __construct(array $definition) {
 		$this->_definition = $this->_merge(self::$_base, $definition) ;
+		
+		if (!isset($this->_definition['method'])) {
+			throw new Simples_Request_Exception('No method defined (key "method" empty)') ;
+		}
 	}
 	
 	/**
@@ -50,6 +55,15 @@ class Simples_Request_Definition {
 	 */
 	public function path() {
 		return $this->_definition['path'] ;
+	}
+	
+	/**
+	 * Returns default magic param
+	 * 
+	 * @return string
+	 */
+	public function magic() {
+		return $this->_definition['magic'] ;
 	}
 	
 	/**

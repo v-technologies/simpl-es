@@ -19,25 +19,23 @@ abstract class Simples_Request extends Simples_Base {
 	protected $_client ;
 	
 	/**
-	 * Base path for the request.
+	 * Request definition. Has to be defined in the request implementations.
 	 * 
-	 * @var string
+	 * @var array|Simples_Request_Definition	During construction phase, array is replaced by a Simples_Request_Definition instance
 	 */
-	protected $_path ;
+	protected $_definition = array() ;
 	
 	/**
-	 * Method.
-	 * 
-	 * @var string 
+	 * Request body 
 	 */
-	protected $_method = self::GET ;
+	protected $_body = array() ;
 	
 	/**
-	 * Request body.
+	 * Request options.
 	 * 
 	 * @var array
 	 */
-	protected $_body = array(
+	protected $_options = array(
 		'index' => null,
 		'type' => null
 	) ;
@@ -48,27 +46,6 @@ abstract class Simples_Request extends Simples_Base {
 	 * @var string 
 	 */
 	protected $_response ;
-	
-	/**
-	 * Request required parameters. Has to be overriden in the requests.
-	 * 
-	 * @var array 
-	 */
-	protected $_required = array() ;
-	
-	/**
-	 * Wich body keys are params and should not be sent in the body (but added to the path)
-	 * 
-	 * @var array
-	 */
-	protected $_params = array() ;
-	
-	/**
-	 * Default param.
-	 * 
-	 * @var string
-	 */
-	protected $_default ;
 	
 	/**
 	 * Method GET 
@@ -95,14 +72,29 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct($body = null, Simples_Transport $transport = null) {
+	public function __construct($body = null, $options = null, Simples_Transport $transport = null) {
+		$this->_definition = new Simples_Request_Definition($this->_definition) ;
+		
 		if (isset($body)) {
 			$this->body($body) ;
+		}
+		
+		if (isset($options)) {
+			$this->options($options) ;
 		}
 		
 		if (isset($transport)) {
 			$this->_client = $transport ;
 		}
+	}
+	
+	/**
+	 * Returns the current request definition.
+	 * 
+	 * @return Simples_Request_Definition	The definition instance.
+	 */
+	public function definition() {
+		return $this->_definition ;
 	}
 	
 	/**
@@ -123,11 +115,11 @@ abstract class Simples_Request extends Simples_Base {
 			}
 		}
 		
-		if ($this->_path) {
-			$path->directory(trim($this->_path, '/')) ;
+		if ($this->definition()->path()) {
+			$path->directory(trim($this->definition()->path(), '/')) ;
 		}
 		
-		if ($this->_params) {
+		if ($this->definition()->inject('params')) {
 			$path->params($this->params()) ;
 			
 		}
@@ -141,7 +133,7 @@ abstract class Simples_Request extends Simples_Base {
 	 * @return string
 	 */
 	public function method() {
-		return $this->_method ;
+		return $this->definition()->method() ;
 	}
 	
 	/**
@@ -151,10 +143,13 @@ abstract class Simples_Request extends Simples_Base {
 	 * @return \Simples_Request 
 	 */
 	public function index() {
-		if (is_array($this->_body['index'])) {
-			return implode(',', $this->_body['index']) ;
+		if (!isset($this->_options['index'])) {
+			return '' ;
 		}
-		return $this->_body['index'] ;
+		if (is_array($this->_options['index'])) {
+			return implode(',', $this->_options['index']) ;
+		}
+		return $this->_options['index'] ;
 	}
 	
 	/**
@@ -164,10 +159,13 @@ abstract class Simples_Request extends Simples_Base {
 	 * @return \Simples_Request 
 	 */
 	public function type() {
-		if (is_array($this->_body['type'])) {
-			return implode(',', $this->_body['type']) ;
+		if (!isset($this->_options['type'])) {
+			return '' ;
 		}
-		return $this->_body['type'] ;
+		if (is_array($this->_options['type'])) {
+			return implode(',', $this->_options['type']) ;
+		}
+		return $this->_options['type'] ;
 	}
 	
 	/**
@@ -198,7 +196,7 @@ abstract class Simples_Request extends Simples_Base {
 		$response = array() ;
 		
 		if (isset($this->_client)) {
-			$response = $this->_client->call($this->path(), $this->_method, $this->to('json')) ;
+			$response = $this->_client->call($this->path(), $this->definition()->method(), $this->to('json')) ;
 		}
 
 		$this->_response = new Simples_Response($response) ;
@@ -223,20 +221,50 @@ abstract class Simples_Request extends Simples_Base {
 	 */
 	public function body(array $body = null) {
 		if (isset($body)) {
-			foreach($this->_required as $required) {
-				if (!isset($body[$required])) {
-					throw new Simples_Request_Exception('Required param "' . $required . '" missing') ;
+			$required = $this->definition()->required('body') ;
+			foreach($required as $key) {
+				if (!isset($body[$key])) {
+					throw new Simples_Request_Exception('Required body key "' . $key . '" missing') ;
 				}
 			} 
 			$this->_body = $body + $this->_body ;
 			return $this ;
 		}
-		$delete = array('index' => true, 'type' => true) + array_flip($this->_params) ;
+		$delete = array_flip($this->definition()->inject('params')) ;
 		return array_diff_key($this->_body, $delete) ;
 	}
 	
+	/**
+	 * Getter / setter : options for the request.
+	 * 
+	 * @param array		$options		Setter : options
+	 * @return \Simples_Request|array	Setter : $this . Getter : current options.
+	 */
+	public function options(array $options = null) {
+		if (isset($options)) {
+			$required = $this->definition()->required('options') ;
+			foreach($required as $key) {
+				if (!isset($options[$key])) {
+					throw new Simples_Request_Exception('Required option key "' . $key . '" missing') ;
+				}
+			} 
+			$this->_options = $options + $this->_options;
+			return $this ;
+		}
+		$delete = array('index' => true, 'type' => true) + array_flip($this->definition()->inject('params')) ;
+		return array_diff_key($this->_options, $delete) ;
+	}
+	
+	/**
+	 * Returns the path params.
+	 * 
+	 * @return array
+	 */
 	public function params() {
-		$params = array_intersect_key($this->_body, array_flip($this->_params)) ;
+		$params = $this->definition()->inject('params') ;
+		if (!empty($params)) {
+			$params = array_intersect_key($this->_body, array_flip($params)) ;
+		}
 		return $params ;
 	}
 	

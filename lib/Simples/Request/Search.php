@@ -10,18 +10,16 @@
 class Simples_Request_Search extends Simples_Request {
 	
 	/**
-	 * API path.
+	 * Definition
 	 * 
-	 * @var string
+	 * @var array
 	 */
-	protected $_path = '_search' ;
+	protected $_definition = array(
+		'method' => self::POST,
+		'path' => '_search',
+		'magic' => 'query',
+	) ;
 	
-	/**
-	 * Call method.
-	 * 
-	 * @var string
-	 */
-	protected $_method = self::POST ;
 	
 	/**
 	 * Default body values.
@@ -44,13 +42,6 @@ class Simples_Request_Search extends Simples_Request {
 		'version' => null,
 		'min_score' => null
 	);
-	
-	/**
-	 * Default param.
-	 * 
-	 * @var string
-	 */
-	protected $_default = 'query' ;
 	
 	/**
 	 * Body without null values.
@@ -81,6 +72,21 @@ class Simples_Request_Search extends Simples_Request {
 			return $this ;
 		}
 		return $this->_query ;
+	}
+	
+	public function from($from) {
+		$this->_body['from'] = $from ;
+		return $this ;
+	}
+	
+	public function size($size) {
+		$this->_body['size'] = $size;
+		return $this ;
+	}
+	
+	public function sort($sort) {
+		$this->_body['sort'] = $sort;
+		return $this ;
 	}
 	
 }

@@ -10,14 +10,17 @@
 class Simples_Request_Get extends Simples_Request {
 	
 	/**
-	 * Call method.
+	 * Definition
 	 * 
-	 * @var string
+	 * @var array
 	 */
-	protected $_method = self::GET ;
-	
-	protected $_required = array(
-		'index', 'type', 'id'
+	protected $_definition = array(
+		'method' => self::GET,
+		'magic' => 'id',
+		'required' => array(
+			'body' => array('id'),
+			'options' => array('index', 'type')
+		)
 	) ;
 	
 	protected $_body = array(
@@ -25,13 +28,6 @@ class Simples_Request_Get extends Simples_Request {
 		'type' => null,
 		'id' => null
 	);
-	
-	/**
-	 * Default param.
-	 * 
-	 * @var string
-	 */
-	protected $_default = 'id' ;
 	
 	/**
 	 * Path : id management.

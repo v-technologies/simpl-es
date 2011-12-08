@@ -11,10 +11,13 @@
 class Simples_Request_Stats extends Simples_Request {
 	
 	/**
-	 * Path.
+	 * Definition
 	 * 
-	 * @var string
+	 * @var array
 	 */
-	protected $_path = '/_stats' ;
+	protected $_definition = array(
+		'method' => self::GET,
+		'path' => '_stats'
+	) ;
 	
 }

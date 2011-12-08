@@ -12,36 +12,26 @@
 class Simples_Request_Index extends Simples_Request {
 	
 	/**
-	 * Call method.
-	 * 
-	 * @var string
-	 */
-	protected $_method = self::POST ;
-	
-	/**
-	 * Required body keys.
+	 * Definition
 	 * 
 	 * @var array
 	 */
-	protected $_required = array(
-		'index','type', 'data'
+	protected $_definition = array(
+		'method' => self::POST,
+		'magic' => 'id',
+		'required' => array(
+			'options' => array('index','type')
+		),
+		'inject' => array(
+			'params' => array('refresh')
+		)
 	) ;
 	
-	/**
-	 * Base body values.
-	 * 
-	 * @var array
-	 */
-	protected $_body = array(
-		'index' => null,
-		'type' => null,
-		'id' => null,
-		'data' => null
-	) ;
-	
-	protected $_params = array(
-		'refresh'
-	);
+	public function __construct($body = null, $options = null, Simples_Transport $transport = null) {
+		var_dump($body) ;
+		var_dump($options) ;
+		parent::__construct($body, $options, $transport);
+	}
 	
 	/**
 	 * Path : id management.
@@ -52,23 +42,10 @@ class Simples_Request_Index extends Simples_Request {
 		$path = parent::path() ;
 		
 		// Object id transmited : we had it to the url.
-		if (isset($this->_body['id'])) {
-			$path->directory($this->_body['id']) ;
+		if (isset($this->_options['id'])) {
+			$path->directory($this->_options['id']) ;
 		}
 		
 		return $path ;
-	}
-	
-	/**
-	 * Returns only the data key.
-	 * 
-	 * @param array $body	Request body (setter mode)
-	 * @return mixed		Getter : request body. Setter : request instance.
-	 */
-	public function body(array $body = null) {
-		if (isset($body)) {
-			return parent::body($body) ;
-		}
-		return $this->_body['data'] ;
 	}
 }

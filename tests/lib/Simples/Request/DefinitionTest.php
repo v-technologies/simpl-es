@@ -2,52 +2,23 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_DeleteTest extends PHPUnit_Framework_TestCase {
+class Simples_Request_DefinitionTest extends PHPUnit_Framework_TestCase {
 
-	public function testDelete() {
-		$client = new Simples_Transport_Http();
-		$this->assertTrue($client->index(array(
-			'index' => 'twitter',
-			'type' => 'tweet',
-			'id' => 'test_get',
-			'data' => array(
-				'content' => 'Pliz, pliz, delete me !'
+	public function testDefinition() {
+		$definition = new Simples_Request_Definition(array('method' => 'GET')) ;
+		$this->assertEquals('GET', $definition->method()) ;
+		$this->assertNull($definition->path()) ;
+		
+		$definition = new Simples_Request_Definition(array(
+			'method' => Simples_Request::GET,
+			'required' => array(
+				'body' => array('id')
 			)
-		))->ok);
-		
-		$delete_index = $client->delete(array(
-			'index' => 'twitter'
 		)) ;
-		$this->assertEquals('/twitter/', $delete_index->path()) ;
 		
-		$delete_type = $client->delete(array(
-			'index' => 'twitter',
-			'type' => 'tweet'
-		)) ;
-		$this->assertEquals('/twitter/tweet/', $delete_type->path()) ;
-		
-		$delete_object = $client->delete(array(
-			'index' => 'twitter', 
-			'type' => 'tweet', 
-			'id' => 1
-		)) ;
-		$this->assertEquals('/twitter/tweet/1/', $delete_object->path()) ;
-		
-		$this->assertEquals(true, $delete_object->ok) ;
-		$res = $client->get(array(
-			'index' => 'twitter',
-			'type' => 'tweet',
-			'id' => 1
-		)) ;
-		$this->assertFalse($res->exists);
-		
-		$this->assertEquals(true, $delete_type->ok) ;
-		
-		$this->assertEquals(true, $delete_index->ok) ;
-		$this->assertEquals(404, $client->status(array(
-			'index' => 'twitter'
-		))->status);
-		
+		$this->assertEquals(Simples_Request::GET, $definition->method()) ;
+		$this->assertEquals(array('id'), $definition->required('body')) ;
+		$this->assertEquals(array(), $definition->required('options')) ;
 	}
 
 }

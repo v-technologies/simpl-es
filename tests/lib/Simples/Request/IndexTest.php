@@ -12,31 +12,24 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 			
 		}
 
-		$client = new Simples_Transport_Http();
+		$client = new Simples_Transport_Http(array(
+				'index' => 'twitter',
+				'type' => 'tweet'
+		));
 
-		$request = new Simples_Request_Index(array(
-			'index' => 'twitter',
-			'type' => 'tweet',
-			'id' => 1,
-			'data' => array(
+		$request = $client->index(array(
 				'user' => 'scharrier',
 				'fullname' => 'Sébastien Charrier'
-			)
-		), $client);
-		$this->assertEquals('/twitter/tweet/1/', $request->path());
+		), array('id' => 1));
+		$this->assertEquals('/twitter/tweet/1/', (string) $request->path());
 
 		$this->assertTrue($request->ok);
 		$this->assertEquals(1, $request->_id);
 
-		$request = new Simples_Request_Index(array(
-			'index' => 'twitter',
-			'type' => 'tweet',
-			'id' => 2,
-			'data' => array(
+		$request = $client->index(array(
 				'user' => 'vtechnologies',
-			)
-		), $client) ;
-		$this->assertEquals('/twitter/tweet/2/', $request->path());
+		), array('id' => 2)) ;
+		$this->assertEquals('/twitter/tweet/2/', (string) $request->path());
 		$this->assertEquals(2, $request->_id);
 	}
 

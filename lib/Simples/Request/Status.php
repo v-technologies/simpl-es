@@ -11,16 +11,12 @@
 class Simples_Request_Status extends Simples_Request {
 	
 	/**
-	 * Path.
+	 * Definition
 	 * 
-	 * @var string
+	 * @var array
 	 */
-	protected $_path = '/_status' ;	
-	
-	/**
-	 * Default param.
-	 * 
-	 * @var string
-	 */
-	protected $_default = 'index' ;
+	protected $_definition = array(
+		'method' => self::GET,
+		'path' => '_status'
+	) ;
 }

@@ -4,8 +4,8 @@ require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootst
 class Simples_Request_StatusTest extends PHPUnit_Framework_TestCase {
 
    public function testStatus() {
-	   $request = new Simples_Request_Status(null, new Simples_Transport_Http()) ;
-	   $results = $request->execute() ;
+	   $client = new Simples_Transport_Http() ;
+	   $results = $client->status()->execute() ;
 	   $this->assertEquals(true, $results->ok) ;
 	   $this->assertTrue(isset($results->_shards->total)) ;
    }
