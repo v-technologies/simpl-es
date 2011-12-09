@@ -124,7 +124,7 @@ class Simples_Transport_Http extends Simples_Transport {
 		if (!empty($data)) {
 			curl_setopt($this->_connection, CURLOPT_POSTFIELDS, $data);
 		} else {
-			curl_setopt($this->_connection, CURLOPT_POSTFIELDS, null);
+			curl_setopt($this->_connection, CURLOPT_POSTFIELDS, '');
 		}
 
 		$response = curl_exec($this->_connection);
