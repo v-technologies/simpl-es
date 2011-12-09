@@ -31,6 +31,14 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 		), array('id' => 2)) ;
 		$this->assertEquals('/twitter/tweet/2/', (string) $request->path());
 		$this->assertEquals(2, $request->_id);
+		
+		
+		$request = $client->index(array(
+			'content' => 'First',
+			'user' => 'scharrier'
+		), array('id' => 1, 'refresh' => true));
+		$this->assertEquals('/twitter/tweet/1/?refresh=1', (string) $request->path()) ;
+	
 	}
 
 }

@@ -263,7 +263,7 @@ abstract class Simples_Request extends Simples_Base {
 	public function params() {
 		$params = $this->definition()->inject('params') ;
 		if (!empty($params)) {
-			$params = array_intersect_key($this->_body, array_flip($params)) ;
+			$params = array_intersect_key($this->_options, array_flip($params)) ;
 		}
 		return $params ;
 	}
