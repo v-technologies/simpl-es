@@ -20,11 +20,6 @@ class Simples_ResponseTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('0.18.5', $request->version->number) ;
 	}
 	
-	/**
-	 * Exception when error returned by ES.
-	 * 
-     * 
-     */
 	public function testException() {
 		try {
 			$response = new Simples_Response(array(
