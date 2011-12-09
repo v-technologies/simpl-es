@@ -22,10 +22,8 @@ class Simples_Response extends Simples_Base {
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct(array $data = null) {
-		if (isset($data)) {
-			$this->set($data) ;
-		}
+	public function __construct(array $data) {
+		$this->set($data) ;
 	}
 
 	/**
@@ -35,6 +33,9 @@ class Simples_Response extends Simples_Base {
 	 * @return \Simples_Response	Current response
 	 */
 	public function set(array $data = null) {
+		if (isset($data['error'])) {
+			throw new Simples_Response_Exception($data) ;
+		}
 		$this->_data = $data ;
 		return $this ;
 	}

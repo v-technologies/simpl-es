@@ -43,8 +43,13 @@ class Simples_Request_DeleteTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(true, $delete_type->ok) ;
 		
 		$this->assertEquals(true, $delete_index->ok) ;
-		$this->assertEquals(404, $client->status(null, array('index' => 'twitter'))->status);
 		
+		try {
+			$client->status(null, array('index' => 'twitter'))->status ;
+			$this->fail() ;
+		} catch (Exception $e) {
+			
+		}
 	}
 
 }
