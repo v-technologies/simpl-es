@@ -2,10 +2,10 @@
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_Search_QueryTest extends PHPUnit_Framework_TestCase {
+class Simples_Request_Search_QueryBuilderTest extends PHPUnit_Framework_TestCase {
 
 	public function testConstruct() {
-		$query = new Simples_Request_Search_Query() ;
+		$query = new Simples_Request_Search_QueryBuilder() ;
 		$res = $query->to('array') ;
 		$this->assertTrue(isset($res['match_all'])) ;
 		
@@ -15,7 +15,7 @@ class Simples_Request_Search_QueryTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testMerged() {
-		$query = new Simples_Request_Search_Query() ;
+		$query = new Simples_Request_Search_QueryBuilder() ;
 		$query->match('scharrier')->in('username') ;
 		$res = $query->to('array') ;
 		$expected = array(
@@ -23,12 +23,12 @@ class Simples_Request_Search_QueryTest extends PHPUnit_Framework_TestCase {
 		) ;
 		$this->assertEquals($res, $expected) ;
 		
-		$query = new Simples_Request_Search_Query() ;
+		$query = new Simples_Request_Search_QueryBuilder() ;
 		$query->field('username')->match('scharrier') ;
 		$res2 = $query->to('array') ;
 		$this->assertEquals($res, $res2) ;
 		
-		$query = new Simples_Request_Search_Query() ;
+		$query = new Simples_Request_Search_QueryBuilder() ;
 		$query->fields(array('username', 'retweet'))->match('scharrier') ;
 		$res = $query->to('array') ;
 		$expected = array(
@@ -39,12 +39,12 @@ class Simples_Request_Search_QueryTest extends PHPUnit_Framework_TestCase {
 		) ;
 		$this->assertEquals($res, $expected) ;
 		
-		$query = new Simples_Request_Search_Query('scharrier') ;
+		$query = new Simples_Request_Search_QueryBuilder('scharrier') ;
 		$query->in(array('username', 'retweet')) ;
 		$res = $query->to('array') ;
 		$this->assertEquals($res, $expected) ;
 		
-		$query = new Simples_Request_Search_Query(array(
+		$query = new Simples_Request_Search_QueryBuilder(array(
 			'query' => 'scharrier',
 			'in' => array('username', 'retweet')
 		)) ;
@@ -53,7 +53,7 @@ class Simples_Request_Search_QueryTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testNotMerged() {
-		$query = new Simples_Request_Search_Query() ;
+		$query = new Simples_Request_Search_QueryBuilder() ;
 		
 		$query->must()
 				->match('scharrier')->in(array('username','retweet'))

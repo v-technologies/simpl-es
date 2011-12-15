@@ -7,7 +7,7 @@
  * @package	Simples
  * @subpackage Request.Search
  */
-class Simples_Request_Search_Query extends Simples_Base {
+class Simples_Request_Search_QueryBuilder extends Simples_Base {
 	
 	const MUST = 'must' ;
 	

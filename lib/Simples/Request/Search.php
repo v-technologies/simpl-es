@@ -51,7 +51,7 @@ class Simples_Request_Search extends Simples_Request {
 	protected $_current = 'query' ;
 	
 	public function __construct($body = null, $options = null, Simples_Transport $transport = null) {
-		$this->_query = new Simples_Request_Search_Query(null, $this) ;
+		$this->_query = new Simples_Request_Search_QueryBuilder(null, $this) ;
 		
 		if (isset($body['query']) && is_string($body['query'])) {
 			$this->_query->add($body['query']) ;
