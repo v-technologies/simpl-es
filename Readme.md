@@ -38,6 +38,13 @@ Teasing
 	// Print your results
 	echo 'Search tooked ' . $response->took . 'ms. ' . $response->hits->total . ' results ! ' ;
 
+Compatibility
+-------------
+
+Simpl-ES is continuously tested on PHP 5.2.x, 5.3.x and 5.4.x. . It'as actually developped for a 5.2 usage, but we will certainly create a 5.3 branche in order to use namespaces.
+
+We have implemented PSR-0 guidelines, so you can use your generic autoload method to work with it.
+
 Help us
 -------
 
