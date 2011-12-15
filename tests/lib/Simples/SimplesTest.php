@@ -35,4 +35,36 @@ class SimplesTest extends PHPUnit_Framework_TestCase {
 			'id' => 1
 		))->_source->from) ; 
 	}
+	
+	/**
+	 * Readme example. 
+	 */
+	public function testMorrison() {
+		// Connect
+		$client = Simples::connect(array(
+			'host' => 'my.es-server.net',
+			'index' => 'directory',
+			'type' => 'contact'
+		)) ;
+
+		// Index
+		$client->index(array(
+			'firstname' => 'Jim',
+			'lastname' => 'Morrison',
+			'type' => 'inspiration'
+		))->execute() ;
+
+		// Search
+		$response = $client->search()
+			->should()
+				->match('Morrison')->in('lastname')
+				->match('Jim')
+			->not()
+				->match('inspiration')->in(array('type','status'))
+			->size(5)
+			->execute() ;
+
+		// Print your results
+		//echo 'Search tooked ' . $response->took . 'ms. ' . $response->hits->total . ' results ! ' ;
+	}
 }

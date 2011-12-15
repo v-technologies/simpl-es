@@ -21,7 +21,7 @@ Teasing
 	// Index
 	$client->index(array(
 		'firstname' => 'Jim',
-		'lastname' => 'Morrison'
+		'lastname' => 'Morrison',
 		'type' => 'inspiration'
 	))->execute() ;
 
@@ -31,7 +31,7 @@ Teasing
 			->match('Morrison')->in('lastname')
 			->match('Jim')
 		->not()
-			->match('inspiration')->in(array('type','status))
+			->match('inspiration')->in(array('type','status'))
 		->size(5)
 		->execute() ;
 
