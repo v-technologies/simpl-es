@@ -227,11 +227,12 @@ abstract class Simples_Request extends Simples_Base {
 					throw new Simples_Request_Exception('Required body key "' . $key . '" missing') ;
 				}
 			} 
-			$this->_body = $body + $this->_body ;
+			$this->_body = array_merge($this->_body, $body) ;
 			return $this ;
 		}
 		$delete = array_flip($this->definition()->inject('params')) ;
-		return array_diff_key($this->_body, $delete) ;
+		$return = array_diff_key($this->_body, $delete) ;
+		return $return ;
 	}
 	
 	/**

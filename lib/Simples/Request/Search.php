@@ -44,6 +44,24 @@ class Simples_Request_Search extends Simples_Request {
 	);
 	
 	/**
+	 * Current subobject working.
+	 * 
+	 * @var string
+	 */
+	protected $_current = 'query' ;
+	
+	public function __construct($body = null, $options = null, Simples_Transport $transport = null) {
+		$this->_query = new Simples_Request_Search_Query(null, $this) ;
+		
+		if (isset($body['query']) && is_string($body['query'])) {
+			$this->_query->add($body['query']) ;
+			unset($body['query']) ;
+		}
+		
+		parent::__construct($body, $options, $transport);
+	}
+	
+	/**
 	 * Body without null values.
 	 * 
 	 * @param array $body
@@ -51,27 +69,29 @@ class Simples_Request_Search extends Simples_Request {
 	 */
 	public function body(array $body = null) {
 		if (isset($body)) {
-			if (isset($body['query'])) {
-				$this->query($body['query']) ;
-			}
 			return parent::body($body) ;
 		}
 		
-		$body = array_filter(parent::body()) ;
-		$body['query'] = $this->query()->to('array') ;
+		$body = parent::body() ;
+		
+		if (empty($body['query'])) {
+			$body['query'] = $this->_query->to('array') ;
+		}
+		
+		$body = array_filter($body) ;
 		
 		return $body ;
 	}
 	
 	public function query($query = null) {
-		if (!isset($this->_query)) {
-			$this->_query = new Simples_Request_Search_Query() ;
-		}
+		// Save current subobject
+		$this->_current = 'query' ;
+		
 		if (isset($query)) {
-			$this->_query->set($query) ;
+			$this->_query->add($query) ;
 			return $this ;
 		}
-		return $this->_query ;
+		return $this ;
 	}
 	
 	public function from($from) {
@@ -89,4 +109,9 @@ class Simples_Request_Search extends Simples_Request {
 		return $this ;
 	}
 	
+	public function __call($name, $args) {
+		$object = '_' . $this->_current ;
+		call_user_func_array(array($this->{$object}, $name), $args) ;
+		return $this ;
+	}
 }
