@@ -90,7 +90,8 @@ class Simples_Request_Search_Criteria extends Simples_Base {
 
 		if (isset($in) && is_string($in) && isset($definition['query'])) {
 			if (is_string($definition['query'])) {
-				if (preg_match('/^[a-z0-9 ]+$/i', $definition['query'])) {
+				if (preg_match('/^[a-z0-9 ]+$/i', $definition['query']) && 
+					!preg_match('/(AND|OR)/', $definition['query'])) {
 					return 'term' ;
 				}
 			} else if (is_string($in) && is_array($definition['query'])) {
