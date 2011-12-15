@@ -83,32 +83,79 @@ class Simples_Request_Search extends Simples_Request {
 		return $body ;
 	}
 	
+	/**
+	 * Query getter/setter.
+	 * 
+	 * @param mixed		$query			Setter : Query definition.
+	 * @return \Simples_Request_Search	This instance
+	 */
 	public function query($query = null) {
 		// Save current subobject
 		$this->_current = 'query' ;
 		
 		if (isset($query)) {
 			$this->_query->add($query) ;
-			return $this ;
 		}
 		return $this ;
 	}
 	
+	/**
+	 * Add multiples field queries one time. It's a simplified call wich permit to give this kind of array :
+	 * $request->queries(array(
+	 *		'field' => 'value',
+	 *		'other_field' => array('value 1', 'value 2')
+	 * ));
+	 * 
+	 * @param array $queries			List of criteries. Field name in key, search in value.
+	 * @return \Simples_Request_Search	This instance.
+	 */
+	public function queries(array $queries) {
+		foreach($queries as $in => $match) {
+			$this->_query->add(array('query' => $match, 'in' => $in)) ;
+		}
+		return $this ;
+	}
+	
+	/**
+	 * Set the from param.
+	 * 
+	 * @param int	$from		From value
+	 * @return \Simples_Request_Search 
+	 */
 	public function from($from) {
 		$this->_body['from'] = $from ;
 		return $this ;
 	}
 	
+	/**
+	 * Set the size.
+	 * 
+	 * @param int	$size		Size value
+	 * @return \Simples_Request_Search 
+	 */
 	public function size($size) {
 		$this->_body['size'] = $size;
 		return $this ;
 	}
 	
+	/**
+	 * Set the sort param.
+	 * 
+	 * @param string	$sort	Sort value
+	 * @return \Simples_Request_Search 
+	 */
 	public function sort($sort) {
 		$this->_body['sort'] = $sort;
 		return $this ;
 	}
 	
+	/**
+	 * Magic call : chain with subobjects.
+	 * 
+	 * @param string	$name		Method name
+	 * @param array		$args		Arguments
+	 * @return \Simples_Request_Search 
+	 */
 	public function __call($name, $args) {
 		$object = '_' . $this->_current ;
 		call_user_func_array(array($this->{$object}, $name), $args) ;

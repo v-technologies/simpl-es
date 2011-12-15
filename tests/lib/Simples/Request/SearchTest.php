@@ -120,4 +120,14 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$response = $request->execute() ;
 		$this->assertTrue(isset($response->took)) ;
 	}
+	
+	public function testMultipleQueries() {
+		$request = $this->client->search()->queries(array(
+			'firstname' => 'Sebastien',
+			'lastname' => array('Charrier','Morrison')
+		)) ;
+		$res = $request->to('array') ;
+		$this->assertEquals('Sebastien', $res['query']['bool']['must'][0]['term']['firstname']) ;
+		$this->assertEquals(array('Charrier','Morrison'), $res['query']['bool']['must'][1]['terms']['lastname']) ;
+	}
 }
