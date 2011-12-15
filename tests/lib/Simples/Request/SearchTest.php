@@ -61,7 +61,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 				'type' => array('terms' => array('field' => 'type'))
 			)
 		)) ;
-		var_dump($request->to('json')) ;
+
 		$response = $request->execute();
 		$facets = $response->facets->type->terms->to('array') ;
 		$this->assertEquals(2, $facets[0]['count']) ;
