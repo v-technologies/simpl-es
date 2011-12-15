@@ -152,7 +152,7 @@ class Simples_Request_Search_Query extends Simples_Base {
 	 */
 	protected function _data() {
 		$return = array() ;
-		if (!$this->_empty()) {
+		if ($this->_count()) {
 			if ($this->_count(self::MUST) === 1 && !$this->_count(self::NOT, self::SHOULD))  {
 				$return = $this->_criteria[self::MUST][0]->to('array') ;
 			} else {
