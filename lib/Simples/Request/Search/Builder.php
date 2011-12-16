@@ -7,7 +7,7 @@
  * @package	Simples
  * @subpackage Request.Search
  */
-class Simples_Request_Search_QueryBuilder extends Simples_Base {
+abstract class Simples_Request_Search_Builder extends Simples_Base {
 	
 	const MUST = 'must' ;
 	
@@ -41,19 +41,28 @@ class Simples_Request_Search_QueryBuilder extends Simples_Base {
 	protected $_clause = self::MUST ;
 	
 	/**
+	 * Criteria type.
+	 * 
+	 * @var string
+	 */
+	protected $_criteriaType ;
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param mixed						$query		Query definition (string/array)
 	 * @param Simples_Request_Search	$request	Request calling this query builder.
 	 */
-	public function __construct($query = null, Simples_Request_Search $request = null) {
-		if (isset($query)) {
-			$this->add($query) ;
-		}
+	public function __construct(Simples_Request_Search $request = null) {		
 		if (isset($request)) {
 			$this->_request = $request ;
 		}
 	}
+	
+	/**
+	 * Generate a criteria. 
+	 */
+	abstract protected function _criteria($criteria) ;
 	
 	/**
 	 * Add a criteria to the current query.
@@ -62,7 +71,7 @@ class Simples_Request_Search_QueryBuilder extends Simples_Base {
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
 	public function add($criteria) {
-		$criteria = new Simples_Request_Search_Criteria($criteria) ;
+		$criteria = $this->_criteria($criteria) ;
 		$count = count($this->_criteria[$this->_clause]) ;
 		if ($count) {
 			$last = $this->_criteria[$this->_clause][$count - 1] ;
@@ -152,8 +161,8 @@ class Simples_Request_Search_QueryBuilder extends Simples_Base {
 	 */
 	protected function _data() {
 		$return = array() ;
-		if ($this->_count()) {
-			if ($this->_count(self::MUST) === 1 && !$this->_count(self::NOT, self::SHOULD))  {
+		if ($this->count()) {
+			if ($this->count(self::MUST) === 1 && !$this->count(self::NOT, self::SHOULD))  {
 				$return = $this->_criteria[self::MUST][0]->to('array') ;
 			} else {
 				foreach($this->_criteria as $clause => $value) {
@@ -164,7 +173,7 @@ class Simples_Request_Search_QueryBuilder extends Simples_Base {
 				$return = array('bool' => $return) ;
 			}
 		} else {
-			$return = new Simples_Request_Search_Criteria() ;
+			$return = $this->_criteria(null) ;
 			$return = $return->to('array') ;
 		}
 		return $return ;
@@ -176,7 +185,7 @@ class Simples_Request_Search_QueryBuilder extends Simples_Base {
 	 * 
 	 * @return int		Count result.
 	 */
-	protected function _count() {
+	public function count() {
 		$test = func_get_args() ;
 		if (empty($test)) {
 			$test = array_keys($this->_criteria) ;

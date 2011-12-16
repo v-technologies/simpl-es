@@ -7,14 +7,21 @@
  * @package	Simples
  * @subpackage Request
  */
-class Simples_Request_Search_Criteria extends Simples_Base {
+abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	
 	/**
 	 * Criteria type.
 	 * 
 	 * @var string
 	 */
-	protected $_type = 'match_all' ;
+	protected $_type = '' ;
+	
+	/**
+	 * Default type.
+	 * 
+	 * @var string
+	 */
+	protected $_defaultType = 'term' ;
 	
 	/**
 	 * Criteria normalized data.
@@ -89,17 +96,12 @@ class Simples_Request_Search_Criteria extends Simples_Base {
 		$in = $this->_in($definition) ;
 
 		if (isset($in) && is_string($in) && isset($definition['query'])) {
-			if (is_string($definition['query'])) {
-				if (preg_match('/^[a-z0-9 ]+$/i', $definition['query']) && 
-					!preg_match('/(AND|OR)/', $definition['query'])) {
-					return 'term' ;
-				}
-			} else if (is_string($in) && is_array($definition['query'])) {
+			if (is_string($in) && is_array($definition['query'])) {
 				return 'terms' ;
 			}
 		}
 		
-		return 'query_string' ;
+		return $this->_defaultType ;
 	}
 	
 	/**
@@ -163,16 +165,6 @@ class Simples_Request_Search_Criteria extends Simples_Base {
 	}
 	
 	/**
-	 * Prepare for a "match_all" clause.
-	 * 
-	 * @return array
-	 */
-	protected function _prepare_match_all() {
-		// Force json_encode to create a {} (and not a [] wich causes a crash with facets clause)
-		return new stdClass() ;
-	}
-	
-	/**
 	 * Prepare for a "term" clause.
 	 * 
 	 * @return array
@@ -196,41 +188,7 @@ class Simples_Request_Search_Criteria extends Simples_Base {
 	protected function _prepare_terms() {
 		return $this->_prepare_term() ;
 	}
-	
-	/**
-	 * Prepare for a "query_string" clause.
-	 * 
-	 * @return array
-	 * @throws Simples_Request_Exception 
-	 */
-	protected function _prepare_query_string() {
-		$return = $this->_data ;
 		
-		// Multiple values
-		if (isset($return['query']) && is_array($return['query'])) {
-			$mode = 'AND' ;
-			if (isset($this->_options['mode'])) {
-				$mode = strtoupper($this->_options['mode']) ;
-			}
-			if (!in_array($mode, array('AND','OR'))) {
-				throw new Simples_Request_Exception('Bad search criteria mode "' . $mode . '"') ;
-			}
-			$return['query'] = implode(' ' . $mode . ' ', $return['query']) ;
-		}
-		
-		// Search in field(s)
-		if (isset($return['in'])) {
-			if (is_array($return['in'])) {
-				$return['fields'] = $return['in'] ;
-			} else {
-				$return['default_field'] = $return['in'] ;
-			}
-			unset($return['in']) ;
-		}
-		
-		return $return ;
-	}
-	
 	/**
 	 * Test if a criteria is mergeable with the current criteria.
 	 * 

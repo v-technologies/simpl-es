@@ -50,9 +50,40 @@ class Simples_Request_Search extends Simples_Request {
 	 */
 	protected $_current = 'query' ;
 	
+	/**
+	 * Query builder.
+	 * 
+	 * @var Simples_Request_Search_Builder_Query
+	 */
+	protected $_query ;
+	
+	/**
+	 * Filter builder.
+	 * 
+	 * @var Simples_Request_Search_Builder_Filter
+	 */
+	protected $_filter ;
+	
+	/**
+	 * Facet builder.
+	 * 
+	 * @var Simples_Request_Search_Builder_Facet
+	 */
+	protected $_facet ;
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param mixed		$body				Request body
+	 * @param array		$options			Array of options
+	 * @param Simples_Transport $transport	ES client instance
+	 */
 	public function __construct($body = null, $options = null, Simples_Transport $transport = null) {
-		$this->_query = new Simples_Request_Search_QueryBuilder(null, $this) ;
+		// Builders
+		$this->_query = new Simples_Request_Search_Builder_Query(null, $this) ;
+		$this->_filter = new Simples_Request_Search_Builder_Filter(null, $this) ;
 		
+		// Simple query_string search : give it to builder.
 		if (isset($body['query']) && is_string($body['query'])) {
 			$this->_query->add($body['query']) ;
 			unset($body['query']) ;
@@ -75,7 +106,12 @@ class Simples_Request_Search extends Simples_Request {
 		$body = parent::body() ;
 		
 		if (empty($body['query'])) {
+			// Force a match_all
 			$body['query'] = $this->_query->to('array') ;
+		}
+		
+		if (empty($body['filter']) && $this->_filter->count()) {
+			$body['filter'] = $this->_filter->to('array') ;
 		}
 		
 		$body = array_filter($body) ;
@@ -100,6 +136,22 @@ class Simples_Request_Search extends Simples_Request {
 	}
 	
 	/**
+	 * Query getter/setter.
+	 * 
+	 * @param mixed		$filter			Setter : Query definition.
+	 * @return \Simples_Request_Search	This instance
+	 */
+	public function filter($filter = null) {
+		// Save current subobject
+		$this->_current = 'filter' ;
+		
+		if (isset($filter)) {
+			$this->_filter->add($filter) ;
+		}
+		return $this ;
+	}
+	
+	/**
 	 * Add multiples field queries one time. It's a simplified call wich permit to give this kind of array :
 	 * $request->queries(array(
 	 *		'field' => 'value',
@@ -112,6 +164,23 @@ class Simples_Request_Search extends Simples_Request {
 	public function queries(array $queries) {
 		foreach($queries as $in => $match) {
 			$this->_query->add(array('query' => $match, 'in' => $in)) ;
+		}
+		return $this ;
+	}
+	
+	/**
+	 * Add multiples field queries one time. It's a simplified call wich permit to give this kind of array :
+	 * $request->queries(array(
+	 *		'field' => 'value',
+	 *		'other_field' => array('value 1', 'value 2')
+	 * ));
+	 * 
+	 * @param array $filters			List of criteries. Field name in key, search in value.
+	 * @return \Simples_Request_Search	This instance.
+	 */
+	public function filters(array $filters) {
+		foreach($filters as $in => $match) {
+			$this->_filter->add(array('query' => $match, 'in' => $in)) ;
 		}
 		return $this ;
 	}

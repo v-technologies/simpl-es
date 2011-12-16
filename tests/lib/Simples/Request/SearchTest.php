@@ -121,6 +121,24 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(isset($response->took)) ;
 	}
 	
+	public function testFilterBuilder() {
+		// Base case
+		$request = $this->client->search()->filter('scharrier')->in('username') ;
+		$res = $request->to('array') ;
+		$expected = array(
+			'query' => array(
+				'match_all' => new stdClass()
+			),
+			'filter' => array(
+				'term' => array(
+					'username' => 'scharrier'
+				)
+			)
+		) ;
+		$this->assertTrue($request instanceof Simples_Request) ;
+		$this->assertEquals($expected, $res) ;
+	}
+	
 	public function testMultipleQueries() {
 		$request = $this->client->search()->queries(array(
 			'firstname' => 'Sebastien',
@@ -129,5 +147,31 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$res = $request->to('array') ;
 		$this->assertEquals('Sebastien', $res['query']['bool']['must'][0]['term']['firstname']) ;
 		$this->assertEquals(array('Charrier','Morrison'), $res['query']['bool']['must'][1]['terms']['lastname']) ;
+	}
+	
+	public function testMultipleFilters() {
+		$request = $this->client->search()->filters(array(
+			'firstname' => 'Sebastien',
+			'lastname' => array('Charrier','Morrison')
+		)) ;
+		$res = $request->to('array') ;
+		$this->assertEquals('Sebastien', $res['filter']['bool']['must'][0]['term']['firstname']) ;
+		$this->assertEquals(array('Charrier','Morrison'), $res['filter']['bool']['must'][1]['terms']['lastname']) ;
+	}
+	
+	public function testFullRequest() {
+		$request = $this->client->search()
+			->query()
+				->match('Sebastien')
+			->filter()
+				->field('type')->match('administrator')
+			->filters(array('level'=>1))
+			->size(2) ;
+		$res = $request->to('array') ;
+		
+		$this->assertEquals('Sebastien', $res['query']['query_string']['query']) ;
+		$this->assertEquals('administrator', $res['filter']['bool']['must'][0]['term']['type']) ;
+		$this->assertEquals(1, $res['filter']['bool']['must'][1]['term']['level']) ;
+		$this->assertEquals(2, $res['size']) ;
 	}
 }
