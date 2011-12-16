@@ -7,7 +7,7 @@
  * @package	Simples
  * @subpackage Request.Search
  */
-class Simples_Request_Search_Builder_Query extends Simples_Request_Search_Builder {
+class Simples_Request_Search_Builder_Query extends Simples_Request_Search_Builder_Criteria {
 	
 	/**
 	 * Returns a new Query criteria.

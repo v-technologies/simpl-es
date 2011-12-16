@@ -62,7 +62,7 @@ class Simples_Request_Search extends Simples_Request {
 	 * 
 	 * @var Simples_Request_Search_Builder_Filter
 	 */
-	protected $_filter ;
+	protected $_filters ;
 	
 	/**
 	 * Facet builder.
@@ -81,7 +81,8 @@ class Simples_Request_Search extends Simples_Request {
 	public function __construct($body = null, $options = null, Simples_Transport $transport = null) {
 		// Builders
 		$this->_query = new Simples_Request_Search_Builder_Query(null, $this) ;
-		$this->_filter = new Simples_Request_Search_Builder_Filter(null, $this) ;
+		$this->_filters = new Simples_Request_Search_Builder_Filters(null, $this) ;
+		$this->_facets = new Simples_Request_Search_Builder_Facets(null, $this) ;
 		
 		// Simple query_string search : give it to builder.
 		if (isset($body['query']) && is_string($body['query'])) {
@@ -110,8 +111,8 @@ class Simples_Request_Search extends Simples_Request {
 			$body['query'] = $this->_query->to('array') ;
 		}
 		
-		if (empty($body['filter']) && $this->_filter->count()) {
-			$body['filter'] = $this->_filter->to('array') ;
+		if (empty($body['filter']) && $this->_filters->count()) {
+			$body['filter'] = $this->_filters->to('array') ;
 		}
 		
 		$body = array_filter($body) ;
@@ -120,7 +121,7 @@ class Simples_Request_Search extends Simples_Request {
 	}
 	
 	/**
-	 * Query getter/setter.
+	 * Query mode switcher.
 	 * 
 	 * @param mixed		$query			Setter : Query definition.
 	 * @return \Simples_Request_Search	This instance
@@ -136,18 +137,33 @@ class Simples_Request_Search extends Simples_Request {
 	}
 	
 	/**
-	 * Query getter/setter.
+	 * Filter mode switcher.
 	 * 
 	 * @param mixed		$filter			Setter : Query definition.
 	 * @return \Simples_Request_Search	This instance
 	 */
 	public function filter($filter = null) {
 		// Save current subobject
-		$this->_current = 'filter' ;
+		$this->_current = 'filters' ;
 		
 		if (isset($filter)) {
-			$this->_filter->add($filter) ;
+			$this->_filters->add($filter) ;
 		}
+		return $this ;
+	}
+	
+	/**
+	 * Add a facet.
+	 * 
+	 * @param mixed		$facet			Setter : Query definition.
+	 * @return \Simples_Request_Search	This instance
+	 */
+	public function facet($name , $facet = null) {
+		// Save current subobject
+		$this->_current = 'facets' ;
+		
+		$this->_facets->add($name, $facet) ;
+		
 		return $this ;
 	}
 	
@@ -180,7 +196,7 @@ class Simples_Request_Search extends Simples_Request {
 	 */
 	public function filters(array $filters) {
 		foreach($filters as $in => $match) {
-			$this->_filter->add(array('query' => $match, 'in' => $in)) ;
+			$this->_filters->add(array('query' => $match, 'in' => $in)) ;
 		}
 		return $this ;
 	}
