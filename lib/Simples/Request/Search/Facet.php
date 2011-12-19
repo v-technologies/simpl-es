@@ -24,7 +24,7 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	protected $_defaultType = 'term' ;
 	
 	/**
-	 * Criteria normalized data.
+	 * Facet normalized data.
 	 * 
 	 * @var array
 	 */
@@ -33,7 +33,7 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	/**
 	 * Constructor.
 	 * 
-	 * @param mixed		$definition		Criteria definition. String or array.
+	 * @param mixed		$definition		Facet definition. String or array.
 	 * @param array		$options		Array of options.
 	 */
 	public function __construct($definition = null, array $options = null) {
@@ -51,7 +51,7 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	}
 	
 	/**
-	 * Returns the current criteria type.
+	 * Returns the current facet type.
 	 * 
 	 * @return string
 	 */
@@ -73,34 +73,46 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	}
 	
 	/**
-	 * Detect the criteria type. Try to detect it if not explicitly defined.
+	 * Detect the facet type. Try to detect it if not explicitly defined.
 	 * 
 	 * @param array		$definition		Criteria definition
 	 * @param array		$options		Criteria options
 	 * @return string					Type. 
 	 */
 	protected function _type(array $definition, array $options = null) {
-		
-		
 		if (isset($options['type'])) {
 			return $options['type'] ;
-		}
-		
-		$in = $this->_in($definition) ;
-
-		if (isset($in) && is_string($in) && isset($definition['query'])) {
-			if (is_string($in) && is_array($definition['query'])) {
-				return 'terms' ;
-			}
 		}
 		
 		return $this->_defaultType ;
 	}
 	
 	/**
+	 * Normalize $definition
+	 * 
+	 * @param mixed		$definition		Criteria definition (string/array)
+	 * @return array					Normalized definition 
+	 */
+	protected function _normalize($definition) {
+		if (is_string($definition)) {
+			$definition = array('in' => $definition) ;
+		} else {
+			$definition['in'] = $this->_in($definition) ;
+			if (isset($definition['field'])) {
+				unset($definition['field']) ;
+			}
+			if (isset($definition['fields'])) {
+				unset($definition['fields']) ;
+			}
+		}
+		
+		return $definition ;
+	}
+	
+	/**
 	 * Normalize the search scope (fields/field/in).
 	 * 
-	 * @param array		$definition		Criteria definition
+	 * @param array		$definition		Facet definition
 	 * @return mixed					Scope (string or array) 
 	 */
 	protected function _in($definition) {
@@ -122,46 +134,61 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	}
 	
 	/**
-	 * Normalize $definition (query / in).
+	 * Prepare data for transformation.
 	 * 
-	 * @param mixed		$definition		Criteria definition (string/array)
-	 * @return array					Normalized definition 
+	 * @return array
+	 * @throws Simples_Request_Exception 
 	 */
-	protected function _normalize($definition) {
-		if (is_string($definition)) {
-			$definition = array('query' => $definition) ;
-		} else {
-			$definition['in'] = $this->_in($definition) ;
-			if (isset($definition['field'])) {
-				unset($definition['field']) ;
-			}
-			if (isset($definition['fields'])) {
-				unset($definition['fields']) ;
-			}
+	protected function _data() {
+		$data = $this->_data ;
+		if (empty($data['in'])) {
+			throw new Simples_Request_Exception('Facet error : no scope (keys "field","fields" and "in" are empty)') ;
 		}
 		
-		return $definition ;
+		// Name
+		if (empty($data['name'])) {
+			$name = $data['in'] ;
+		} else {
+			$name = $data['name'] ;
+			unset($data['name']) ;
+		}
+		
+		// Scope
+		if (is_array($data['in'])) {
+			$data['fields'] = $data['in'] ;
+		} else {
+			$data['field'] = $data['in'] ;
+		}
+		unset($data['in']) ;
+		
+		return array($name => array($this->type() => $data)) ;
 	}
 	
 	/**
 	 * Test if a criteria is mergeable with the current criteria.
 	 * 
-	 * @param Simples_Request_Search_Criteria $criteria		Criteria to test.
+	 * @param Simples_Request_Search_Criteria $facet		Criteria to test.
 	 * @return boolean										Yes/no ?
 	 */
-	public function mergeable(Simples_Request_Search_Criteria $criteria) {
-		return false ;
+	public function mergeable(Simples_Request_Search_Facet $facet) {
+		$data =	$facet->get() ;
+		foreach($data as $key => $value) {
+			if (isset($this->_data[$key])) {
+				return false ;
+			}
+		}
+		return true ;
 	}
 	
 	/**
 	 * Merge a criteria with current. 
 	 * 
-	 * @param Simples_Request_Search_Criteria $criteria		Criteria to merge.
+	 * @param Simples_Request_Search_Criteria $facet		Criteria to merge.
 	 * @return \Simples_Request_Search_Criteria				This instance (fluid interface).
 	 */
-	public function merge(Simples_Request_Search_Criteria $criteria) {
-		$this->_data = array_merge($this->_data, $criteria->get()) ;
-		unset($criteria) ;
+	public function merge(Simples_Request_Search_Facet $facet) {
+		$this->_data = array_merge($this->_data, $facet->get()) ;
+		unset($facet) ;
 		$this->_type = $this->_type($this->_data, $this->_options) ;
 		return $this ;
 	}	
