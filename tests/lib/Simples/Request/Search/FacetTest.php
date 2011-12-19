@@ -35,5 +35,20 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 		) ;
 		$this->assertEquals($expected, $res) ;
 	}
+	
+	public function testFluid() {
+		$facet = new Simples_Request_Search_Facet('category') ;
+		$facet->filter()->field('type')->match('administrateur') ;
+		$res = $facet->to('array') ;
+		$this->assertEquals('administrateur', $res['category']['facet_filter']['term']['type']) ;
+		
+		$facet->filters(array(
+			'status' => 'validated',
+			'valid' => true
+		));
+		
+		$res = $facet->to('array') ;
+		$this->assertEquals(3, count($res['category']['facet_filter']['bool']['must'])) ;
+	}
 
 }

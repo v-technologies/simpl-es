@@ -35,7 +35,7 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
 	public function add($definition, $options = null) {
-		$facet = new Simples_Request_Search_Facet($definition, $options) ;
+		$facet = new Simples_Request_Search_Facet($definition, $options, $this->_fluid()) ;
 		if (count($this->_facets)) {
 			$last = $this->_facets[end(array_keys($this->_facets))] ;
 			if ($last->mergeable($facet)) {

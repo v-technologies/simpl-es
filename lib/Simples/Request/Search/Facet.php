@@ -38,12 +38,29 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	protected $_options = array() ;
 	
 	/**
+	 * Facet filters.
+	 * 
+	 * @var Simples_Request_Search_Builder_Filters
+	 */
+	protected $_filters ;
+	
+	/**
+	 * Fluid return.
+	 * 
+	 * @var mixed
+	 */
+	protected $_fluid ;
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param mixed		$definition		Facet definition. String or array.
 	 * @param array		$options		Array of options.
+	 * @param mixed		$fluid			Fluid object instance.	
 	 */
-	public function __construct($definition = null, array $options = null) {
+	public function __construct($definition = null, array $options = null, $fluid = null) {
+		$this->_filters = new Simples_Request_Search_Builder_Filters() ;
+		
 		if (isset($definition) || isset($options)) {
 			$this->_data = $this->_normalize($definition, $options) ;
 		}
@@ -54,6 +71,10 @@ class Simples_Request_Search_Facet extends Simples_Base {
 		
 		if (isset($options)) {
 			$this->_options = $options ;
+		}
+		
+		if (isset($fluid)) {
+			$this->_fluid = $fluid ;
 		}
 	}
 	
@@ -92,6 +113,52 @@ class Simples_Request_Search_Facet extends Simples_Base {
 			return isset($this->_data[$key]) ? $this->_data[$key] : null ;
 		}
 		return array_filter($this->_data) ;
+	}
+	
+	/**
+	 * Just for usage : describe that we are working in filters.
+	 * 
+	 * @return mixed		Fluid instance
+	 */
+	public function filter() {
+		return $this->_fluid() ;
+	}
+	
+	/**
+	 * Add multiple filters once.
+	 * 
+	 * @param array $filters		Liste of filters.
+	 * @return mixed				Fluid instance. 
+	 */
+	public function filters(array $filters) {
+		foreach($filters as $in => $query ){
+			$this->_filters->add(array('query' => $query, 'in' => $in)) ;
+		}
+		return $this->_fluid() ;
+	}
+	
+	/**
+	 * Magic call : chain with subobjects.
+	 * 
+	 * @param string	$name		Method name
+	 * @param array		$args		Arguments
+	 * @return \Simples_Request_Search 
+	 */
+	public function __call($name, $args) {
+		call_user_func_array(array($this->_filters, $name), $args) ;
+		return $this->_fluid() ;
+	}
+	
+	/**
+	 * Returns this instance or object setted in fluid property.
+	 * 
+	 * @return \Simples_Request_Search_Facet 
+	 */
+	protected function _fluid() {
+		if (isset($this->_fluid)) {
+			return $this->_fluid ;
+		}
+		return $this ;
 	}
 	
 	/**
@@ -183,7 +250,14 @@ class Simples_Request_Search_Facet extends Simples_Base {
 		}
 		unset($data['in']) ;
 		
-		return array($name => array($this->type() => $data)) ;
+		$return = array($this->type() => $data) ;
+		
+		// Filters
+		if (count($this->_filters)) {
+			$return['facet_filter'] = $this->_filters->to('array') ;
+		}
+		
+		return  array($name => $return ) ; 
 	}
 	
 	/**
