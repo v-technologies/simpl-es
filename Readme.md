@@ -32,6 +32,7 @@ Teasing
 			->match('Jim')
 		->not()
 			->match('inspiration')->in(array('type','status'))
+		->facets(array('type','status'))
 		->size(5)
 		->execute() ;
 
