@@ -31,6 +31,13 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	protected $_data = array() ;
 	
 	/**
+	 * Options .
+	 * 
+	 * @var array
+	 */
+	protected $_options = array() ;
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @param mixed		$definition		Facet definition. String or array.
@@ -57,6 +64,21 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	 */
 	public function type() {
 		return $this->_type ;
+	}
+	
+	/**
+	 * Get the calculated facet name.
+	 * 
+	 * @return string
+	 */
+	public function name() {
+		if (!empty($this->_data['name'])) {
+			return $this->_data['name'] ;
+		}
+		if (!empty($this->_data['in'])) {
+			return $this->_data['in'] ;
+		}
+		return null ;
 	}
 	
 	/**

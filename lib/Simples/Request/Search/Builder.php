@@ -7,7 +7,7 @@
  * @package	Simples
  * @subpackage Request.Search
  */
-abstract class Simples_Request_Search_Builder extends Simples_Base {
+abstract class Simples_Request_Search_Builder extends Simples_Base implements Countable {
 	
 	/**
 	 * Request dependency.
@@ -36,13 +36,6 @@ abstract class Simples_Request_Search_Builder extends Simples_Base {
 	 */
 	abstract public function add($element) ;
 	
-	/**
-	 * Count the number of elements for the current builder.
-	 * 
-	 * @return int		Count result.
-	 */
-	abstract public function count() ;
-
 	
 	/**
 	 * Fluid interface : returns the request instance if set, or this instance.
