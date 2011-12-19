@@ -37,7 +37,9 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 	public function add($definition, $options = null) {
 		$facet = new Simples_Request_Search_Facet($definition, $options, $this->_fluid()) ;
 		if (count($this->_facets)) {
-			$last = $this->_facets[end(array_keys($this->_facets))] ;
+			end($this->_facets) ;
+			$last = $this->_facets[key($this->_facets)] ;
+			reset($this->_facets) ;
 			if ($last->mergeable($facet)) {
 				$last->merge($facet) ;
 				return $this->_fluid() ;
