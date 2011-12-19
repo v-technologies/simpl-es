@@ -166,12 +166,14 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 			->filter()
 				->field('type')->match('administrator')
 			->filters(array('level'=>1))
+			->facets(array('type','level'))
 			->size(2) ;
 		$res = $request->to('array') ;
 		
 		$this->assertEquals('Sebastien', $res['query']['query_string']['query']) ;
 		$this->assertEquals('administrator', $res['filter']['bool']['must'][0]['term']['type']) ;
 		$this->assertEquals(1, $res['filter']['bool']['must'][1]['term']['level']) ;
+		$this->assertEquals(2, count($res['facets'])) ;
 		$this->assertEquals(2, $res['size']) ;
 	}
 }

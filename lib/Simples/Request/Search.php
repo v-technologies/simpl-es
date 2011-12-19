@@ -115,6 +115,10 @@ class Simples_Request_Search extends Simples_Request {
 			$body['filter'] = $this->_filters->to('array') ;
 		}
 		
+		if (empty($body['facets']) && $this->_facets->count()) {
+			$body['facets'] = $this->_facets->to('array') ;
+		}
+		
 		$body = array_filter($body) ;
 		
 		return $body ;
@@ -197,6 +201,26 @@ class Simples_Request_Search extends Simples_Request {
 	public function filters(array $filters) {
 		foreach($filters as $in => $match) {
 			$this->_filters->add(array('query' => $match, 'in' => $in)) ;
+		}
+		return $this ;
+	}
+	
+	/**
+	 * Add multiples facets one time. Support simple calls or full definitions calls :
+	 * $request->facets(array(
+	 *		'field_1',
+	 *		'field_2' => array('order' => 'term)
+	 * )) ;
+	 * 
+	 * @param array $facets				Facets definitions.
+	 * @return \Simples_Request_Search 
+	 */
+	public function facets(array $facets) {
+		foreach($facets as $key => $value) {
+			if (!is_numeric($key)) {
+				$value = array('name' => $key) + $value ;
+			}
+			$this->_facets->add($value) ;
 		}
 		return $this ;
 	}
