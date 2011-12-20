@@ -158,7 +158,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	protected function _data() {
 		$method = '_prepare_' . $this->_type ;
 		if (method_exists($this, $method)) {
-			return array($this->_type => $this->{$method}()) ; 
+			return $this->{$method}() ; 
 		}
 		
 		return array($this->_type => $this->_data) ;
@@ -169,14 +169,36 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * 
 	 * @return array
 	 */
-	protected function _prepare_term() {
+	protected function _prepare_term($type = 'term') {
 		$data = $this->_data ;
-		$return = array(
-			$data['in'] => $data['query']
-		);
+		$in = $data['in'] ;
+		$value = $data['query'] ;
 		unset($data['in']) ;
 		unset($data['query']) ;
-		$return += $data ;
+			
+		if (!is_array($in)) {
+			$return = array(
+				$type => array(
+					$in => $value
+				) + $data
+			);
+		} else {
+			$return = array(
+				'bool' => array(
+					'should' => array()
+				)
+			) ;
+			foreach($in as $field) {
+				$_clause = array(
+					$type => array(
+						$field => $value
+					) + $data
+				) ;
+				$return['bool']['should'][] = $_clause ;
+			}
+		}
+		
+		
 		return $return ;
 	}
 	
@@ -186,7 +208,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @return array
 	 */
 	protected function _prepare_terms() {
-		return $this->_prepare_term() ;
+		return $this->_prepare_term('terms') ;
 	}
 		
 	/**

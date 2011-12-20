@@ -6,7 +6,7 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 
 	public function testBase() {
 		$facet = new Simples_Request_Search_Facet('category_id') ;
-		$this->assertEquals('term',$facet->type()) ;
+		$this->assertEquals('terms',$facet->type()) ;
 		$this->assertEquals('category_id',$facet->get('in')) ;
 	}
 	
@@ -15,7 +15,7 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 		$res = $facet->to('array') ;
 		$expected = array(
 			'category_id' => array(
-				'term' => array(
+				'terms' => array(
 					'field' => 'category_id',
 				)
 			)
@@ -28,7 +28,7 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 		$res = $facet->to('array') ;
 		$expected = array(
 			'category' => array(
-				'term' => array(
+				'terms' => array(
 					'fields' => array('Offers.category_id','Users.category_id'),
 				)
 			)
@@ -38,16 +38,17 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 	
 	public function testFluid() {
 		$facet = new Simples_Request_Search_Facet('category') ;
-		$facet->filter()->field('type')->match('administrateur') ;
+		$facet->filtered()->field('type')->match('administrateur') ;
 		$res = $facet->to('array') ;
 		$this->assertEquals('administrateur', $res['category']['facet_filter']['term']['type']) ;
 		
-		$facet->filters(array(
+		$facet->filtered(array(
 			'status' => 'validated',
 			'valid' => true
 		));
 		
 		$res = $facet->to('array') ;
+		
 		$this->assertEquals(3, count($res['category']['facet_filter']['bool']['must'])) ;
 	}
 

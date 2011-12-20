@@ -162,11 +162,11 @@ class Simples_Request_Search extends Simples_Request {
 	 * @param mixed		$facet			Setter : Query definition.
 	 * @return \Simples_Request_Search	This instance
 	 */
-	public function facet($name , $facet = null) {
+	public function facet($facet , $options = null) {
 		// Save current subobject
 		$this->_current = 'facets' ;
 		
-		$this->_facets->add($name, $facet) ;
+		$this->_facets->add($facet, $options) ;
 		
 		return $this ;
 	}
@@ -218,6 +218,9 @@ class Simples_Request_Search extends Simples_Request {
 	public function facets(array $facets) {
 		foreach($facets as $key => $value) {
 			if (!is_numeric($key)) {
+				if (!is_array($value)) {
+					$value = array('in' => $value) ;
+				}
 				$value = array('name' => $key) + $value ;
 			}
 			$this->_facets->add($value) ;

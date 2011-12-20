@@ -22,7 +22,7 @@ class Simples_Request_Search_Builder_FacetsTest extends PHPUnit_Framework_TestCa
 		
 		$res = $facets->to('array') ;
 		$expected = array(
-			'term' => array(
+			'terms' => array(
 				'field' => 'user_id',
 				'order' => 'term'
 			)

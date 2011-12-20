@@ -21,7 +21,7 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	 * 
 	 * @var string
 	 */
-	protected $_defaultType = 'term' ;
+	protected $_defaultType = 'terms' ;
 	
 	/**
 	 * Facet normalized data.
@@ -116,23 +116,16 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	}
 	
 	/**
-	 * Just for usage : describe that we are working in filters.
-	 * 
-	 * @return mixed		Fluid instance
-	 */
-	public function filter() {
-		return $this->_fluid() ;
-	}
-	
-	/**
 	 * Add multiple filters once.
 	 * 
 	 * @param array $filters		Liste of filters.
 	 * @return mixed				Fluid instance. 
 	 */
-	public function filters(array $filters) {
-		foreach($filters as $in => $query ){
-			$this->_filters->add(array('query' => $query, 'in' => $in)) ;
+	public function filtered(array $filters = null) {
+		if ($filters) {
+			foreach($filters as $in => $query ){
+				$this->_filters->add(array('query' => $query, 'in' => $in)) ;
+			}
 		}
 		return $this->_fluid() ;
 	}
@@ -194,7 +187,6 @@ class Simples_Request_Search_Facet extends Simples_Base {
 				unset($definition['fields']) ;
 			}
 		}
-		
 		return $definition ;
 	}
 	

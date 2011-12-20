@@ -159,6 +159,16 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array('Charrier','Morrison'), $res['filter']['bool']['must'][1]['terms']['lastname']) ;
 	}
 	
+	public function testMultipleFacets() {
+		$request = $this->client->search()->facets(array(
+			'name' => 'firstname',
+			'full' => array('in' => array('firstname','lastname'))
+		)) ;
+		$res = $request->to('array') ;
+		$this->assertEquals('firstname', $res['facets']['name']['terms']['field']) ;
+		$this->assertEquals(array('firstname','lastname'), $res['facets']['full']['terms']['fields']) ;
+	}
+	
 	public function testFullRequest() {
 		$request = $this->client->search()
 			->query()

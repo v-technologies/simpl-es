@@ -35,11 +35,13 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
 	public function add($definition, $options = null) {
+		if (is_string($definition) && is_array($options)) {
+			$definition = array('name' => $definition) + $options ;
+			$options = null ;
+		}
 		$facet = new Simples_Request_Search_Facet($definition, $options, $this->_fluid()) ;
 		if (count($this->_facets)) {
-			end($this->_facets) ;
-			$last = $this->_facets[key($this->_facets)] ;
-			reset($this->_facets) ;
+			$last = $this->_last() ;
 			if ($last->mergeable($facet)) {
 				$last->merge($facet) ;
 				return $this->_fluid() ;
@@ -56,6 +58,26 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 	 */
 	public function count() {
 		return count($this->_facets) ;
+	}
+	
+	/**
+	 * Magic call : chain with subobjects.
+	 * 
+	 * @param string	$name		Method name
+	 * @param array		$args		Arguments
+	 * @return \Simples_Request_Search 
+	 */
+	public function __call($name, $args) {
+		call_user_func_array(array($this->_last(), $name), $args) ;
+		return $this->_fluid() ;
+	}
+	
+	protected function _last() {
+		end($this->_facets) ;
+		$last = $this->_facets[key($this->_facets)] ;
+		reset($this->_facets) ;
+		
+		return $last ;
 	}
 	
 	/**

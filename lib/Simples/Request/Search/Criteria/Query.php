@@ -51,7 +51,7 @@ class Simples_Request_Search_Criteria_Query extends Simples_Request_Search_Crite
 	 */
 	protected function _prepare_match_all() {
 		// Force json_encode to create a {} (and not a [] wich causes a crash with facets clause)
-		return new stdClass() ;
+		return array('match_all' => new stdClass()) ;
 	}
 	
 	/**
@@ -85,6 +85,6 @@ class Simples_Request_Search_Criteria_Query extends Simples_Request_Search_Crite
 			unset($return['in']) ;
 		}
 		
-		return $return ;
+		return array('query_string' => $return) ;
 	}
 }
