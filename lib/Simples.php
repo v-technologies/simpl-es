@@ -42,7 +42,7 @@ class Simples {
 			self::_client($config)->connect() ;
 		}
 		
-		return self::_client() ;
+		return self::_client($config) ;
 	}
 	
 	/**
@@ -85,7 +85,10 @@ class Simples {
 				$driver = $config['driver'] ;
 			}
 			self::$_client = self::_factory()->transport($driver, $config) ;
+		} elseif (!empty($config)) {
+			self::$_client->config($config) ;
 		}
+		
 		
 		return self::$_client ; 
 	}

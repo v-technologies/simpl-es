@@ -36,13 +36,25 @@ class SimplesTest extends PHPUnit_Framework_TestCase {
 		))->_source->from) ; 
 	}
 	
+	public function testMultiConnect() {
+		Simples::connect(array(
+			'host' => '127.0.0.1',
+			'index' => 'stars'
+		)) ;
+		Simples::connect(array(
+			'host' => '127.0.0.1',
+			'index' => 'planets'
+		)) ;
+		$this->assertEquals('planets', Simples::current()->config('index')) ;
+	}
+	
 	/**
 	 * Readme example. 
 	 */
 	public function testMorrison() {
 		// Connect
 		$client = Simples::connect(array(
-			'host' => 'my.es-server.net',
+			'host' => 'localhost',
 			'index' => 'directory',
 			'type' => 'contact'
 		)) ;
