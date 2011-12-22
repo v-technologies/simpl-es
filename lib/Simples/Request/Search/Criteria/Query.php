@@ -76,11 +76,13 @@ class Simples_Request_Search_Criteria_Query extends Simples_Request_Search_Crite
 		}
 		
 		// Search in field(s)
-		if (isset($return['in'])) {
-			if (is_array($return['in'])) {
-				$return['fields'] = $return['in'] ;
-			} else {
-				$return['default_field'] = $return['in'] ;
+		if (array_key_exists('in',$return)) {
+			if (isset($return['in'])) {
+				if (is_array($return['in'])) {
+					$return['fields'] = $return['in'] ;
+				} else {
+					$return['default_field'] = $return['in'] ;
+				}
 			}
 			unset($return['in']) ;
 		}

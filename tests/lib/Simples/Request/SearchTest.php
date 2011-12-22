@@ -37,11 +37,19 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testSearch() {
-		$request = $this->client->search('scharrier') ;
-		$body = $request->body() ;
+		$request = $this->client->search() ;
+		$request->match('scharrier') ;
+		$res = $request->to('array') ;
 		
 		// Base search tests
-		$this->assertEquals('scharrier', $body['query']['query_string']['query']) ;
+		$expected = array(
+			'query' => array(
+				'query_string' => array(
+					'query' => 'scharrier'
+				)
+			)
+		) ;
+		$this->assertEquals($expected, $res) ;
 		
 		$res = $request->execute() ;		
 		$this->assertEquals(2, $res->hits->total) ;

@@ -11,7 +11,12 @@ class Simples_Request_Search_Builder_QueryTest extends PHPUnit_Framework_TestCas
 		
 		$query->add('scharrier') ;
 		$res = $query->to('array') ;
-		$this->assertEquals('scharrier', $res['query_string']['query']) ;
+		$expected = array(
+			'query_string' => array(
+				'query' => 'scharrier'
+			)
+		) ;
+		$this->assertEquals($expected, $res) ;
 	}
 	
 	public function testMerged() {
