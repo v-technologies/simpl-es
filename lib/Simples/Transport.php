@@ -81,6 +81,60 @@ abstract class Simples_Transport extends Simples_Base {
 	}
 	
 	/**
+	 * Returns the current server status.
+	 * 
+	 * @return Simples_Request_Status
+	 */
+	public function status() {
+		return $this->__call('status', func_get_args()) ;
+	}
+	
+	/**
+	 * Returns stats
+	 * 
+	 * @return Simples_Request_Stats
+	 */
+	public function stats() {
+		return $this->__call('stats', func_get_args()) ;
+	}
+	
+	/**
+	 * Index an object
+	 * 
+	 * @return Simples_Request_Index
+	 */
+	public function index() {
+		return $this->__call('index', func_get_args()) ;
+	}
+	
+	/**
+	 * Get an object from its id
+	 * 
+	 * @return Simples_Request_Get
+	 */
+	public function get() {
+		return $this->__call('get', func_get_args()) ;
+	}
+	
+	/**
+	 * Delete something : an object, a type or an index
+	 * 
+	 * @return Simples_Request_Delete
+	 */
+	public function delete() {
+		return $this->__call('delete', func_get_args()) ;
+	}
+	
+	/**
+	 * Search API
+	 * 
+	 * @return Simples_Request_Search
+	 */
+	public function search() {
+		return $this->__call('search', func_get_args()) ;
+	}
+	
+	/**
 	 * Here is the magic ! 
 	 * 
 	 * @param string	$request	Request alias

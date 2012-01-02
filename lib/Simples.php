@@ -20,14 +20,14 @@ class Simples {
 	/**
 	 * Factory.
 	 * 
-	 * @var \Simples_Factory
+	 * @var Simples_Factory
 	 */
 	static protected $_factory ;
 	
 	/**
 	 * Transport client.
 	 * 
-	 * @var \Simples_Transport
+	 * @var Simples_Transport
 	 */
 	static protected $_client ;
 	
@@ -35,7 +35,7 @@ class Simples {
 	 * Connect your Simples to your ES instance.
 	 * 
 	 * @param array		$config		[optionnal] Configuration
-	 * @return \Simple_Transport	Connection client instance 
+	 * @return Simple_Transport		Connection client instance 
 	 */
 	static public function connect(array $config = array()) {
 		if (!self::connected()) {
@@ -66,7 +66,7 @@ class Simples {
 	/**
 	 * Returns the current client.
 	 * 
-	 * @return \Simple_Transport
+	 * @return Simple_Transport
 	 */
 	static public function current(array $config = array()) {
 		if (!isset(self::$_client)) {
@@ -82,7 +82,7 @@ class Simples {
 	 * Returns a new client.
 	 * 
 	 * @param array		$config		[optionnal] Client configuration
-	 * @return \Simples_Client 
+	 * @return Simples_Client 
 	 */
 	static public function client(array $config = array()) {
 		$driver = 'http' ;
@@ -95,7 +95,7 @@ class Simples {
 	/**
 	 * Gets the current factory (and generates it if necessary).
 	 * 
-	 * @return \Simple_Factory
+	 * @return Simple_Factory
 	 */
 	static protected function _factory() {
 		if (!isset(self::$_factory)) {
