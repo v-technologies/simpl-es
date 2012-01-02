@@ -79,4 +79,10 @@ class SimplesTest extends PHPUnit_Framework_TestCase {
 		// Print your results
 		//echo 'Search tooked ' . $response->took . 'ms. ' . $response->hits->total . ' results ! ' ;
 	}
+	
+	public function testClient() {
+		$client = Simples::client(array('host' => 'something')) ;
+		$other = Simples::client(array('host' => 'somethingelse')) ;
+		$this->assertTrue($client->config('host') !== $other->config('host')) ;
+	}
 }

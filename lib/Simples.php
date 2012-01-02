@@ -39,10 +39,10 @@ class Simples {
 	 */
 	static public function connect(array $config = array()) {
 		if (!self::connected()) {
-			self::_client($config)->connect() ;
+			self::current($config)->connect() ;
 		}
 		
-		return self::_client($config) ;
+		return self::current($config) ;
 	}
 	
 	/**
@@ -59,7 +59,7 @@ class Simples {
 	 */
 	static public function disconnect() {
 		if (self::connected()) {
-			self::_client()->disconnect() ;
+			self::current()->disconnect() ;
 		}
 	}
 	
@@ -68,29 +68,28 @@ class Simples {
 	 * 
 	 * @return \Simple_Transport
 	 */
-	static public function current() {
-		return self::_client() ;
+	static public function current(array $config = array()) {
+		if (!isset(self::$_client)) {
+			self::$_client = self::client($config) ;
+		}
+		if ($config) {
+			return self::$_client->config($config) ;
+		}
+		return self::$_client ;
 	}
 	
 	/**
-	 * Returns the current client. If it doesn't exists, generates it.
+	 * Returns a new client.
 	 * 
 	 * @param array		$config		[optionnal] Client configuration
 	 * @return \Simples_Client 
 	 */
-	static protected function _client(array $config = array()) {
-		if (!isset(self::$_client)) {
-			$driver = 'http' ;
-			if (isset($config['driver'])) {
-				$driver = $config['driver'] ;
-			}
-			self::$_client = self::_factory()->transport($driver, $config) ;
-		} elseif (!empty($config)) {
-			self::$_client->config($config) ;
+	static public function client(array $config = array()) {
+		$driver = 'http' ;
+		if (isset($config['driver'])) {
+			$driver = $config['driver'] ;
 		}
-		
-		
-		return self::$_client ; 
+		return self::_factory()->transport($driver, $config) ;
 	}
 	
 	/**
