@@ -119,6 +119,19 @@ class Simples_Request_Search extends Simples_Request {
 			$body['facets'] = $this->_facets->to('array') ;
 		}
 		
+		// Reformatage des highlights
+		if (!empty($body['highlight']['fields'])) {
+			$highlight = array() ;
+			foreach($body['highlight']['fields'] as $key => $value) {
+				if (is_numeric($key)) {
+					$highlight[$value] = new stdClass() ;
+				} else {
+					$highlight[$key] = $value ;
+				}
+			}
+			$body['highlight']['fields'] = $highlight ;
+		}
+		
 		$body = array_filter($body) ;
 		
 		return $body ;
@@ -258,6 +271,61 @@ class Simples_Request_Search extends Simples_Request {
 	 */
 	public function sort($sort) {
 		$this->_body['sort'] = $sort;
+		return $this ;
+	}
+	
+	/**
+	 * Set the highlight param.
+	 * 
+	 * @param string	$sort	Sort value
+	 * @return \Simples_Request_Search 
+	 */
+	public function highlight($highlight) {
+		$this->_body['highlight'] = $highlight;
+		return $this ;
+	}
+	
+	/**
+	 * Set the script_fields param.
+	 * 
+	 * @param string	$fields	script_fields value
+	 * @return \Simples_Request_Search 
+	 */
+	public function scriptFields($fields) {
+		$this->_body['script_fields'] = $fields;
+		return $this ;
+	}
+	
+	/**
+	 * Set the explain param.
+	 * 
+	 * @param bool	$explain	Explain value
+	 * @return \Simples_Request_Search 
+	 */
+	public function explain($explain) {
+		$this->_body['explain'] = $explain;
+		return $this ;
+	}
+	
+	/**
+	 * Set the min_score param.
+	 * 
+	 * @param string	$sort	Sort value
+	 * @return \Simples_Request_Search 
+	 */
+	public function minScore($min_score) {
+		$this->_body['min_score'] = $min_score;
+		return $this ;
+	}
+	
+	/**
+	 * Set the fields param.
+	 * 
+	 * @param string	$sort	Sort value
+	 * @return \Simples_Request_Search 
+	 */
+	public function fields($fields) {
+		$this->_body['fields'] = $fields;
 		return $this ;
 	}
 	

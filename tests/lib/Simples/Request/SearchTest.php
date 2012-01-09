@@ -194,4 +194,18 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, count($res['facets'])) ;
 		$this->assertEquals(2, $res['size']) ;
 	}
+	
+	public function testHighlight() {
+		$request = $this->client->search()->highlight(array(
+			'fields' => array(
+				'name',
+				'address' => array(
+					'fragment_size' => 150
+				)
+			)
+		)) ;
+		$res = $request->to('array') ;
+		$this->assertTrue(isset($res['highlight']['fields']['name'])) ;
+		$this->assertTrue(isset($res['highlight']['fields']['address'])) ;
+	}
 }

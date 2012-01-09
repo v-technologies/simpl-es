@@ -199,7 +199,7 @@ abstract class Simples_Request extends Simples_Base {
 			$response = $this->_client->call($this->path(), $this->definition()->method(), $this->to('json')) ;
 		}
 
-		$this->_response = new Simples_Response($response) ;
+		$this->_response = $this->_response($response) ;
 		
 		return $this->_response ;
 	}
@@ -294,5 +294,15 @@ abstract class Simples_Request extends Simples_Base {
 	 */
 	protected function _data() {
 		return $this->body() ;
+	}
+	
+	/**
+	 * Generates a standard response. Overriden in specific requests.
+	 * 
+	 * @param array		$response		Data.
+	 * @return \Simples_Response		Structured response.
+	 */
+	protected function _response($response) {
+		return new Simples_Response($response) ;
 	}
 }
