@@ -16,14 +16,17 @@ class Simples_Response extends Simples_Base {
 	 */
 	protected $_data = array() ;
 	
-		
 	/**
 	 * Constructor.
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct(array $data) {
+	public function __construct(array $data, array $config = null) {
 		$this->set($data) ;
+		
+		if (isset($config)) {
+			$this->config($config) ;
+		}
 	}
 
 	/**

@@ -303,6 +303,6 @@ abstract class Simples_Request extends Simples_Base {
 	 * @return \Simples_Response		Structured response.
 	 */
 	protected function _response($response) {
-		return new Simples_Response($response) ;
+		return new Simples_Response($response, $this->options()) ;
 	}
 }

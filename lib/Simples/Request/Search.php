@@ -10,6 +10,16 @@
 class Simples_Request_Search extends Simples_Request {
 	
 	/**
+	 * Do nothing with highlights 
+	 */
+	const HIGHLIGHT_DO_NOTHING = false ;
+	
+	/**
+	 * Replace highlighted values in the source 
+	 */
+	const HIGHLIGHT_REPLACE = true ;
+	
+	/**
 	 * Definition
 	 * 
 	 * @var array
@@ -70,6 +80,17 @@ class Simples_Request_Search extends Simples_Request {
 	 * @var Simples_Request_Search_Builder_Facet
 	 */
 	protected $_facet ;
+	
+	/**
+	 * Request options.
+	 * 
+	 * @var array
+	 */
+	protected $_options = array(
+		'index' => null,
+		'type' => null,
+		'highlight' => Simples_Request_Search::HIGHLIGHT_DO_NOTHING
+	) ;
 	
 	/**
 	 * Constructor.
@@ -340,5 +361,15 @@ class Simples_Request_Search extends Simples_Request {
 		$object = '_' . $this->_current ;
 		call_user_func_array(array($this->{$object}, $name), $args) ;
 		return $this ;
+	}
+	
+	/**
+	 * Specific response object.
+	 * 
+	 * @param array		$data		Search request results.
+	 * @return \Simples_Response_Search 
+	 */
+	protected function _response($data) {
+		return new Simples_Response_Search($data, $this->options()) ;
 	}
 }
