@@ -76,7 +76,7 @@ class Simples_Response_Search extends Simples_Response {
 			}
 			if ($i === count($path) - 1) {
 				// Special case : base value is a string and ES gives us an array with only one value.
-				if (is_array($value) && count($value) === 1 && isset($value[0]) && is_string($_list[$key])) {
+				if (is_array($value) && count($value) === 1 && isset($value[0]) && isset($_list[$key]) && is_string($_list[$key])) {
 					$value = $value[0] ;
 				}
 				$_list[$key] = $value;
