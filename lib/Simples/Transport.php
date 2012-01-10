@@ -86,7 +86,8 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @return Simples_Request_Status
 	 */
 	public function status() {
-		return $this->__call('status', func_get_args()) ;
+		$args = func_get_args() ;
+		return $this->__call('status', $args) ;
 	}
 	
 	/**
@@ -95,7 +96,8 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @return Simples_Request_Stats
 	 */
 	public function stats() {
-		return $this->__call('stats', func_get_args()) ;
+		$args = func_get_args() ;
+		return $this->__call('stats', $args) ;
 	}
 	
 	/**
@@ -104,7 +106,8 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @return Simples_Request_Index
 	 */
 	public function index() {
-		return $this->__call('index', func_get_args()) ;
+		$args = func_get_args() ;
+		return $this->__call('index', $args) ;
 	}
 	
 	/**
@@ -113,7 +116,8 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @return Simples_Request_Get
 	 */
 	public function get() {
-		return $this->__call('get', func_get_args()) ;
+		$args = func_get_args() ;
+		return $this->__call('get', $args) ;
 	}
 	
 	/**
@@ -122,7 +126,8 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @return Simples_Request_Delete
 	 */
 	public function delete() {
-		return $this->__call('delete', func_get_args()) ;
+		$args = func_get_args() ;
+		return $this->__call('delete', $args) ;
 	}
 	
 	/**
@@ -131,7 +136,8 @@ abstract class Simples_Transport extends Simples_Base {
 	 * @return Simples_Request_Search
 	 */
 	public function search() {
-		return $this->__call('search', func_get_args()) ;
+		$args = func_get_args() ;
+		return $this->__call('search', $args) ;
 	}
 	
 	/**
