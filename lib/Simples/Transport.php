@@ -164,7 +164,7 @@ abstract class Simples_Transport extends Simples_Base {
 			$body = isset($params[0]) ? $params[0] : array() ;
 			
 			// Magic param
-			if (!is_array($body)) {
+			if (is_scalar($body)) {
 				$key = $this->_factory->defaultParam($path) ;
 				if (!isset($key)) {
 					throw new Simples_Transport_Exception('No default param defined for "' . $path . '". You have to give a full body.') ;
