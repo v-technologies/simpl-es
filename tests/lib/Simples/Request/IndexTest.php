@@ -62,6 +62,8 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 		
 		$request = $this->client->index($data, array('refresh' => true)) ;
 		
+		$body = $request->body() ;
+		
 		$this->assertTrue($request->bulk()) ;
 		$this->assertEquals('/_bulk/?refresh=1', $request->path()) ;
 		

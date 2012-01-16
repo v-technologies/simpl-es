@@ -34,15 +34,15 @@ class Simples_Document_SetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(3, count($set)) ;
 	}
 
-	public function testValid() {
+	public function testCheck() {
 		$data = array('Not','A','Set') ;
-		$this->assertFalse(Simples_Document_Set::valid($data)) ;
+		$this->assertFalse(Simples_Document_Set::check($data)) ;
 		
 		$data = array(
 			array('is' => 'A Simples_Document'),
 			array('is' => 'Another Simples_Document')
 		) ;
-		$this->assertTrue(Simples_Document_Set::valid($data)) ;
+		$this->assertTrue(Simples_Document_Set::check($data)) ;
 	}
 	
 	public function testTransformation() {

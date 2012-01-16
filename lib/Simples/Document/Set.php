@@ -34,7 +34,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * @throws Simples_Document_Exception 
 	 */
 	public function set(array $set) {
-		if (!self::valid($set)) {
+		if (!self::check($set)) {
 			throw new Simples_Document_Exception('$set is not a valid Simples_Document_Set set of documents') ;
 		}
 		foreach($set as $document) {
@@ -68,7 +68,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * @param mixed		$data		Data to test.
 	 * @return boolean
 	 */
-	static public function valid($data) {
+	static public function check($data) {
 		if (is_string($data)) {
 			return false ;
 		}
@@ -88,9 +88,9 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * 
 	 * @return array	Array structured docs.
 	 */
-	protected function _toArray() {
+	protected function _toArray($data) {
 		$return = array() ;
-		foreach($this->_data as $doc) {
+		foreach($data as $doc) {
 			$return[] = $doc->to('array') ;
 		}
 		return $return ;
@@ -101,7 +101,11 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * 
 	 * @return string	Json structured docs.
 	 */
-	protected function _toJson() {
-		return json_encode($this->_toArray());
+	protected function _toJson($data) {
+		$return = array() ;
+		foreach($data as $doc) {
+			$return[] = $doc->to('array') ;
+		}
+		return json_encode($return);
 	}
 }

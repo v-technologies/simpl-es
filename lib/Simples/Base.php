@@ -84,7 +84,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return string	Request in json 
 	 */
-	protected function _toJson(array $data) {
+	protected function _toJson($data) {
 		return !empty($data) ? json_encode($data) : '' ;
 	}
 	
@@ -93,7 +93,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return array 
 	 */
-	protected function _toArray(array $data) {
+	protected function _toArray($data) {
 		return $data ;
 	}
 }

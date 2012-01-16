@@ -120,7 +120,7 @@ class Simples_Request_Search extends Simples_Request {
 	 * @param array $body
 	 * @return type 
 	 */
-	public function body(array $body = null) {
+	public function body($body = null) {
 		if (isset($body)) {
 			return parent::body($body) ;
 		}

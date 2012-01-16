@@ -75,7 +75,7 @@ class Simples_Document extends Simples_Base {
 		
 		if (isset($this->_data[$path])) {
 			if (is_array($this->_data[$path])) {
-				if (Simples_Document_Set::valid($this->_data[$path])) {
+				if (Simples_Document_Set::check($this->_data[$path])) {
 					return new Simples_Document_Set($this->_data[$path]) ;
 				}
 				return new self($this->_data[$path]) ;

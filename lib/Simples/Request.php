@@ -219,7 +219,7 @@ abstract class Simples_Request extends Simples_Base {
 	 * @param array		$body		Setter : body
 	 * @return \Simples_Request|array	Setter : $this . Getter : current body.
 	 */
-	public function body(array $body = null) {
+	public function body($body = null) {
 		if (isset($body)) {
 			$required = $this->definition()->required('body') ;
 			foreach($required as $key) {
