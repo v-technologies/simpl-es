@@ -138,6 +138,10 @@ class Simples_Request_Index extends Simples_Request {
 					$action['index']['_id'] = $document->properties->id ;
 				}
 				$json .= json_encode($action) . "\n" ;
+				if (!$document instanceof Simples_Document) {
+					var_dump($document) ;
+					var_dump($data) ;
+				}
 				$json .= $document->to('json') . "\n" ;
 			}
 		} else {
