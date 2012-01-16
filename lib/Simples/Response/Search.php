@@ -33,6 +33,19 @@ class Simples_Response_Search extends Simples_Response {
 	}
 	
 	/**
+	 * Returns a traversable hits object. You can "foreach" directly on a query
+	 * hits.
+	 * 
+	 * @return \Simples_Document_Set|null		A set of results.
+	 */
+	public function hits() {
+		if (isset($this->_data['hits']['hits'])) {
+			return new Simples_Document_Set($this->_data['hits']['hits']) ;
+		}
+		return null ;
+	}
+	
+	/**
 	 * Re-inject highlighted results in the main results.
 	 * 
 	 * @param array $data	Response data.
