@@ -82,4 +82,26 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 		}
 		return true ;
 	}
+	
+	/**
+	 * Array transformation.
+	 * 
+	 * @return array	Array structured docs.
+	 */
+	protected function _toArray() {
+		$return = array() ;
+		foreach($this->_data as $doc) {
+			$return[] = $doc->to('array') ;
+		}
+		return $return ;
+	}
+	
+	/**
+	 * Json transformation.
+	 * 
+	 * @return string	Json structured docs.
+	 */
+	protected function _toJson() {
+		return json_encode($this->_toArray());
+	}
 }

@@ -44,5 +44,19 @@ class Simples_Document_SetTest extends PHPUnit_Framework_TestCase {
 		) ;
 		$this->assertTrue(Simples_Document_Set::valid($data)) ;
 	}
+	
+	public function testTransformation() {
+		$data = array(
+			array('is' => 'A Simples_Document'),
+			array('is' => 'Another Simples_Document')
+		) ;
+		$set = new Simples_Document_Set($data) ;
+		
+		$res = $set->to('array') ;
+		$this->assertEquals($data, $res) ;
+		
+		$res = $set->to('json') ;
+		$this->assertEquals(json_encode($data), $res) ;
+	}
 
 }
