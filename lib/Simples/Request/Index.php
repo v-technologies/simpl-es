@@ -82,7 +82,7 @@ class Simples_Request_Index extends Simples_Request {
 			} elseif ($body instanceof Simples_Document_Set || Simples_Document_Set::check($body)) {
 				$this->_bulk = true ;
 				
-				 if ($body instanceof Simples_Document_Set) {
+				 if (!$body instanceof Simples_Document_Set) {
 					 $body = new Simples_Document_Set($body) ;
 				 }
 				 $this->_body = $body ;
@@ -136,12 +136,7 @@ class Simples_Request_Index extends Simples_Request {
 					$action['index']['_id'] = $document->properties->id ;
 				}
 				$json .= json_encode($action) . "\n" ;
-				
-				if ($document instanceof Simples_Document) {
-					$json .= $document->to('json') . "\n" ;
-				} else {
-					$json .= json_encode($document) . "\n" ;
-				}
+				$json .= $document->to('json') . "\n" ;
 			}
 		} else {
 			$json = json_encode($data) ;

@@ -19,6 +19,17 @@ class Simples_Request_Search_Builder_QueryTest extends PHPUnit_Framework_TestCas
 		$this->assertEquals($expected, $res) ;
 	}
 	
+	public function testFluid() {
+		$request = new Simples_Request_Search() ;
+		$builder = new Simples_Request_Search_Builder_Query($request) ;
+		$res = $builder->add('scharrier') ;
+		$this->assertTrue($res instanceof Simples_Request_Search) ;
+		
+		$builder = new Simples_Request_Search_Builder_Query() ;
+		$res = $builder->add('scharrier') ;
+		$this->assertTrue($res instanceof Simples_Request_Search_Builder_Query) ;
+	}
+	
 	public function testMerged() {
 		$query = new Simples_Request_Search_Builder_Query() ;
 		$query->match('scharrier')->in('username') ;

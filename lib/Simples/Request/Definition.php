@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Manage a request definition.
+ * 
+ * @author Sébastien Charrier <scharrier@gmail.com>
+ * @package	Simples
+ * @subpackage Request
+ */
 class Simples_Request_Definition {
 	
 	/**

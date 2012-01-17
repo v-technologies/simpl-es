@@ -196,11 +196,13 @@ class Simples_Request_Search extends Simples_Request {
 	 * @param mixed		$facet			Setter : Query definition.
 	 * @return \Simples_Request_Search	This instance
 	 */
-	public function facet($facet , $options = null) {
+	public function facet($facet =null, $options = null) {
 		// Save current subobject
 		$this->_current = 'facets' ;
 		
-		$this->_facets->add($facet, $options) ;
+		if (isset($facet)) {
+			$this->_facets->add($facet, $options) ;
+		}
 		
 		return $this ;
 	}

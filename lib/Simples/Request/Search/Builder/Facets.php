@@ -17,28 +17,13 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 	protected $_facets = array() ;
 	
 	/**
-	 * Constructor.
-	 * 
-	 * @param mixed						$query		Query definition (string/array)
-	 * @param Simples_Request_Search	$request	Request calling this query builder.
-	 */
-	public function __construct(Simples_Request_Search $request = null) {		
-		if (isset($request)) {
-			$this->_request = $request ;
-		}
-	}
-	
-	/**
 	 * Add a criteria to the current query.
 	 * 
-	 * @param mixed		$criteria	Criteria to add.
+	 * @param  mixed	$criteria	Criteria to add.
+	 * @param  array	$options	Options.	
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
 	public function add($definition, $options = null) {
-		if (is_string($definition) && is_array($options)) {
-			$definition = array('name' => $definition) + $options ;
-			$options = null ;
-		}
 		$facet = new Simples_Request_Search_Facet($definition, $options, $this->_fluid()) ;
 		if (count($this->_facets)) {
 			$last = $this->_last() ;
@@ -72,6 +57,11 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 		return $this->_fluid() ;
 	}
 	
+	/**
+	 * Returns the last called.
+	 * 
+	 * @return type 
+	 */
 	protected function _last() {
 		end($this->_facets) ;
 		$last = $this->_facets[key($this->_facets)] ;
@@ -94,5 +84,4 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 		
 		return $return ;
 	}
-	
 }

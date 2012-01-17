@@ -9,10 +9,11 @@ class Simples_Request_Search_Builder_FacetsTest extends PHPUnit_Framework_TestCa
 		$res = $facets->to('array') ;
 		$this->assertTrue(empty($res)) ;
 		
-		$facets->add('category')->add('user_id') ;
+		$facets->add('category', array('size'=>5))->add('user_id') ;
 		
 		$res = $facets->to('array') ;
 		$expected = array('category','user_id') ;
+		
 		
 		$this->assertEquals(2, count($facets)) ; 
 		$this->assertEquals($expected, array_keys($res)) ;
@@ -28,5 +29,23 @@ class Simples_Request_Search_Builder_FacetsTest extends PHPUnit_Framework_TestCa
 			)
 		) ;
 		$this->assertEquals($expected, $res['user_id']) ;
+	}
+	
+	public function testFiltered() {
+		$facets = new Simples_Request_Search_Builder_Facets() ;
+		$facets
+			->add('category')
+			->add('user_id')
+			->add(array('size' => 5))
+			->filtered()
+				->should()
+					->field('status')->match('valid') 
+					->field('firstname')->match(array('Jim','Ray')) ;
+		$res = $facets->to('array') ;
+
+		$this->assertEquals(array('category','user_id'), array_keys($res)) ;
+		$this->assertTrue(isset($res['user_id']['facet_filter'])) ;
+		$this->assertTrue(isset($res['user_id']['facet_filter']['bool']['should'][0]['term']['status'])) ;
+		$this->assertTrue(isset($res['user_id']['facet_filter']['bool']['should'][1]['terms']['firstname'])) ;
 	}
 }
