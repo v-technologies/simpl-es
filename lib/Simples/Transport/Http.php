@@ -21,7 +21,9 @@ class Simples_Transport_Http extends Simples_Transport {
 		'port' => 9200,
 		'protocol' => 'http',
 		'timeout' => 1000,
-		'check' => true
+		'check' => true,
+		'index' => null,
+		'type' => null
 	) ;
 	
 	/**
