@@ -36,8 +36,23 @@ class Simples_Response extends Simples_Base {
 	 * @return \Simples_Response	Current response
 	 */
 	public function set(array $data = null) {
+		// Intercepted ES error
 		if (isset($data['error'])) {
 			throw new Simples_Response_Exception($data) ;
+		}
+		// Shard failure
+		if (!empty($data['_shards']['failed'])) {
+			if (empty($data['_shards']['failures'])) {
+				throw new Simples_Response_Exception('An error has occured on a shard during request parsing') ;
+			} else {
+				$errors = array() ;
+				foreach($data['_shards']['failures'] as $failure) {
+					if (!empty($failure['reason'])) {
+						$errors[] = $failure['reason'] ;
+					}
+				}
+				throw new Simples_Response_Exception('Some errors have occured on a shard during request parsing : ' . implode($errors)) ;
+			}
 		}
 		$this->_data = $data ;
 		return $this ;
