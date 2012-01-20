@@ -1,12 +1,7 @@
 <?php
 
 /**
- * Delete.
- * 
- * Can be used to delete :
- * - an index
- * - a type
- * - an object
+ * Delete and object.
  * 
  * @author Sébastien Charrier <scharrier@gmail.com>
  * @package	Simples
@@ -21,6 +16,10 @@ class Simples_Request_Delete extends Simples_Request {
 	 */
 	protected $_definition = array(
 		'method' => self::DELETE,
+		'required' => array(
+			'body' => array('id'),
+			'options' => array('index','type')
+		),
 		'magic' => 'id'
 	) ;
 	

@@ -16,17 +16,6 @@ class Simples_Request_DeleteTest extends PHPUnit_Framework_TestCase {
 				'id' => 'test_get'
 			))->ok);
 		
-		$delete_index = $client->delete(null, array(
-			'index' => 'twitter'
-		)) ;
-		$this->assertEquals('/twitter/', (string) $delete_index->path()) ;
-		
-		$delete_type = $client->delete(null, array(
-			'index' => 'twitter',
-			'type' => 'tweet'
-		)) ;
-		$this->assertEquals('/twitter/tweet/', (string) $delete_type->path()) ;
-		
 		$delete_object = $client->delete(1, array(
 			'index' => 'twitter', 
 			'type' => 'tweet', 
@@ -39,17 +28,5 @@ class Simples_Request_DeleteTest extends PHPUnit_Framework_TestCase {
 			'type' => 'tweet',
 		)) ;
 		$this->assertFalse($res->exists);
-		
-		$this->assertEquals(true, $delete_type->ok) ;
-		
-		$this->assertEquals(true, $delete_index->ok) ;
-		
-		try {
-			$client->status(null, array('index' => 'twitter'))->status ;
-			$this->fail() ;
-		} catch (Exception $e) {
-			
-		}
 	}
-
 }

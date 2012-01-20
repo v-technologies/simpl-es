@@ -34,7 +34,10 @@ class Simples_Factory extends Simples_Base {
 			'index' => 'Simples_Request_Index',
 			'get' => 'Simples_Request_Get',
 			'delete' => 'Simples_Request_Delete',
-			'search' => 'Simples_Request_Search'
+			'search' => 'Simples_Request_Search',
+			'mapping' => 'Simples_Request_Mapping',
+			'createIndex' => 'Simples_Request_CreateIndex',
+			'deleteIndex' => 'Simples_Request_DeleteIndex'
 		),
 		'Response' => array(
 		),

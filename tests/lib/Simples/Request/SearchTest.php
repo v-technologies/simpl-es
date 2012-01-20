@@ -12,7 +12,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 			'type' => 'tweet'
 		));
 		
-		$this->client->delete(array('type' => null))->execute() ;
+		$this->client->deleteIndex()->execute() ;
 		
 		$res = $this->client->index(array(
 			'content' => 'First',

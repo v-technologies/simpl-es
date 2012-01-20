@@ -139,7 +139,9 @@ class Simples_Request_Index extends Simples_Request {
 				$json .= $document->to('json') . "\n" ;
 			}
 		} else {
-			$json = json_encode($data) ;
+			if (!empty($data)) {
+				$json = json_encode($data) ;
+			}
 		}
 		return $json ;
 	}
