@@ -39,7 +39,7 @@ class Simples_Request_Mapping extends Simples_Request {
 	 * @param array $data	Body data.
 	 * @return array 
 	 */
-	protected function _toArray(array $data) {
+	protected function _toArray($data) {
 		if (isset($data['raw'])) {
 			return json_decode($data['raw'], true) ;
 		}
@@ -52,7 +52,7 @@ class Simples_Request_Mapping extends Simples_Request {
 	 * @param array $data	Body data.
 	 * @return array 
 	 */
-	protected function _toJson(array $data) {
+	protected function _toJson($data) {
 		if (isset($data['raw'])) {
 			return $data['raw'] ;
 		}
