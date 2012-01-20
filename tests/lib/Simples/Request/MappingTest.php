@@ -11,9 +11,6 @@ class Simples_Request_MappingTest extends PHPUnit_Framework_TestCase {
 			'log' => true
 		));
 		$this->client->createIndex()->execute() ;
-		
-		// Wait 'til replication is done.
-		sleep(1) ;
 	}
 	
 	public function testPath() {
@@ -64,6 +61,9 @@ class Simples_Request_MappingTest extends PHPUnit_Framework_TestCase {
 		$request = $this->client->mapping($mapping) ;
 		$response = $request->execute() ;
 		$this->assertTrue($response->ok) ;
+		
+		// Wait 'til replication is done.
+		sleep(1) ;
 		
 		$response = $this->client->mapping()->execute() ;
 		$this->assertEquals($mapping, $response->to('array')) ;
