@@ -37,7 +37,8 @@ class Simples_Factory extends Simples_Base {
 			'search' => 'Simples_Request_Search',
 			'mapping' => 'Simples_Request_Mapping',
 			'createIndex' => 'Simples_Request_CreateIndex',
-			'deleteIndex' => 'Simples_Request_DeleteIndex'
+			'deleteIndex' => 'Simples_Request_DeleteIndex',
+			'deleteType' => 'Simples_Request_DeleteType'
 		),
 		'Response' => array(
 		),
