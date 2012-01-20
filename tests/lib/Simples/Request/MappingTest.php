@@ -16,6 +16,9 @@ class Simples_Request_MappingTest extends PHPUnit_Framework_TestCase {
 	public function testPath() {
 		$request = $this->client->mapping() ;
 		$this->assertEquals('/music/composers/_mapping/', (string) $request->path()) ;
+		
+		$request = $this->client->mapping(null, array('ignore_conflicts' => true)) ;
+		$this->assertEquals('/music/composers/_mapping/?ignore_conflicts=1', (string) $request->path()) ;
 	}
 
 	public function testMethod() {

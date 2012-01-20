@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Delete an index.
+ * Delete a type.
  * 
  * @author Sébastien Charrier <scharrier@gmail.com>
  * @package	Simples
  * @subpackage Request
  */
-class Simples_Request_DeleteIndex extends Simples_Request_CreateIndex {
+class Simples_Request_DeleteType extends Simples_Request {
 	
 	/**
 	 * Definition
@@ -16,6 +16,9 @@ class Simples_Request_DeleteIndex extends Simples_Request_CreateIndex {
 	 */
 	protected $_definition = array(
 		'method' => self::DELETE,
-		'magic' => 'index'
+		'required' => array(
+			'options' => array('index')
+		),
+		'magic' => 'type'
 	) ;
 }

@@ -19,10 +19,23 @@ class Simples_Request_Mapping extends Simples_Request {
 	protected $_definition = array(
 		'method' => self::GET,
 		'path' => '_mapping',
-		'magic' => 'raw'
+		'magic' => 'raw',
+		'inject' => array(
+			'params' => array('ignore_conflicts')
+		)
 	) ;
 	
+	/**
+	 * Request body 
+	 */
 	protected $_body = array() ;
+	
+	/**
+	 * Default options 
+	 */
+	protected $_options = array(
+		'ignore_conflicts' => null
+	);
 	
 	/**
 	 * Switch method if we're in getter or setter mode.
