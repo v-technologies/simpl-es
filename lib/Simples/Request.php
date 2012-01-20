@@ -196,7 +196,7 @@ abstract class Simples_Request extends Simples_Base {
 		$response = array() ;
 		
 		if (isset($this->_client)) {
-			$response = $this->_client->call($this->path(), $this->definition()->method(), $this->to('json')) ;
+			$response = $this->_client->call($this->path(), $this->method(), $this->to('json')) ;
 		}
 
 		$this->_response = $this->_response($response) ;

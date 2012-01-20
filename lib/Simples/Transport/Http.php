@@ -60,7 +60,7 @@ class Simples_Transport_Http extends Simples_Transport {
 		
 		// Check if it's an ES server
 		if ($this->config('check')) {
-			$res = $this->call() ;
+			$res = $this->call('/') ;
 			if (!isset($res)) {
 				throw new Simples_Transport_Exception('Invalid JSON or empty response') ;
 			}
@@ -108,15 +108,15 @@ class Simples_Transport_Http extends Simples_Transport {
 	 * @param mixed	 $data		Optionnal data
 	 * @return string			HTTP response to the call, not parsed
 	 */
-	public function call($url = null, $method = 'GET', $data = null) {
-		// Action log
-		if ($this->config('log')) {
-			$this->log($url, $method, $data) ;
-		}
-		
+	public function call($url = null, $method = 'GET', $data = null) {		
 		// Autoconnect
 		if (!$this->connected()) {
 			$this->connect() ;
+		}
+		
+		// Action log
+		if ($this->config('log')) {
+			$this->log($url, $method, $data) ;
 		}
 		
 		curl_setopt($this->_connection, CURLOPT_CUSTOMREQUEST, strtoupper($method));
