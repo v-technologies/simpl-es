@@ -14,13 +14,21 @@ abstract class Simples_Transport extends Simples_Base {
 	protected $_factory ;
 	
 	/**
+	 * Logs.
+	 * 
+	 * @var array
+	 */
+	protected $_logs = array() ;
+	
+	/**
 	 * Connection configuration, with defaults.
 	 * 
 	 * @var array
 	 */
 	protected $_config = array(
 		'index' => null,
-		'type' => null
+		'type' => null,
+		'log' => false
 	) ;
 	
 	/**
@@ -138,6 +146,44 @@ abstract class Simples_Transport extends Simples_Base {
 	public function search() {
 		$args = func_get_args() ;
 		return $this->__call('search', $args) ;
+	}
+	
+	/**
+	 * Logs some data
+	 * @param type $data
+	 * @return \Simples_Transport 
+	 */
+	public function log($path, $method, $data = null) {
+		if (is_array($data)) {
+			$data = json_encode($data) ;
+		}
+		$this->_logs[] = array(
+			'path' => (string) $path,
+			'method' => (string) $method,
+			'data' => $data
+		);
+		return $this ;
+	}
+	
+	/**
+	 * Returns the recorded logs.
+	 * 
+	 * @param	bool	$string	Should we return logs as a string ?
+	 * @return	mixed			Logs : as an array or a string.
+	 */
+	public function logs($string = false) {
+		if ($string) {
+			$return = '' ;
+			foreach($this->_logs as $log) {
+				$return .= $log['method'] . ' : ' . $log['path'] ;
+				if (!empty($log['data'])) {
+					$return .= ' > ' . $log['data'] ;
+				}
+				$return .= "\n" ;
+			}
+			return $return ;
+		}
+		return $this->_logs ;
 	}
 	
 	/**

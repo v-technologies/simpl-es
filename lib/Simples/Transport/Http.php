@@ -109,6 +109,11 @@ class Simples_Transport_Http extends Simples_Transport {
 	 * @return string			HTTP response to the call, not parsed
 	 */
 	public function call($url = null, $method = 'GET', $data = null) {
+		// Action log
+		if ($this->config('log')) {
+			$this->log($url, $method, $data) ;
+		}
+		
 		// Autoconnect
 		if (!$this->connected()) {
 			$this->connect() ;

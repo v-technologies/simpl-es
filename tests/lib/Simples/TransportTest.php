@@ -34,6 +34,18 @@ class Simples_TransportTest extends PHPUnit_Framework_TestCase {
 			return ;
 		}
 	}
+	
+	public function testLog() {
+		$client = new Simples_Transport_Fake() ;
+		$client->call('/some/action',Simples_Request::GET) ;
+		$client->call('/other/action',Simples_Request::PUT, array('some' => 'data')) ;
+		$this->assertEquals(2, count($client->logs())) ;
+		$expected = 
+'GET : /some/action
+PUT : /other/action > {"some":"data"}
+' ;
+		$this->assertEquals($expected, $client->logs(true)) ;
+	}
 }
 
 class Simples_Transport_Fake extends Simples_Transport {
@@ -55,6 +67,7 @@ class Simples_Transport_Fake extends Simples_Transport {
 	}
 	
 	public function call($path = null, $method = 'GET', $data = null) {
-		return new Simples_Response() ;
+		$this->log($path, $method, $data) ;
+		return new Simples_Response(array()) ;
 	}
 }
