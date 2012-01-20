@@ -48,38 +48,6 @@ class SimplesTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('planets', Simples::current()->config('index')) ;
 	}
 	
-	/**
-	 * Readme example. 
-	 */
-	public function testMorrison() {
-		// Connect
-		$client = Simples::connect(array(
-			'host' => 'localhost',
-			'index' => 'directory',
-			'type' => 'contact'
-		)) ;
-
-		// Index
-		$client->index(array(
-			'firstname' => 'Jim',
-			'lastname' => 'Morrison',
-			'type' => 'inspiration'
-		))->execute() ;
-
-		// Search
-		$response = $client->search()
-			->should()
-				->match('Morrison')->in('lastname')
-				->match('Jim')
-			->not()
-				->match('inspiration')->in(array('type','status'))
-			->size(5)
-			->execute() ;
-
-		// Print your results
-		//echo 'Search tooked ' . $response->took . 'ms. ' . $response->hits->total . ' results ! ' ;
-	}
-	
 	public function testClient() {
 		$client = Simples::client(array('host' => 'something')) ;
 		$other = Simples::client(array('host' => 'somethingelse')) ;

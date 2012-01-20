@@ -208,4 +208,14 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(isset($res['highlight']['fields']['name'])) ;
 		$this->assertTrue(isset($res['highlight']['fields']['address'])) ;
 	}
+	
+	public function testOptions() {
+		$request = $this->client->search() ;
+		$request->add(array('query' => 'sebastien','in' => 'name'), array('type' => 'text')) ;
+		$request->add(array('boost' => '2'), array('type' => 'terms')) ;
+		$res = $request->to('array') ;
+		$this->assertEquals(2, count($res['query']['bool']['must'])) ;
+		$this->assertEquals('text', key($res['query']['bool']['must'][0])) ;
+		$this->assertEquals('terms', key($res['query']['bool']['must'][1])) ;
+	}
 }

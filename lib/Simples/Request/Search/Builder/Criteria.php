@@ -51,8 +51,8 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 * @param mixed		$criteria	Criteria to add.
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
-	public function add($criteria) {
-		$criteria = $this->_criteria($criteria) ;
+	public function add($criteria, array $options = array()) {
+		$criteria = $this->_criteria($criteria, $options) ;
 		$count = count($this->_criteria[$this->_clause]) ;
 		if ($count) {
 			$last = $this->_criteria[$this->_clause][$count - 1] ;

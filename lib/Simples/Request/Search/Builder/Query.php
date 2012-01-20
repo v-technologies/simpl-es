@@ -15,7 +15,7 @@ class Simples_Request_Search_Builder_Query extends Simples_Request_Search_Builde
 	 * @param type $criteria		Criteria definition.
 	 * @return \Simples_Request_Search_Criteria_Filter 
 	 */
-	protected function _criteria($criteria) {
-		return new Simples_Request_Search_Criteria_Query($criteria) ;
+	protected function _criteria($criteria, array $options = array()) {
+		return new Simples_Request_Search_Criteria_Query($criteria, $options) ;
 	}
 }

@@ -28,7 +28,10 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * 
 	 * @var array
 	 */
-	protected $_data = array() ;
+	protected $_data = array(
+		'query' => null,
+		'in' => null
+	) ;
 	
 	/**
 	 * Criteria options.
@@ -55,6 +58,10 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		if (isset($options)) {
 			$this->_options = $options ;
 		}
+	}
+	
+	public function options() {
+		return $this->_options ;
 	}
 	
 	/**
@@ -172,7 +179,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	protected function _prepare_term($type = 'term') {
 		$data = $this->_data ;
 		$in = $data['in'] ;
-		$value = $data['query'] ;
+		$value = isset($data['query']) ? $data['query'] : null ;
 		unset($data['in']) ;
 		unset($data['query']) ;
 			
@@ -210,6 +217,15 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	protected function _prepare_terms() {
 		return $this->_prepare_term('terms') ;
 	}
+	
+	/**
+	 * Prepare for a "text" clause.
+	 * 
+	 * @return array
+	 */
+	protected function _prepare_text() {
+		return $this->_prepare_term('text') ;
+	}
 		
 	/**
 	 * Test if a criteria is mergeable with the current criteria.
@@ -221,6 +237,12 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data =	$criteria->get() ;
 		foreach($data as $key => $value) {
 			if (isset($this->_data[$key])) {
+				return false ;
+			}
+		}
+		$options = $criteria->options() ;
+		foreach($options as $key => $value) {
+			if (isset($this->_options[$key])) {
 				return false ;
 			}
 		}

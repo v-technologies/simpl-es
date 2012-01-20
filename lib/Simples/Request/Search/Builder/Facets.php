@@ -23,7 +23,7 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 	 * @param  array	$options	Options.	
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
-	public function add($definition, $options = null) {
+	public function add($definition, array $options = array()) {
 		$facet = new Simples_Request_Search_Facet($definition, $options, $this->_fluid()) ;
 		if (count($this->_facets)) {
 			$last = $this->_last() ;
