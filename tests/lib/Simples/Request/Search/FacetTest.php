@@ -10,7 +10,7 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('category_id',$facet->get('in')) ;
 	}
 	
-	public function testSimpleField() {
+	public function testIn() { 
 		$facet = new Simples_Request_Search_Facet('category_id') ;
 		$res = $facet->to('array') ;
 		$expected = array(
@@ -20,7 +20,36 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 				)
 			)
 		) ;
-		$this->assertEquals($expected, $res) ;
+		
+		$facet = new Simples_Request_Search_Facet(array('in' => 'category_id')) ;
+		$res = $facet->to('array') ;
+		$expected = array(
+			'category_id' => array(
+				'terms' => array(
+					'field' => 'category_id',
+				)
+			)
+		) ;
+		
+		$facet = new Simples_Request_Search_Facet(array('field' => 'category_id')) ;
+		$res = $facet->to('array') ;
+		$expected = array(
+			'category_id' => array(
+				'terms' => array(
+					'field' => 'category_id',
+				)
+			)
+		) ;
+		
+		$facet = new Simples_Request_Search_Facet(array('name' => 'test_value_field','value_field' => 'category_id')) ;
+		$res = $facet->to('array') ;
+		$expected = array(
+			'test_value_field' => array(
+				'terms' => array(
+					'value_field' => 'category_id',
+				)
+			)
+		) ;
 	}
 	
 	public function testMultipleFields() {

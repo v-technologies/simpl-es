@@ -179,13 +179,16 @@ class Simples_Request_Search_Facet extends Simples_Base {
 		if (is_string($definition)) {
 			$definition = array('in' => $definition) ;
 		} else {
-			$definition['in'] = $this->_in($definition) ;
-			if (isset($definition['field'])) {
-				unset($definition['field']) ;
-			}
-			if (isset($definition['fields'])) {
-				unset($definition['fields']) ;
-			}
+                        $in = $this->_in($definition) ;
+                        if (isset($in)) {
+                            $definition['in'] = $in ;
+                            if (isset($definition['field'])) {
+                                    unset($definition['field']) ;
+                            }
+                            if (isset($definition['fields'])) {
+                                    unset($definition['fields']) ;
+                            }
+                        }
 		}
 		return $definition ;
 	}
@@ -222,25 +225,29 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	 */
 	protected function _data() {
 		$data = $this->_data ;
-		if (empty($data['in'])) {
-			throw new Simples_Request_Exception('Facet error : no scope (keys "field","fields" and "in" are empty)') ;
+		if (empty($data['in']) && empty($data['value_field'])) {
+			throw new Simples_Request_Exception('Facet error : no scope (keys "field","fields","value_field" and "in" are empty)') ;
 		}
 		
 		// Name
-		if (empty($data['name'])) {
+		if (empty($data['name']) && !empty($data['in'])) {
 			$name = $data['in'] ;
-		} else {
+		} elseif (!empty($data['name'])) {
 			$name = $data['name'] ;
 			unset($data['name']) ;
+		} else {
+			throw new Simples_Request_Exception('Facet error : the facet\'s name cannot be determined') ;
 		}
 		
 		// Scope
-		if (is_array($data['in'])) {
-			$data['fields'] = $data['in'] ;
-		} else {
-			$data['field'] = $data['in'] ;
-		}
-		unset($data['in']) ;
+                if (isset($data['in'])) {
+                    if (is_array($data['in'])) {
+                            $data['fields'] = $data['in'] ;
+                    } else {
+                            $data['field'] = $data['in'] ;
+                    }
+                    unset($data['in']) ;
+                }
 		
 		$return = array($this->type() => $data) ;
 		
