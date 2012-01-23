@@ -35,7 +35,8 @@ class Simples_Request_Index extends Simples_Request {
 		'index' => null,
 		'type' => null,
 		'id' => null,
-		'refresh' => null
+		'refresh' => null,
+		'clean' => false
 	) ;
 	
 	/**
@@ -76,24 +77,30 @@ class Simples_Request_Index extends Simples_Request {
 	 */
 	public function body($body = null) {
 		if (isset($body)) {
-			if ($body instanceof Simples_Document) {
-				$body = $body->to('array') ;
-				return parent::body($body) ;
-			} elseif ($body instanceof Simples_Document_Set || Simples_Document_Set::check($body)) {
+			if ($body instanceof Simples_Document_Set || Simples_Document_Set::check($body)) {
 				$this->_bulk = true ;
 				
 				 if (!$body instanceof Simples_Document_Set) {
 					 $body = new Simples_Document_Set($body) ;
 				 }
 				 $this->_body = $body ;
-				 return $this ;
+			} elseif ($body instanceof Simples_Document) {
+				$this->_body = $body ;
+			} else {
+				$this->_body = new Simples_Document($body) ;
 			}
+			return $this ;
 		}
 		
 		if ($this->bulk()) {
 			return $this->_body ;
 		}
-		return parent::body($body) ;		
+		
+		if (isset($this->_body)) {
+			return $this->_body ;
+		}
+		
+		return array() ;
 	}
 	
 	/**
@@ -111,10 +118,7 @@ class Simples_Request_Index extends Simples_Request {
 	 * @return array
 	 */
 	protected function _toArray($data) {
-		if ($data instanceof Simples_Document_Set) {
-			$data = $data->to('array') ;
-		}
-		return $data ;
+		return $data->to('array', $this->_options) ; ;
 	}
 	
 	/**
@@ -136,11 +140,11 @@ class Simples_Request_Index extends Simples_Request {
 					$action['index']['_id'] = $document->properties->id ;
 				}
 				$json .= json_encode($action) . "\n" ;
-				$json .= $document->to('json') . "\n" ;
+				$json .= $document->to('json', $this->_options) . "\n" ;
 			}
 		} else {
 			if (!empty($data)) {
-				$json = json_encode($data) ;
+				$json = $data->to('json', $this->_options) ;
 			}
 		}
 		return $json ;

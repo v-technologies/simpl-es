@@ -119,23 +119,72 @@ class Simples_Document extends Simples_Base {
 	/**
 	 * Smart data recovering : with _source and without.
 	 * 
+	 * Options :
+	 * - clean (bool) : remove the empty values and convert numerics to floats
+	 * - source (mixed) : false to force not working with "_source", true to force working with it. Else, "auto".
+	 * 
 	 * @return array	Prepared data.
 	 */
-	protected function _data() {
-		if (!isset($this->_properties)) {
-			return parent::_data() ;
+	protected function _data(array $options = null) {
+		if (!isset($options)) {
+			$options = array() ;
 		}
-		$return = array() ;
+		$options += array(
+			'clean' => false,
+			'source' => 'auto'
+		);
 		
-		// Rename properties
-		$properties = $this->_properties->to('array') ;
-		foreach($properties as $key => $value) {
-			$return['_' . $key] = $value ;
+		$data = parent::_data($options) ;
+		
+		if ($options['clean']) {
+			$this->_clean($data) ;
 		}
 		
-		// Add the source
-		$return['_source'] = $this->_data ;
+		$source = (bool) $options['source'] ;
+		if ($options['source'] === 'auto' && !isset($this->_properties)) {
+			$source = false ;
+		}
+		
+		if (!$source) {
+			return $data ;			
+		} else {
+			$return = array() ;
+
+			// Rename properties
+			if (isset($this->_properties)) {
+				$properties = $this->_properties->to('array') ;
+				foreach($properties as $key => $value) {
+					$return['_' . $key] = $value ;
+				}
+			}
+
+			// Add the source
+			$return['_source'] = $data ;
+			
+		}
 		
 		return $return ;
+	}
+	
+	/**
+	 * Clean an object : removes all the empty fields and transforms numeric fields
+	 * in float.
+	 * 
+	 * @param array		$data	Object (by reference)
+	 */
+	protected function _clean(& $data) {
+		foreach($data as $key => $value) {
+			if (is_array($value)) {
+				$this->_clean($data[$key]) ;
+			} elseif ((is_scalar($value) && !strlen($value)) || !isset($value)) {
+				unset($data[$key]) ;
+			} elseif (is_numeric($value)) {
+				$data[$key] = (float) $value ;
+			}
+		}
+	}
+	
+	protected function _toArray($data) {
+		return parent::_toArray($data);
 	}
 }

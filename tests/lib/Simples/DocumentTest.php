@@ -10,6 +10,9 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$this->data['standard'] = array(
 			'firstname' => 'Jim',
 			'lastname' => 'Morrison',
+			'empty' => '',
+			'integer' => '9',
+			'float' => '1.11',
 			'categories' => array('Poet','Composer'),
 			'band' => array(
 				'name' => 'The doors'
@@ -59,5 +62,26 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$res = $document->to('array') ;
 		$this->assertEquals('Jim', $res['_source']['firstname']) ;
 		$this->assertEquals('music', $res['_index']) ;
+		
+		// Test clean
+		$document = new Simples_Document($this->data['standard']) ;
+		$res = $document->to('array', array('clean' => true)) ;
+		$this->assertFalse(isset($res['empty'])) ;
+		$this->assertTrue($res['integer'] === 9.0);
+		$this->assertTrue($res['float'] === 1.11);
+		
+		// Test source
+		$document = new Simples_Document($this->data['standard']) ;
+		$res = $document->to('array', array('source' => true)) ;
+		$this->assertTrue(isset($res['_source'])) ;
+		$res = $document->to('array', array('source' => 'auto')) ;
+		$this->assertFalse(isset($res['_source'])) ;
+		
+		$document = new Simples_Document($this->data['source']) ;
+		$res = $document->to('array', array('source' => false)) ;
+		$this->assertFalse(isset($res['_source'])) ;
+		$res = $document->to('array', array('source' => 'auto')) ;
+		$this->assertTrue(isset($res['_source'])) ;
+		
 	}
 }

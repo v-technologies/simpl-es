@@ -58,10 +58,10 @@ abstract class Simples_Base {
 	 * @param string	$format		Asked format
 	 * @return mixed				Formated request 
 	 */
-	public function to($format) {
+	public function to($format, array $options = null) {
 		$method =  '_to' . ucfirst($format) ;
 		if (method_exists($this, $method)) {
-			return $this->{$method}($this->_data()) ;
+			return $this->{$method}($this->_data($options), $options) ;
 		}
 		
 		throw new Simples_Request_Exception('Unsupported request transformation format : "' . $format . '"') ;
@@ -72,7 +72,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return array
 	 */
-	protected function _data() {
+	protected function _data(array $options = null) {
 		if (isset($this->_data)) {
 			return $this->_data ;
 		}
@@ -84,7 +84,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return string	Request in json 
 	 */
-	protected function _toJson($data) {
+	protected function _toJson($data, array $options = null) {
 		return !empty($data) ? json_encode($data) : '' ;
 	}
 	
@@ -93,7 +93,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return array 
 	 */
-	protected function _toArray($data) {
+	protected function _toArray($data, array $options = null) {
 		return $data ;
 	}
 }
