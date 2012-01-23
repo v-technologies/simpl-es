@@ -60,6 +60,11 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		}
 	}
 	
+	/**
+	 * Returns the criteria options.
+	 * 
+	 * @return array	Options
+	 */
 	public function options() {
 		return $this->_options ;
 	}
@@ -94,8 +99,6 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @return string					Type. 
 	 */
 	protected function _type(array $definition, array $options = null) {
-		
-		
 		if (isset($options['type'])) {
 			return $options['type'] ;
 		}
