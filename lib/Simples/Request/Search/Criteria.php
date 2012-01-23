@@ -165,7 +165,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * 
 	 * @return array
 	 */
-	protected function _data() {
+	protected function _data(array $options = array()) {
 		$method = '_prepare_' . $this->_type ;
 		if (method_exists($this, $method)) {
 			return $this->{$method}() ; 

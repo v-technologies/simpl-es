@@ -125,10 +125,7 @@ class Simples_Document extends Simples_Base {
 	 * 
 	 * @return array	Prepared data.
 	 */
-	protected function _data(array $options = null) {
-		if (!isset($options)) {
-			$options = array() ;
-		}
+	protected function _data(array $options = array()) {
 		$options += array(
 			'clean' => false,
 			'source' => 'auto'
@@ -182,9 +179,5 @@ class Simples_Document extends Simples_Base {
 				$data[$key] = (float) $value ;
 			}
 		}
-	}
-	
-	protected function _toArray($data) {
-		return parent::_toArray($data);
 	}
 }

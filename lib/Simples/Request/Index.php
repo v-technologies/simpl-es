@@ -78,9 +78,7 @@ class Simples_Request_Index extends Simples_Request {
 	public function body($body = null) {
 		if (isset($body)) {
 			if ($body instanceof Simples_Document_Set || Simples_Document_Set::check($body)) {
-				$this->_bulk = true ;
-				
-				 if (!$body instanceof Simples_Document_Set) {
+				if (!$body instanceof Simples_Document_Set) {
 					 $body = new Simples_Document_Set($body) ;
 				 }
 				 $this->_body = $body ;
@@ -90,10 +88,6 @@ class Simples_Request_Index extends Simples_Request {
 				$this->_body = new Simples_Document($body) ;
 			}
 			return $this ;
-		}
-		
-		if ($this->bulk()) {
-			return $this->_body ;
 		}
 		
 		if (isset($this->_body)) {
@@ -109,7 +103,7 @@ class Simples_Request_Index extends Simples_Request {
 	 * @return bool
 	 */
 	public function bulk() {
-		return $this->_bulk ;
+		return $this->_body instanceof Simples_Document_Set ;
 	}
 	
 	/**
@@ -117,7 +111,7 @@ class Simples_Request_Index extends Simples_Request {
 	 * 
 	 * @return array
 	 */
-	protected function _toArray($data) {
+	protected function _toArray($data, array $options = array()) {
 		return $data->to('array', $this->_options) ; ;
 	}
 	
@@ -126,10 +120,11 @@ class Simples_Request_Index extends Simples_Request {
 	 * 
 	 * @return string
 	 */
-	protected function _toJson($data) {
+	protected function _toJson($data, array $options = array()) {
 		$json = '' ;
-		if ($this->_bulk) {
-			foreach($data as $document) {
+		if ($this->_body instanceof Simples_Document_Set) {
+			$iterator = $data->getIterator() ;
+			foreach($iterator as $document) {
 				$action = array(
 					'index' => array(
 						'_index' => $this->_options['index'],

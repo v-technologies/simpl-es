@@ -292,7 +292,7 @@ abstract class Simples_Request extends Simples_Base {
 	 * 
 	 * @return array
 	 */
-	protected function _data() {
+	protected function _data(array $options = array()) {
 		return $this->body() ;
 	}
 	

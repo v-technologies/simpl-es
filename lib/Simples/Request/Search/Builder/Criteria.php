@@ -140,7 +140,7 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 * 
 	 * @return array	Data prepared for json_encode()
 	 */
-	protected function _data() {
+	protected function _data(array $options = array()) {
 		$return = array() ;
 		if ($this->count()) {
 			if ($this->count(self::MUST) === 1 && !$this->count(self::NOT, self::SHOULD))  {

@@ -58,7 +58,7 @@ abstract class Simples_Base {
 	 * @param string	$format		Asked format
 	 * @return mixed				Formated request 
 	 */
-	public function to($format, array $options = null) {
+	public function to($format, array $options = array()) {
 		$method =  '_to' . ucfirst($format) ;
 		if (method_exists($this, $method)) {
 			return $this->{$method}($this->_data($options), $options) ;
@@ -72,7 +72,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return array
 	 */
-	protected function _data(array $options = null) {
+	protected function _data(array $options = array()) {
 		if (isset($this->_data)) {
 			return $this->_data ;
 		}
@@ -84,7 +84,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return string	Request in json 
 	 */
-	protected function _toJson($data, array $options = null) {
+	protected function _toJson($data, array $options = array()) {
 		return !empty($data) ? json_encode($data) : '' ;
 	}
 	
@@ -93,7 +93,7 @@ abstract class Simples_Base {
 	 * 
 	 * @return array 
 	 */
-	protected function _toArray($data, array $options = null) {
+	protected function _toArray($data, array $options = array()) {
 		return $data ;
 	}
 }

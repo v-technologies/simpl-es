@@ -95,7 +95,5 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse(isset($res['empty'])) ;
 		$this->assertTrue($res['zero'] === 0.0) ;
 		$this->assertTrue($res['float'] === 1.2) ;
-		
-		var_dump($request->to('json')) ;
 	}
 }

@@ -223,7 +223,7 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	 * @return array
 	 * @throws Simples_Request_Exception 
 	 */
-	protected function _data() {
+	protected function _data(array $options = array()) {
 		$data = $this->_data ;
 		if (empty($data['in']) && empty($data['value_field'])) {
 			throw new Simples_Request_Exception('Facet error : no scope (keys "field","fields","value_field" and "in" are empty)') ;

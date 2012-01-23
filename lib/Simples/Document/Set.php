@@ -88,7 +88,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * 
 	 * @return array	Array structured docs.
 	 */
-	protected function _toArray($data) {
+	protected function _toArray($data, array $options = array()) {
 		$return = array() ;
 		foreach($data as $doc) {
 			$return[] = $doc->to('array') ;
@@ -101,7 +101,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * 
 	 * @return string	Json structured docs.
 	 */
-	protected function _toJson($data) {
+	protected function _toJson($data, array $options = array()) {
 		$return = array() ;
 		foreach($data as $doc) {
 			$return[] = $doc->to('array') ;

@@ -75,7 +75,7 @@ class Simples_Request_Search_Builder_Facets extends Simples_Request_Search_Build
 	 * 
 	 * @return array
 	 */
-	protected function _data() {
+	protected function _data(array $options = array()) {
 		$return = array() ;
 		
 		foreach($this->_facets as $facet) {
