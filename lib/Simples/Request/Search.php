@@ -48,7 +48,7 @@ class Simples_Request_Search extends Simples_Request {
 		'highlight' => null,
 		'fields' => null,
 		'script_fields' => null,
-		'explain' => false,
+		'explain' => null,
 		'version' => null,
 		'min_score' => null
 	);
@@ -153,7 +153,11 @@ class Simples_Request_Search extends Simples_Request {
 			$body['highlight']['fields'] = $highlight ;
 		}
 		
-		$body = array_filter($body) ;
+                foreach($body as $key => $value) {
+                    if (!isset($value)) {
+                        unset($body[$key]) ;
+                    }
+                }
 		
 		return $body ;
 	}

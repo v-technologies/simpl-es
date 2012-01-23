@@ -38,7 +38,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 
 	public function testSearch() {
 		$request = $this->client->search() ;
-		$request->match('scharrier') ;
+		$request->match('scharrier')->size(0)->explain(false) ;
 		$res = $request->to('array') ;
 		
 		// Base search tests
@@ -47,7 +47,9 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 				'query_string' => array(
 					'query' => 'scharrier'
 				)
-			)
+			),
+                        'size' => 0,
+                        'explain' => false
 		) ;
 		$this->assertEquals($expected, $res) ;
 		
@@ -144,6 +146,23 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 			)
 		) ;
 		$this->assertTrue($request instanceof Simples_Request) ;
+		$this->assertEquals($expected, $res) ;
+	}
+        
+        public function testFacetsBuilder() {
+		// Base case
+		$request = $this->client->search()->facet('username') ;
+		$res = $request->to('array') ;
+		$expected = array(
+			'query' => array(
+				'match_all' => new stdClass()
+			),
+			'facets' => array(
+				'username' => array(
+					'terms' => array('field' => 'username')
+				)
+			)
+		) ;
 		$this->assertEquals($expected, $res) ;
 	}
 	
