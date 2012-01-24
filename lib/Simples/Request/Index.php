@@ -144,4 +144,14 @@ class Simples_Request_Index extends Simples_Request {
 		}
 		return $json ;
 	}
+	
+	/**
+	 * Specific response object.
+	 * 
+	 * @param array		$data		Search request results.
+	 * @return \Simples_Response_Search 
+	 */
+	protected function _response($data) {
+		return new Simples_Response_Bulk($data, $this->options()) ;
+	}
 }

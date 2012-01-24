@@ -36,6 +36,18 @@ class Simples_Response extends Simples_Base {
 	 * @return \Simples_Response	Current response
 	 */
 	public function set(array $data = null) {
+		$this->_check($data) ;
+		$this->_data = $data ;
+		return $this ;
+	}
+	
+	/**
+	 * Check if response data is valid.
+	 * 
+	 * @param array $data	Response data.
+	 * @throws Simples_Response_Exception 
+	 */
+	protected function _check(array $data) {
 		// Intercepted ES error
 		if (isset($data['error'])) {
 			throw new Simples_Response_Exception($data) ;
@@ -54,8 +66,6 @@ class Simples_Response extends Simples_Base {
 				throw new Simples_Response_Exception('Some errors have occured on a shard during request parsing : ' . implode($errors)) ;
 			}
 		}
-		$this->_data = $data ;
-		return $this ;
 	}
 	
 	/**
