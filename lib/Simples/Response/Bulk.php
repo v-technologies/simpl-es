@@ -16,7 +16,7 @@ class Simples_Response_Bulk extends Simples_Response {
 	 * @return \Simples_Response_Bulk 
 	 * @todo	Generate an exception containing all the previous exceptions (actually, stop on the first)
 	 */
-	public function set(array $data) {
+	public function set(array $data = null) {
 		// Bulk response check
 		if (isset($data['items'])) {
 			foreach($data['items'] as $i => $action) {
