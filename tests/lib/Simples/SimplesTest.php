@@ -27,7 +27,8 @@ class SimplesTest extends PHPUnit_Framework_TestCase {
 				'from' => 'Static usage'
 			),
 			array(
-				'id' => 1
+				'id' => 1,
+				'refresh' => true
 			)
 		)->execute() ;
 		
