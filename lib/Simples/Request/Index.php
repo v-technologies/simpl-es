@@ -131,8 +131,8 @@ class Simples_Request_Index extends Simples_Request {
 						'_type' => $this->_options['type']
 					)
 				) ;
-				if (isset($document->properties->id)) {
-					$action['index']['_id'] = $document->properties->id ;
+				if (isset($document->id)) {
+					$action['index']['_id'] = $document->id ;
 				}
 				$json .= json_encode($action) . "\n" ;
 				$json .= $document->to('json', $this->_options) . "\n" ;
