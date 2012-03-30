@@ -7,7 +7,7 @@ class Simples_Request_DeleteTypeTest extends PHPUnit_Framework_TestCase {
 	public $client ;
 	
 	public function setUp() {
-		$this->client = new Simples_Transport_Http(array('index' => 'test_delete', 'type' => 'test_delete_type'));	
+		$this->client = new Simples_Transport_Http(array('index' => 'test_delete', 'type' => 'test_delete_type'));			
 		$this->client->createIndex()->execute() ;
 	}
 
@@ -25,7 +25,9 @@ class Simples_Request_DeleteTypeTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function tearDown() {
-		$this->client->deleteIndex()->execute() ;
+		if ($this->client) {
+			$this->client->deleteIndex()->execute() ;
+		}
 	}
 
 }
