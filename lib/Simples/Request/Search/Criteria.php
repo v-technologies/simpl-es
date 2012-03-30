@@ -212,6 +212,15 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		return $return ;
 	}
 
+	/**
+	 * Autodetect the "in" key to use. Not coherent in the ES API, I try to make
+	 * some magic here.
+	 * 
+	 * @param  string $type  Criteria type
+	 * @param  string $value Value
+	 * @param  [type] $data  [description]
+	 * @return [type]        [description]
+	 */
 	protected function _termIn($type, $value, $data) {
 		if (!$data) {
 			return $value ;
@@ -222,6 +231,25 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 			$key = 'query' ;
 		}
 		return array($key => $value) + $data ;
+	}
+
+	/**
+	 * Prepare for a range clause.
+	 * 
+	 * @return array
+	 */
+	protected function _prepare_range() {
+		$data = $this->_data ;
+		$in = $data['in'] ;
+		unset($data['in']) ;
+			
+		$return = array(
+			'range' => array(
+				$in => $data
+			) 
+		);
+		
+		return $return ;
 	}
 		
 	/**

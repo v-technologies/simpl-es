@@ -147,6 +147,32 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		) ;
 		$this->assertTrue($request instanceof Simples_Request) ;
 		$this->assertEquals($expected, $res) ;
+
+		// Test other filter type
+		$request = $this->client->search()->filter(array(
+			'in' => 'my_field',
+			'ranges' => array(
+				array('from' => 2),
+				array('from' => 3, 'to ' => 5)
+			)
+		), array('type' => 'range')) ;
+		$res = $request->to('array');
+		$expected = array(
+			'query' => array(
+				'match_all' => new stdClass()
+			),
+			'filter' => array(
+				'range' => array(
+					'my_field' => array(
+						'ranges' => array(
+							array('from' => 2),
+							array('from' => 3, 'to ' => 5)
+						)
+					)
+				)
+			)
+		) ;
+		$this->assertEquals($expected, $res) ;
 	}
         
         public function testFacetsBuilder() {

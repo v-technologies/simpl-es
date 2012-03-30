@@ -184,12 +184,12 @@ class Simples_Request_Search extends Simples_Request {
 	 * @param mixed		$filter			Setter : Query definition.
 	 * @return \Simples_Request_Search	This instance
 	 */
-	public function filter($filter = null) {
+	public function filter($filter = null, $options = array()) {
 		// Save current subobject
 		$this->_current = 'filters' ;
 		
 		if (isset($filter)) {
-			$this->_filters->add($filter) ;
+			$this->_filters->add($filter, $options) ;
 		}
 		return $this ;
 	}
@@ -200,7 +200,7 @@ class Simples_Request_Search extends Simples_Request {
 	 * @param mixed		$facet			Setter : Query definition.
 	 * @return \Simples_Request_Search	This instance
 	 */
-	public function facet($facet =null, $options = null) {
+	public function facet($facet =null, $options = array()) {
 		// Save current subobject
 		$this->_current = 'facets' ;
 		
