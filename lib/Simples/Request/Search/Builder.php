@@ -34,7 +34,7 @@ abstract class Simples_Request_Search_Builder extends Simples_Base implements Co
 	 * @param mixed		$criteria	Element to add.
 	 * @return mixed				Current builder instance or current request instance (fluid calls)
 	 */
-	abstract public function add($element, array $options = array()) ;
+	abstract public function add($element, null $options = array()) ;
 	
 	
 	/**
