@@ -171,7 +171,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 			return $this->{$method}() ; 
 		}
 		
-		return array($this->_type => $this->_data) ;
+		return $this->_prepare_term($this->_type) ;
 	}
 	
 	/**
@@ -189,8 +189,8 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		if (!is_array($in)) {
 			$return = array(
 				$type => array(
-					$in => $value
-				) + $data
+					$in => $this->_termIn($type, $value, $data)
+				) 
 			);
 		} else {
 			$return = array(
@@ -201,8 +201,8 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 			foreach($in as $field) {
 				$_clause = array(
 					$type => array(
-						$field => $value
-					) + $data
+						$field => $this->_termIn($type, $value, $data)
+					)
 				) ;
 				$return['bool']['should'][] = $_clause ;
 			}
@@ -211,23 +211,17 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		
 		return $return ;
 	}
-	
-	/**
-	 * Prepare for a "terms" clause.
-	 * 
-	 * @return array
-	 */
-	protected function _prepare_terms() {
-		return $this->_prepare_term('terms') ;
-	}
-	
-	/**
-	 * Prepare for a "text" clause.
-	 * 
-	 * @return array
-	 */
-	protected function _prepare_text() {
-		return $this->_prepare_term('text') ;
+
+	protected function _termIn($type, $value, $data) {
+		if (!$data) {
+			return $value ;
+		}
+		if (in_array($type, array('term','terms','prefix'))) {
+			$key = 'value' ;
+		} else {
+			$key = 'query' ;
+		}
+		return array($key => $value) + $data ;
 	}
 		
 	/**

@@ -168,12 +168,12 @@ class Simples_Request_Search extends Simples_Request {
 	 * @param mixed		$query			Setter : Query definition.
 	 * @return \Simples_Request_Search	This instance
 	 */
-	public function query($query = null) {
+	public function query($query = null, $options = array()) {
 		// Save current subobject
 		$this->_current = 'query' ;
 		
 		if (isset($query)) {
-			$this->_query->add($query) ;
+			$this->_query->add($query, $options) ;
 		}
 		return $this ;
 	}
