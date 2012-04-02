@@ -43,6 +43,16 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 		
 		return $this ;
 	}
+
+	/**
+	 * Get an element from the set.
+	 * 
+	 * @param  int $position 		Element position
+	 * @return Simples_Document     Element, if exists (null if not)
+	 */
+	public function get($position) {
+		return (isset($this->_data[$position])) ? $this->_data[$position] : null ;
+	}
 	
 	/**
 	 * IteratorAggregate implementation.
