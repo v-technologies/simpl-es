@@ -148,7 +148,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @param  array &$definition Clause definition
 	 */
 	protected function _value(&$definition) {
-		$aliases = array('query','term','terms','match') ;
+		$aliases = array('query','term','terms','match','values') ;
 
 		foreach($aliases as $alias) {
 			if (isset($definition[$alias])) {
@@ -272,6 +272,41 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 				$return['bool']['should'][] = $_clause ;
 			}
 		}
+		
+		return $return ;
+	}
+
+	/**
+	 * Prepare for a geo distance clause.
+	 * 
+	 * @return array
+	 */
+	protected function _prepare_geo_distance() {
+		$data = $this->get() ;
+		
+		if (!isset($data['in'])) {
+			throw new Simples_Request_Exception('Key "in" is empty') ;
+		}
+
+		$in = $data['in'] ;
+		if (!empty($data['lat']) && !empty($data['lon'])) {
+			$values = array('lat' => $data['lat'], 'lon' => $data['lon']) ;
+			unset($data['lat']) ;
+			unset($data['lon']) ;
+		} elseif (!empty($data['value'])) {
+			$values = $data['value'] ;
+			unset($data['value']) ;
+		}
+		unset($data['in']) ;
+
+		if (empty($values)) {
+			throw new Simples_Request_Exception('Keys "values","lat","lon" are empty') ;
+		}
+		
+			
+		$return = array(
+			'geo_distance' => array($in => $values) + $data
+		);
 		
 		return $return ;
 	}
