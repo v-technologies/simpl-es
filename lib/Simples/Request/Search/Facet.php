@@ -121,10 +121,14 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	 * @param array $filters		Liste of filters.
 	 * @return mixed				Fluid instance. 
 	 */
-	public function filtered(array $filters = null) {
+	public function filtered(array $filters = null, array $options = array()) {
 		if ($filters) {
-			foreach($filters as $in => $query ){
-				$this->_filters->add(array('query' => $query, 'in' => $in)) ;
+			if (is_numeric(key($filters))) {
+				foreach($filters as $in => $query ){
+					$this->_filters->add(array('query' => $query, 'in' => $in), $options) ;
+				}
+			} else {
+				$this->_filters->add($filters, $options) ;
 			}
 		}
 		return $this->_fluid() ;

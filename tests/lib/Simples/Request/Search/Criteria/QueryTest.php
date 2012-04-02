@@ -27,9 +27,6 @@ class Simples_Request_Search_Criteria_QueryTest extends PHPUnit_Framework_TestCa
 		$query = new Simples_Request_Search_Criteria_Query(array('query' => 'user:scharrier*')) ;
 		$this->assertEquals('query_string', $query->type()) ;
 		
-		$query = new Simples_Request_Search_Criteria_Query(array('sebastien','charrier')) ;
-		$this->assertEquals('query_string', $query->type()) ;
-		
 		$query = new Simples_Request_Search_Criteria_Query(array('query' => 'scharrier', 'in' => array('username','retweet'))) ;
 		$this->assertEquals('query_string', $query->type()) ;
 		

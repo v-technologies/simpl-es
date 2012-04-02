@@ -8,14 +8,7 @@
  * @subpackage Request
  */
 abstract class Simples_Request_Search_Criteria extends Simples_Base {
-	
-	/**
-	 * Criteria type.
-	 * 
-	 * @var string
-	 */
-	protected $_type = '' ;
-	
+		
 	/**
 	 * Default type.
 	 * 
@@ -29,7 +22,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @var array
 	 */
 	protected $_data = array(
-		'query' => null,
+		'value' => null,
 		'in' => null
 	) ;
 	
@@ -51,10 +44,6 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 			$this->_data = $this->_normalize($definition, $options) ;
 		}
 		
-		if (isset($definition)) {
-			$this->_type = $this->_type($this->_data, $options) ;
-		}
-		
 		if (isset($options)) {
 			$this->_options = $options ;
 		}
@@ -69,14 +58,6 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		return $this->_options ;
 	}
 	
-	/**
-	 * Returns the current criteria type.
-	 * 
-	 * @return string
-	 */
-	public function type() {
-		return $this->_type ;
-	}
 	
 	/**
 	 * Returns all the normalized data, or only for a key if $key is given.
@@ -88,7 +69,13 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		if (isset($key)) {
 			return isset($this->_data[$key]) ? $this->_data[$key] : null ;
 		}
-		return array_filter($this->_data) ;
+		$data = $this->_data ;
+		foreach($data as $key => $value) {
+			if (!isset($value) || (is_string($value) && !strlen($value))) {
+				unset($data[$key]) ;
+			}
+		}
+		return $data ;
 	}
 	
 	/**
@@ -98,44 +85,18 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @param array		$options		Criteria options
 	 * @return string					Type. 
 	 */
-	protected function _type(array $definition, array $options = null) {
-		if (isset($options['type'])) {
-			return $options['type'] ;
+	public function type() {
+		if (isset($this->_options['type'])) {
+			return $this->_options['type'] ;
 		}
-		
-		$in = $this->_in($definition) ;
 
-		if (isset($in) && is_string($in) && isset($definition['query'])) {
-			if (is_string($in) && is_array($definition['query'])) {
+		if (isset($this->_data['in']) && is_string($this->_data['in']) && isset($this->_data['value'])) {
+			if (is_string($this->_data['in']) && is_array($this->_data['value'])) {
 				return 'terms' ;
 			}
 		}
 		
 		return $this->_defaultType ;
-	}
-	
-	/**
-	 * Normalize the search scope (fields/field/in).
-	 * 
-	 * @param array		$definition		Criteria definition
-	 * @return mixed					Scope (string or array) 
-	 */
-	protected function _in($definition) {
-		if (isset($definition['in'])) {
-			if (is_array($definition['in'])) {
-				if (count($definition['in']) === 1) {
-					return $definition['in'][0] ;
-				}
-			}
-			return $definition['in'] ;
-		}
-		if (isset($definition['field'])) {
-			return $definition['field'] ;
-		}
-		if (isset($definition['fields'])) {
-			return $definition['fields'] ;
-		}
-		return null ;
 	}
 	
 	/**
@@ -146,18 +107,55 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 */
 	protected function _normalize($definition) {
 		if (is_string($definition)) {
-			$definition = array('query' => $definition) ;
+			$definition = array('value' => $definition) ;
+		} elseif (is_array($definition)) {
+			$this->_in($definition) ;
+			$this->_value($definition) ;
 		} else {
-			$definition['in'] = $this->_in($definition) ;
-			if (isset($definition['field'])) {
-				unset($definition['field']) ;
-			}
-			if (isset($definition['fields'])) {
-				unset($definition['fields']) ;
-			}
+			$definition = array() ;
 		}
 		
-		return $definition ;
+		return $definition + array('value' => null, 'in' => null) ;
+	}
+
+	/**
+	 * Normalize the search scope (fields/field/in).
+	 * 
+	 * @param array		$definition		Criteria definition
+	 */
+	protected function _in(&$definition) {
+		$aliases = array('field','fields') ;
+		foreach($aliases as $alias) {
+			if (isset($definition[$alias])) {
+				$definition['in'] = $definition[$alias] ;
+				unset($definition[$alias]) ;
+			}
+		}
+
+		// Final wash 
+		if (isset($definition['in'])) {
+			if (is_array($definition['in'])) {
+				if (count($definition['in']) === 1) {
+					$definition['in'] =  $definition['in'][0] ;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Normalize values keys.
+	 * 
+	 * @param  array &$definition Clause definition
+	 */
+	protected function _value(&$definition) {
+		$aliases = array('query','term','terms','match') ;
+
+		foreach($aliases as $alias) {
+			if (isset($definition[$alias])) {
+				$definition['value'] = $definition[$alias] ;
+				unset($definition[$alias]) ;
+			}
+		}
 	}
 	
 	/**
@@ -166,12 +164,13 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @return array
 	 */
 	protected function _data(array $options = array()) {
-		$method = '_prepare_' . $this->_type ;
+		$type = $this->type() ;
+		$method = '_prepare_' . $type ;
 		if (method_exists($this, $method)) {
 			return $this->{$method}() ; 
 		}
 		
-		return $this->_prepare_term($this->_type) ;
+		return $this->_prepare_term($type) ;
 	}
 	
 	/**
@@ -180,11 +179,15 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @return array
 	 */
 	protected function _prepare_term($type = 'term') {
-		$data = $this->_data ;
+		$data = $this->get() ;
+		
+		if (!isset($data['in']) || !isset($data['value'])) {
+			throw new Simples_Request_Exception('Key "in" or "value" empty') ;
+		}
+
 		$in = $data['in'] ;
-		$value = isset($data['query']) ? $data['query'] : null ;
-		unset($data['in']) ;
-		unset($data['query']) ;
+		$value = $data['value'] ;
+		$data = array_diff_key($data, array('in' => true, 'value' => true)) ;
 			
 		if (!is_array($in)) {
 			$return = array(
@@ -239,15 +242,36 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @return array
 	 */
 	protected function _prepare_range() {
-		$data = $this->_data ;
+		$data = $this->get() ;
+		
+		if (!isset($data['in'])) {
+			throw new Simples_Request_Exception('Key "in" empty') ;
+		}
+
 		$in = $data['in'] ;
 		unset($data['in']) ;
 			
-		$return = array(
-			'range' => array(
-				$in => $data
-			) 
-		);
+		if (!isset($data['ranges'])) {
+			$return = array(
+				'range' => array(
+					$in => $data
+				) 
+			);
+		} else {
+			$return = array(
+				'bool' => array(
+					'should' => array()
+				)
+			) ;
+			foreach($data['ranges'] as $range) {
+				$_clause = array(
+					'range' => array(
+						$in => $range
+					)
+				) ;
+				$return['bool']['should'][] = $_clause ;
+			}
+		}
 		
 		return $return ;
 	}
@@ -283,7 +307,6 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	public function merge(Simples_Request_Search_Criteria $criteria) {
 		$this->_data = array_merge($this->_data, $criteria->get()) ;
 		unset($criteria) ;
-		$this->_type = $this->_type($this->_data, $this->_options) ;
 		return $this ;
 	}	
 }

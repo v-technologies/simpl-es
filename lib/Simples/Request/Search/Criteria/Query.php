@@ -25,23 +25,25 @@ class Simples_Request_Search_Criteria_Query extends Simples_Request_Search_Crite
 	 * @param array		$options		Criteria options
 	 * @return string					Type. 
 	 */
-	protected function _type(array $definition, array $options = null) {
-		if (isset($options['type'])) {
-			return $options['type'] ;
+	public function type() {
+		if (isset($this->_options['type'])) {
+			return $this->_options['type'] ;
 		}
-		
-		$in = $this->_in($definition) ;
 
-		if (isset($in) && is_string($in) && isset($definition['query'])) {
-			if (is_string($definition['query'])) {
-				if (preg_match('/^[a-z0-9 ]+$/i', $definition['query']) && 
-					!preg_match('/(AND|OR)/', $definition['query'])) {
+		if (empty($this->_data['in']) && empty($this->_data['value'])) {
+			return 'match_all' ;
+		}
+
+		if (isset($this->_data['in']) && is_string($this->_data['in']) && isset($this->_data['value'])) {
+			if (is_string($this->_data['value'])) {
+				if (preg_match('/^[a-z0-9 ]+$/i', $this->_data['value']) && 
+					!preg_match('/(AND|OR)/', $this->_data['value'])) {
 					return 'term' ;
 				}
 			}
 		}
 		
-		return parent::_type($definition, $options) ;
+		return parent::type() ;
 	}
 	
 	/**
@@ -61,8 +63,11 @@ class Simples_Request_Search_Criteria_Query extends Simples_Request_Search_Crite
 	 * @throws Simples_Request_Exception 
 	 */
 	protected function _prepare_query_string() {
-		$return = $this->_data ;
-		
+		$return = $this->get() ;
+		if (array_key_exists('value', $return)) {
+			$return['query'] = $return['value'] ;
+			unset($return['value']) ;
+		}
 		// Multiple values
 		if (isset($return['query']) && is_array($return['query'])) {
 			$mode = 'AND' ;

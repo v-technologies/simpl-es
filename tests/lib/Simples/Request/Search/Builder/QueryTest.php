@@ -37,6 +37,7 @@ class Simples_Request_Search_Builder_QueryTest extends PHPUnit_Framework_TestCas
 		$expected = array(
 			'term' => array('username' => 'scharrier')
 		) ;
+
 		$this->assertEquals($res, $expected) ;
 		
 		$query = new Simples_Request_Search_Builder_Query() ;

@@ -72,12 +72,11 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('administrateur', $res['category']['facet_filter']['term']['type']) ;
 		
 		$facet->filtered(array(
-			'status' => 'validated',
-			'valid' => true
+			array('in' => 'status', 'value' => 'validated'),
+			array('in' => 'valid', 'value' => true)
 		));
 		
 		$res = $facet->to('array') ;
-		
 		$this->assertEquals(3, count($res['category']['facet_filter']['bool']['must'])) ;
 	}
 

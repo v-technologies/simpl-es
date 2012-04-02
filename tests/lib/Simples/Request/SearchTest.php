@@ -162,12 +162,10 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 				'match_all' => new stdClass()
 			),
 			'filter' => array(
-				'range' => array(
-					'my_field' => array(
-						'ranges' => array(
-							array('from' => 2),
-							array('from' => 3, 'to ' => 5)
-						)
+				'bool' => array(
+					'should' => array(
+						array('range' => array('my_field' => array('from' => 2))),
+						array('range' => array('my_field' => array('from' => 3, 'to ' => 5)))
 					)
 				)
 			)
@@ -175,7 +173,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $res) ;
 	}
         
-        public function testFacetsBuilder() {
+    public function testFacetsBuilder() {
 		// Base case
 		$request = $this->client->search()->facet('username') ;
 		$res = $request->to('array') ;
@@ -189,6 +187,36 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 				)
 			)
 		) ;
+		$this->assertEquals($expected, $res) ;
+
+		// Range filtered facet
+		$request = $this->client->search()->facet('age')
+			->filtered(array('in' => 'age', 'ranges' => array(
+				array('from' => '5', 'to' => '10'),
+				array('from' => '11', 'to' => '20')
+			)), array('type' => 'range')) ;
+		$res = $request->to('array') ;
+
+		$expected = array(
+			'query' => array(
+				'match_all' => new stdClass()
+			),
+			'facets' => array(
+				'age' => array(
+					'terms' => array('field' => 'age'),
+					'facet_filter' => array(
+						'bool' => array(
+							'should' => array(
+								array('range' => array(
+									'age' => array('from' => '5', 'to' => '10'))),
+								array('range' => array(
+									'age' => array('from' => '11', 'to' => '20')))
+							)
+						)
+					)
+				)
+			)
+		);
 		$this->assertEquals($expected, $res) ;
 	}
 	
@@ -257,7 +285,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 	public function testOptions() {
 		$request = $this->client->search() ;
 		$request->add(array('query' => 'sebastien','in' => 'name'), array('type' => 'text')) ;
-		$request->add(array('boost' => '2'), array('type' => 'terms')) ;
+		$request->add(array('boost' => '2','in' => 'lastname', 'value' => array('sebastien','jim')), array('type' => 'terms')) ;
 		$res = $request->to('array') ;
 		$this->assertEquals(2, count($res['query']['bool']['must'])) ;
 		$this->assertEquals('text', key($res['query']['bool']['must'][0])) ;

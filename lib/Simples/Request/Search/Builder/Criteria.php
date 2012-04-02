@@ -72,7 +72,7 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
 	public function field($field_name) {
-		return $this->add(array('field' => $field_name)) ;
+		return $this->add(array('in' => $field_name)) ;
 	}
 	
 	/**
@@ -82,7 +82,7 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 * @return mixed					Current query instance or current request instance (fluid calls)
 	 */
 	public function fields(array $fields_names) {
-		return $this->add(array('fields' => $fields_names)) ;
+		return $this->add(array('in' => $fields_names)) ;
 	}
 	
 	/**
@@ -92,7 +92,7 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 * @return mixed				Current query instance or current request instance (fluid calls)
 	 */
 	public function match($query) {
-		return $this->add(array('query' => $query)) ;
+		return $this->add(array('value' => $query)) ;
 	}
 	
 	/**
