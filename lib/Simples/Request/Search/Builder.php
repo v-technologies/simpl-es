@@ -27,6 +27,15 @@ abstract class Simples_Request_Search_Builder extends Simples_Base implements Co
 			$this->_request = $request ;
 		}
 	}
+
+	/**
+	 * Default instance return : $this. Overriden in most builders.
+	 * 
+	 * @return Simples_Request_Search_Builder this builder
+	 */
+	public function instance() {
+		return $this ;
+	}
 	
 	/**
 	 * Add an element to the current builder.

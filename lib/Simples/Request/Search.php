@@ -59,6 +59,13 @@ class Simples_Request_Search extends Simples_Request {
 	 * @var string
 	 */
 	protected $_current = 'query' ;
+
+	/**
+	 * Fluid calls marker : initiated on the first fluid call.
+	 * 
+	 * @var boolean
+	 */
+	protected $_fluid = false ;
 	
 	/**
 	 * Query builder.
@@ -89,8 +96,10 @@ class Simples_Request_Search extends Simples_Request {
 	protected $_options = array(
 		'index' => null,
 		'type' => null,
-		'highlight' => Simples_Request_Search::HIGHLIGHT_DO_NOTHING
-	) ;
+		'highlight' => Simples_Request_Search::HIGHLIGHT_DO_NOTHING,
+		'fluid' => true
+	);
+
 	
 	/**
 	 * Constructor.
@@ -171,6 +180,7 @@ class Simples_Request_Search extends Simples_Request {
 	public function query($query = null, $options = array()) {
 		// Save current subobject
 		$this->_current = 'query' ;
+		$this->_fluid = true ;
 		
 		if (isset($query)) {
 			$this->_query->add($query, $options) ;
@@ -187,6 +197,7 @@ class Simples_Request_Search extends Simples_Request {
 	public function filter($filter = null, $options = array()) {
 		// Save current subobject
 		$this->_current = 'filters' ;
+		$this->_fluid = true ;
 		
 		if (isset($filter)) {
 			$this->_filters->add($filter, $options) ;
@@ -203,6 +214,7 @@ class Simples_Request_Search extends Simples_Request {
 	public function facet($facet =null, $options = array()) {
 		// Save current subobject
 		$this->_current = 'facets' ;
+		$this->_fluid = true ;
 		
 		if (isset($facet)) {
 			$this->_facets->add($facet, $options) ;
@@ -222,6 +234,10 @@ class Simples_Request_Search extends Simples_Request {
 	 * @return \Simples_Request_Search	This instance.
 	 */
 	public function queries(array $queries) {
+		// Save current subobject
+		$this->_current = 'query' ;
+		$this->_fluid = true ;
+
 		foreach($queries as $in => $match) {
 			$this->_query->add(array('query' => $match, 'in' => $in)) ;
 		}
@@ -239,6 +255,10 @@ class Simples_Request_Search extends Simples_Request {
 	 * @return \Simples_Request_Search	This instance.
 	 */
 	public function filters(array $filters) {
+		// Save current subobject
+		$this->_current = 'filters' ;
+		$this->_fluid = true ;
+
 		foreach($filters as $in => $match) {
 			$this->_filters->add(array('query' => $match, 'in' => $in)) ;
 		}
@@ -256,6 +276,10 @@ class Simples_Request_Search extends Simples_Request {
 	 * @return \Simples_Request_Search 
 	 */
 	public function facets(array $facets) {
+		// Save current subobject
+		$this->_current = 'facets' ;
+		$this->_fluid = true ;
+
 		foreach($facets as $key => $value) {
 			if (!is_numeric($key)) {
 				if (!is_array($value)) {
@@ -354,6 +378,21 @@ class Simples_Request_Search extends Simples_Request {
 	public function fields($fields) {
 		$this->_body['fields'] = $fields;
 		return $this ;
+	}
+
+	/**
+	 * Get a fluid called instance.
+	 * 
+	 * @return Simples_Base Some of the Search object part.
+	 */
+	public function instance() {
+		if (!$this->_fluid || !$this->_current) {
+			return $this ;
+		}
+
+		// We have used the fluid interface
+		$object = '_' . $this->_current ;
+		return $this->{$object}->instance() ;
 	}
 	
 	/**

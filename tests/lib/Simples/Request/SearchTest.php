@@ -92,6 +92,29 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(10, $body['from']) ;
 		$this->assertEquals(5, $body['size']) ;
 		$this->assertEquals('Client.name desc', $body['sort']) ;
+
+		// Break fluid calls
+		$request = $this->client->search() ;
+		$this->assertTrue($request->instance() instanceof Simples_Request_Search) ;
+
+		$request->query() ;
+		$this->assertTrue($request->instance() instanceof Simples_Request_Search_Builder_Query) ;
+
+		$request->filter() ;
+		$this->assertTrue($request->instance() instanceof Simples_Request_Search_Builder_Filters) ;
+
+		$request->query() ;
+		$this->assertTrue($request->instance() instanceof Simples_Request_Search_Builder_Query) ;
+
+		$request->query('test') ;
+		$this->assertTrue($request->instance() instanceof Simples_Request_Search_Criteria_Query) ;
+
+		$filter = $request->filter(array('value' => 'test', 'in' => 'my_field'))->instance() ;
+		$this->assertTrue($filter instanceof Simples_Request_Search_Criteria_Filter) ;
+
+		$filter2 = $request->filter(array('value' => 'other test', 'in' => 'my_field'))->instance() ;
+		$this->assertTrue($filter2 instanceof Simples_Request_Search_Criteria_Filter) ;
+		$this->assertNotEquals($filter->to('array'), $filter2->to('array')) ;
 	}
 	
 	public function testQueryBuilder() {

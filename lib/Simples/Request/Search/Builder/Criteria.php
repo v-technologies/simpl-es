@@ -53,9 +53,8 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 */
 	public function add($criteria, array $options = array()) {
 		$criteria = $this->_criteria($criteria, $options) ;
-		$count = count($this->_criteria[$this->_clause]) ;
-		if ($count) {
-			$last = $this->_criteria[$this->_clause][$count - 1] ;
+		$last = $this->_last() ;
+		if ($last) {
 			if ($last->mergeable($criteria)) {
 				$last->merge($criteria) ;
 				return $this ;
@@ -63,6 +62,20 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 		}
 		$this->_criteria[$this->_clause][] = $criteria ;
 		return $this->_fluid() ;
+	}
+
+	/**
+	 * Get the last clause added to the builder.
+	 * 
+	 * @return mixed Criteria or null if nothing.
+	 */
+	protected function _last() {
+		$count = count($this->_criteria[$this->_clause]) ;
+		if ($count) {
+			$last = $this->_criteria[$this->_clause][$count - 1] ;
+			return $last ;
+		}
+		return null ;
 	}
 	
 	/**
@@ -178,5 +191,19 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 		}
 		
 		return $total ;
+	}
+
+	/**
+	 * Return the last added clause if exists. Otherwise, this.
+	 * 
+	 * @return mixed Criteria or this.
+	 */
+	public function instance() {
+		$last = $this->_last() ;
+		if ($last) {
+			return $last ;
+		}
+
+		return $this ;
 	}
 }
