@@ -263,10 +263,12 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 					'should' => array()
 				)
 			) ;
+			$_data = $data ;
+			unset($_data['ranges']) ;
 			foreach($data['ranges'] as $range) {
 				$_clause = array(
 					'range' => array(
-						$in => $range
+						$in => $range + $_data
 					)
 				) ;
 				$return['bool']['should'][] = $_clause ;

@@ -114,6 +114,7 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 		// Multiple ranges
 		$criteria = new TestCriteria(array(
 			'field' => 'in',
+			'include_upper' => true,
 			'ranges' => array(
 				array('from' => 1,'to' => 10),
 				array('from' => 11,'to' => 20)
@@ -125,12 +126,12 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 				'should' => array(
 					array(
 						'range' => array(
-							'in' => array('from' => 1,'to' => 10)
+							'in' => array('from' => 1,'to' => 10, 'include_upper' => true)
 						)
 					),
 					array(
 						'range' => array(
-							'in' => array('from' => 11,'to' => 20)
+							'in' => array('from' => 11,'to' => 20, 'include_upper' => true)
 						)
 					)
 				)
