@@ -4,20 +4,29 @@ require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php')
 class Simples_ResponseTest extends PHPUnit_Framework_TestCase {
 	
 	public function testConstruct() {
-		$request = new Simples_Response(array()) ;
-		$this->assertTrue($request instanceof Simples_Response) ;
+		$response = new Simples_Response(array()) ;
+		$this->assertTrue($response instanceof Simples_Response) ;
+	}
+
+	public function testSet() {
+		$response = new Simples_Response(array()) ;
+		$response->set('field','value') ;
+		$this->assertEquals('value', $response->field) ;
+
+		$response->set(array('field' => 'value2')) ;
+		$this->assertEquals('value2', $response->field) ;
 	}
 	
 	public function testAccessors() {
-		$request = new Simples_Response(array(
+		$response = new Simples_Response(array(
 			'ok' => true,
 			'version' => array(
 				'number' => '0.18.5'
 			)
 		)) ;
-		$this->assertEquals(true, $request->ok);
-		$this->assertTrue($request->version instanceof Simples_Response) ;
-		$this->assertEquals('0.18.5', $request->version->number) ;
+		$this->assertEquals(true, $response->ok);
+		$this->assertTrue($response->version instanceof Simples_Response) ;
+		$this->assertEquals('0.18.5', $response->version->number) ;
 	}
 	
 	public function testException() {

@@ -35,9 +35,14 @@ class Simples_Response extends Simples_Base {
 	 * @param array $data			Array of data
 	 * @return \Simples_Response	Current response
 	 */
-	public function set(array $data = null) {
-		$this->_check($data) ;
-		$this->_data = $data ;
+	public function set($key = null, $data = null) {
+		if (is_string($key)) {
+			$this->_data[$key] = $data ;
+		} else {
+			$this->_check($key) ;
+			$this->_data = $key ;
+		}
+
 		return $this ;
 	}
 	
