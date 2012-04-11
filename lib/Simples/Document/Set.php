@@ -14,7 +14,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * 
 	 * @var array
 	 */
-	protected $_data ;
+	protected $_data = array() ;
 	
 	/**
 	 * Constructor.
@@ -79,7 +79,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * @return boolean
 	 */
 	static public function check($data) {
-		if (is_string($data)) {
+		if (!is_array($data)) {
 			return false ;
 		}
 		foreach($data as $key => $value) {

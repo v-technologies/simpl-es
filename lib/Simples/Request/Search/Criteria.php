@@ -238,7 +238,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$return = array(
 			$type => array(
 				'field' => $in
-			)
+			) + $data
 		);		
 		
 		return $return ;
@@ -251,6 +251,31 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 */
 	protected function _prepare_exists() {
 		return $this->_prepare_missing('exists') ;
+	}
+
+	/**
+	 * Prepare for a "geo_bounding_box" clause.
+	 * 
+	 * @return array
+	 */
+	protected function _prepare_geo_bounding_box() {
+		$data = $this->get() ;
+		
+		if (!isset($data['in'])) {
+			throw new Simples_Request_Exception('Key "in" is empty') ;
+		}
+
+		$in = $data['in'] ;
+		unset($data['in']) ;
+			
+		
+		$return = array(
+			'geo_bounding_box' => array(
+				$in => $data
+			)
+		);		
+		
+		return $return ;
 	}
 
 	/**

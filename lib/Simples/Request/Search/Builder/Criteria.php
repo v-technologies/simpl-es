@@ -64,6 +64,12 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 		return $this->_fluid() ;
 	}
 
+	/**
+	 * Set/get options.
+	 * 
+	 * @param  array $options Setter : options
+	 * @return mixed          Getter : options . Setter : this.
+	 */
 	public function options($options = null) {
 		return $this->_last()->options($options) ;
 	}
