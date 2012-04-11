@@ -97,6 +97,30 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 		);
 		$this->assertEquals($expected, $res) ;
 
+		// Missing
+		$criteria = new TestCriteria(array(
+			'field' => 'my_field'
+		), array('type' => 'missing')) ;
+		$res = $criteria->to('array') ;
+		$expected = array(
+			'missing' => array(
+				'field' => 'my_field'
+			)
+		);
+		$this->assertEquals($expected, $res) ;
+
+		// Exists
+		$criteria = new TestCriteria(array(
+			'field' => 'my_field'
+		), array('type' => 'exists')) ;
+		$res = $criteria->to('array') ;
+		$expected = array(
+			'exists' => array(
+				'field' => 'my_field'
+			)
+		);
+		$this->assertEquals($expected, $res) ;
+
 		// Range
 		$criteria = new TestCriteria(array(
 			'field' => 'in',

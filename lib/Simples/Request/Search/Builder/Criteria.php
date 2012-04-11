@@ -64,6 +64,10 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 		return $this->_fluid() ;
 	}
 
+	public function options($options = null) {
+		return $this->_last()->options($options) ;
+	}
+
 	/**
 	 * Get the last clause added to the builder.
 	 * 

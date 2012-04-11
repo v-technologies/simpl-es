@@ -394,6 +394,23 @@ class Simples_Request_Search extends Simples_Request {
 		$object = '_' . $this->_current ;
 		return $this->{$object}->instance() ;
 	}
+
+	/**
+	 * Fluid options handling.
+	 * 
+	 * @param  array $options Setter mode : options to set
+	 * @return array          Getter mode : options of the current object or subobject instance
+	 */
+	public function options(array $options = null) {
+		if ($this->_fluid) {
+			if (isset($options)) {
+				$this->{'_' . $this->_current}->options($options) ;
+				return $this ;
+			}
+			return $this->{'_' . $this->_current}->options() ;
+		}
+		return parent::options($options) ;
+	}
 	
 	/**
 	 * Magic call : chain with subobjects.
@@ -415,6 +432,6 @@ class Simples_Request_Search extends Simples_Request {
 	 * @return \Simples_Response_Search 
 	 */
 	protected function _response($data) {
-		return new Simples_Response_Search($data, $this->options()) ;
+		return new Simples_Response_Search($data, parent::options()) ;
 	}
 }

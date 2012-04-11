@@ -313,5 +313,12 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, count($res['query']['bool']['must'])) ;
 		$this->assertEquals('text', key($res['query']['bool']['must'][0])) ;
 		$this->assertEquals('terms', key($res['query']['bool']['must'][1])) ;
+
+		$request = $this->client->search() ;
+		$request->filter()
+			->field('location')
+			->options(array('type' => 'missing')) ;
+		$res = $request->to('array') ;
+		$this->assertTrue(isset($res['filter']['missing'])) ;
 	}
 }

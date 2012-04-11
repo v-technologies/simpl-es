@@ -54,7 +54,11 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * 
 	 * @return array	Options
 	 */
-	public function options() {
+	public function options(array $options = null) {
+		if (isset($options)) {
+			$this->_options = $options + $this->_options ;
+			return $this ;
+		}
 		return $this->_options ;
 	}
 	
@@ -213,6 +217,40 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		
 		
 		return $return ;
+	}
+
+	/**
+	 * Prepare for a "missing" or "exists" clause.
+	 * 
+	 * @return array
+	 */
+	protected function _prepare_missing($type = 'missing') {
+		$data = $this->get() ;
+		
+		if (!isset($data['in'])) {
+			throw new Simples_Request_Exception('Key "in" is empty') ;
+		}
+
+		$in = $data['in'] ;
+		unset($data['in']) ;
+			
+		
+		$return = array(
+			$type => array(
+				'field' => $in
+			)
+		);		
+		
+		return $return ;
+	}
+
+	/**
+	 * Prepare for an "exists" clause.
+	 * 
+	 * @return array
+	 */
+	protected function _prepare_exists() {
+		return $this->_prepare_missing('exists') ;
 	}
 
 	/**
