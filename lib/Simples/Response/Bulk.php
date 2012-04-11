@@ -16,15 +16,15 @@ class Simples_Response_Bulk extends Simples_Response {
 	 * @return \Simples_Response_Bulk 
 	 * @todo	Generate an exception containing all the previous exceptions (actually, stop on the first)
 	 */
-	public function set(array $data = null) {
+	public function set($key = null, $data = null) {
 		// Bulk response check
-		if (isset($data['items'])) {
-			foreach($data['items'] as $i => $action) {
+		if (isset($key['items'])) {
+			foreach($key['items'] as $i => $action) {
 				$response = $action[key($action)] ;
 				$this->_check($response) ;
 			}
 		}
-		$this->_data = $data ;
+		$this->_data = $key ;
 		return $this ;
 	}
 }
