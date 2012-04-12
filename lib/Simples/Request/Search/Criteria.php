@@ -258,6 +258,31 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * 
 	 * @return array
 	 */
+	protected function _prepare_ids() {
+		$data = $this->get() ;
+		
+		if (!isset($data['value'])) {
+			throw new Simples_Request_Exception('Key "value" is empty') ;
+		}
+
+		$value = $data['value'] ;
+		unset($data['value']) ;
+			
+		
+		$return = array(
+			'ids' => array(
+				'values' => $value
+			) + $data
+		);		
+		
+		return $return ;
+	}
+
+	/**
+	 * Prepare for a "geo_bounding_box" clause.
+	 * 
+	 * @return array
+	 */
 	protected function _prepare_geo_bounding_box() {
 		$data = $this->get() ;
 		

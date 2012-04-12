@@ -121,6 +121,20 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 		);
 		$this->assertEquals($expected, $res) ;
 
+		// Ids
+		$criteria = new TestCriteria(array(
+			'values' => array('1','2','3'),
+			'type' => 'my_type'
+		), array('type' => 'ids')) ;
+		$res = $criteria->to('array') ;
+		$expected = array(
+			'ids' => array(
+				'values' => array('1','2','3'),
+				'type' => "my_type"
+			)
+		);
+		$this->assertEquals($expected, $res) ;
+
 		// Range
 		$criteria = new TestCriteria(array(
 			'field' => 'in',
