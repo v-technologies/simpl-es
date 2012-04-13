@@ -21,7 +21,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * 
 	 * @param array $set	Set of documents
 	 */
-	public function __construct(array $set = null) {
+	public function __construct($set = null) {
 		if (isset($set)) {
 			$this->set($set) ;
 		}
@@ -33,12 +33,20 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * @param array $set		Set of documents.
 	 * @throws Simples_Document_Exception 
 	 */
-	public function set(array $set) {
+	public function set($set) {
 		if (!self::check($set)) {
 			throw new Simples_Document_Exception('$set is not a valid Simples_Document_Set set of documents') ;
 		}
-		foreach($set as $document) {
-			$this->_data[] = new Simples_Document($document) ;
+		if ($set instanceof Simples_Document) {
+			$this->_data[] = $set ;
+		} else {
+			foreach($set as $document) {
+				if ($document instanceof Simples_Document) {
+					$this->_data[] = $document ;
+				} else {
+					$this->_data[] = new Simples_Document($document) ;
+				}
+			}
 		}
 		
 		return $this ;
@@ -79,6 +87,9 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * @return boolean
 	 */
 	static public function check($data) {
+		if ($data instanceof Simples_Document) {
+			return true ;
+		}
 		if (!is_array($data)) {
 			return false ;
 		}
@@ -86,7 +97,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 			if (!is_numeric($key)) {
 				return false ;
 			}
-			if (!is_array($value)) {
+			if (!is_array($value) && !$value instanceof Simples_Document) {
 				return false ;
 			}
 		}

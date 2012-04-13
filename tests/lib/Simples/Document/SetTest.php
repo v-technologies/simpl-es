@@ -13,6 +13,14 @@ class Simples_Document_SetTest extends PHPUnit_Framework_TestCase {
 			$this->fail() ;
 		} catch (Exception $e) {
 		}
+
+		$set = new Simples_Document_Set(new Simples_Document(array('something' => 'good'))) ;
+		$this->assertTrue($set instanceof Simples_Document_Set) ;		
+		$this->assertEquals(1, count($set)) ;
+
+		$set = new Simples_Document_Set(array(new Simples_Document(array('something' => 'good')))) ;
+		$this->assertTrue($set instanceof Simples_Document_Set) ;		
+		$this->assertEquals(1, count($set)) ;
 	}
 	
 	public function testInterfaces() {

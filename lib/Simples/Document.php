@@ -40,19 +40,23 @@ class Simples_Document extends Simples_Base {
 	 * @return \Simples_Response	Current response
 	 */
 	public function set(array $data = null) {
-		if (isset($data['_source'])) {
-			$this->_data = $data['_source'] ;
+		if (isset($data['_source']) || isset($data['fields'])) {
+			if (isset($data['_source'])) {
+				$key = '_source' ;
+			} else {
+				$key = 'fields' ;
+			}
+			$this->_data = $data[$key] ;
 			
 			// Renaming properties (for simplified call)
 			$properties = array() ;
-			foreach($data as $key => $value) {
-				if ($key !== '_source') {
-					$key = preg_replace('/^(_)/','', $key) ;
-					$properties[$key] = $value ;
+			foreach($data as $_key => $value) {
+				if ($_key !== $key) {
+					$_key = preg_replace('/^(_)/','', $_key) ;
+					$properties[$_key] = $value ;
 				}
 			}
 			$this->_properties = new Simples_Document($properties) ;
-			
 		} else {
 			$this->_data = $data ;
 		}
