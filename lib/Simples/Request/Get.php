@@ -42,4 +42,14 @@ class Simples_Request_Get extends Simples_Request {
 		
 		return $path ;
 	}
+
+	/**
+	 * Specific response object.
+	 * 
+	 * @param array		$data		Get request results.
+	 * @return \Simples_Response_Get 
+	 */
+	protected function _response($data) {
+		return new Simples_Response_Get($data, parent::options()) ;
+	}
 }

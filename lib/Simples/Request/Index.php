@@ -77,13 +77,13 @@ class Simples_Request_Index extends Simples_Request {
 	 */
 	public function body($body = null) {
 		if (isset($body)) {
-			if ($body instanceof Simples_Document_Set || Simples_Document_Set::check($body)) {
+			if ($body instanceof Simples_Document) {
+				$this->_body = $body ;
+			} elseif ($body instanceof Simples_Document_Set || Simples_Document_Set::check($body)) {
 				if (!$body instanceof Simples_Document_Set) {
 					 $body = new Simples_Document_Set($body) ;
 				 }
 				 $this->_body = $body ;
-			} elseif ($body instanceof Simples_Document) {
-				$this->_body = $body ;
 			} else {
 				$this->_body = new Simples_Document($body) ;
 			}
