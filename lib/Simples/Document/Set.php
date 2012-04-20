@@ -15,13 +15,25 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	 * @var array
 	 */
 	protected $_data = array() ;
+
+	/**
+	 * Configuration.
+	 * 
+	 * @var array
+	 */
+	protected $_config = array(
+		'source' => null
+	) ;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param array $set	Set of documents
 	 */
-	public function __construct($set = null) {
+	public function __construct($set = null, array $options = null) {
+		if (isset($options)) {
+			$this->config($options) ;
+		} 
 		if (isset($set)) {
 			$this->set($set) ;
 		}
@@ -44,7 +56,7 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 				if ($document instanceof Simples_Document) {
 					$this->_data[] = $document ;
 				} else {
-					$this->_data[] = new Simples_Document($document) ;
+					$this->_data[] = new Simples_Document($document, $this->config()) ;
 				}
 			}
 		}

@@ -82,6 +82,24 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse(isset($res['_source'])) ;
 		$res = $document->to('array', array('source' => 'auto')) ;
 		$this->assertTrue(isset($res['_source'])) ;
-		
+
+		// Force source
+		$document = new Simples_Document($this->data['standard'], array('source' => true)) ;
+		$res = $document->to('array', array('source' => true)) ;
+		$this->assertTrue(isset($res['_firstname'])) ;
+		$res = $document->to('array', array('source' => false)) ;
+		$this->assertTrue(empty($res)) ;
+
+		$document = new Simples_Document($this->data['standard'], array('source' => false)) ;
+		$res = $document->to('array', array('source' => true)) ;
+		$this->assertTrue(isset($res['_source']['firstname'])) ;
+
+		$document = new Simples_Document($this->data['source'], array('source' => true)) ;
+		$res = $document->to('array', array('source' => true)) ;
+		$this->assertTrue(isset($res['_source']['firstname'])) ;
+
+		$document = new Simples_Document($this->data['source'], array('source' => false)) ;
+		$res = $document->to('array', array('source' => true)) ;
+		$this->assertTrue(isset($res['_source']['_source']['firstname'])) ;
 	}
 }

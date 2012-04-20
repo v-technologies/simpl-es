@@ -40,7 +40,7 @@ class Simples_Response_Search extends Simples_Response {
 	 */
 	public function hits() {
 		if (isset($this->_data['hits']['hits'])) {
-			return new Simples_Document_Set($this->_data['hits']['hits']) ;
+			return new Simples_Document_Set($this->_data['hits']['hits'], array('source' => true)) ;
 		}
 		return null ;
 	}

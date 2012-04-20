@@ -21,13 +21,26 @@ class Simples_Document extends Simples_Base {
 	 * @var array
 	 */
 	protected $_data = array() ;
+
+	/**
+	 * Configuration:
+	 * - source (bool) : force or not if we are working on a document in the ES hit format or in a standard document
+	 * 
+	 * @var array
+	 */
+	protected $_config = array(
+		'source' => null
+	);
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param SimplesTransport $transport		Connection to use.
 	 */
-	public function __construct(array $data = null) {
+	public function __construct(array $data = null, array $options = null) {
+		if (isset($options)) {
+			$this->config($options) ;
+		}
 		if (isset($data)) {
 			$this->set($data) ;
 		}
@@ -40,13 +53,17 @@ class Simples_Document extends Simples_Base {
 	 * @return \Simples_Response	Current response
 	 */
 	public function set(array $data = null) {
-		if (isset($data['_source']) || isset($data['fields'])) {
+		$source = $this->config('source') ;
+		if ($source === true || ($source === null && (isset($data['_source']) || isset($data['fields'])))) {
 			if (isset($data['_source'])) {
 				$key = '_source' ;
 			} else {
 				$key = 'fields' ;
 			}
-			$this->_data = $data[$key] ;
+
+			if (isset($data[$key])) {
+				$this->_data = $data[$key] ;
+			}
 			
 			// Renaming properties (for simplified call)
 			$properties = array() ;

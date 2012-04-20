@@ -71,4 +71,16 @@ class Simples_Document_SetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(json_encode($data), $res) ;
 	}
 
+	public function testSource() {
+		$data = array(
+			array('_id' => 10)
+		) ;
+		$set = new Simples_Document_Set($data, array('source' => true)) ;
+		$this->assertTrue($set->get(0)->properties() instanceof Simples_Document) ;
+		$this->assertEquals(10, $set->get(0)->properties()->id) ;
+
+		$set = new Simples_Document_Set($data, array('source' => false)) ;
+		$this->assertFalse($set->get(0)->properties() instanceof Simples_Document) ;
+	}
+
 }
