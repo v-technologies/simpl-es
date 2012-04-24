@@ -30,7 +30,7 @@ class Simples_Response_Get extends Simples_Response {
 	 */
 	public function document() {
 		if (isset($this->_data['_source'])) {
-			return new Simples_Document($this->_data) ;
+			return new Simples_Document($this->_data, array('source' => true)) ;
 		}
 		return null ;
 	}
