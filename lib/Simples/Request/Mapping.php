@@ -21,7 +21,7 @@ class Simples_Request_Mapping extends Simples_Request {
 		'path' => '_mapping',
 		'magic' => 'raw',
 		'inject' => array(
-			'params' => array('ignore_conflicts')
+			'params' => array('ignore_conflicts','refresh')
 		)
 	) ;
 	

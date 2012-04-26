@@ -16,7 +16,10 @@ class Simples_Request_CreateIndex extends Simples_Request {
 	 */
 	protected $_definition = array(
 		'method' => self::PUT,
-		'magic' => 'index'
+		'magic' => 'index',
+		'inject' => array(
+			'params' => array('refresh')
+		)
 	) ;
 	
 	/**

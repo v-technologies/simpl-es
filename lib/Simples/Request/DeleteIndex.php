@@ -16,6 +16,9 @@ class Simples_Request_DeleteIndex extends Simples_Request_CreateIndex {
 	 */
 	protected $_definition = array(
 		'method' => self::DELETE,
-		'magic' => 'index'
+		'magic' => 'index',
+		'inject' => array(
+			'params' => array('refresh')
+		)
 	) ;
 }
