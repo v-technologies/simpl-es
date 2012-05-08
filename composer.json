@@ -1,0 +1,15 @@
+{
+	"name": "v-technologies/simpl-es",
+	"description": "ElasticSearch PHP API. Simplier. Really. ",
+	"type": "library",
+	"authors": [
+		{
+			"name": "V-Technologies",
+			"email": ""
+		}
+	],
+	"require": {},
+	"autoload": {
+		"psr-0": {"Simples": "lib/"}
+	}
+}
