@@ -220,6 +220,49 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	}
 
 	/**
+	 * Prepare for an "prefix" clause. Let the user give an array of values : in this case,
+	 * generates one boolean clause by value.
+	 * 
+	 * @return array
+	 */
+	protected function _prepare_prefix() {
+		$data = $this->get() ;
+		
+		if (!isset($data['in']) || !isset($data['value'])) {
+			throw new Simples_Request_Exception('Key "in" or "value" empty') ;
+		}
+
+		$in = $data['in'] ;
+		$value = $data['value'] ;
+		$data = array_diff_key($data, array('in' => true, 'value' => true)) ;
+			
+		if (!is_array($value)) {
+			$return = array(
+				'prefix' => array(
+					$in => $this->_termIn('prefix', $value, $data)
+				) 
+			);
+		} else {
+			$return = array(
+				'bool' => array(
+					'should' => array()
+				)
+			) ;
+			foreach($value as $v) {
+				$_clause = array(
+					'prefix' => array(
+						$in => $this->_termIn('prefix', $v, $data)
+					)
+				) ;
+				$return['bool']['should'][] = $_clause ;
+			}
+		}
+		
+		
+		return $return ;
+	}
+
+	/**
 	 * Prepare for a "missing" or "exists" clause.
 	 * 
 	 * @return array
