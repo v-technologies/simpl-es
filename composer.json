@@ -1,14 +1,19 @@
 {
 	"name": "v-technologies/simpl-es",
-	"description": "ElasticSearch PHP API. Simplier. Really. ",
 	"type": "library",
+	"description": "ElasticSearch PHP API. Simplier. Really. ",
 	"authors": [
 		{
 			"name": "Sebastien Charrier, V-Technologies",
 			"email": "sebastien@vtech.fr"
 		}
 	],
-	"require": {},
+	"keywords" : ["search","elasticsearch"],
+	"licence" : "MIT",
+	"homepage" : "http://github.com/v-technologies/simpl-es/",
+	"require": {
+		"php" : ">=5.2.0"
+	},
 	"autoload": {
 		"psr-0": {"Simples": "lib/"}
 	}
