@@ -1,4 +1,4 @@
-# Simpl-ES : an ElasticSearch PHP API. Simplier. Really.
+# Simpl-ES : an ElasticSearch PHP API. Simpler. Really.
 
 [![Build Status](https://secure.travis-ci.org/scharrier/simpl-es.png)](http://travis-ci.org/scharrier/simpl-es) [![Maintained Status](http://stillmaintained.com/scharrier/simpl-es.png)](http://stillmaintained.com/scharrier/simpl-es)
 
@@ -48,7 +48,7 @@ We have implemented PSR-0 guidelines, so you can use your generic autoload metho
 Installation
 ------------
 
-The simpliest way to install and use Simpl-ES is to use Composer, as there is a package on Packagist. Just add this to your project composer.json file :
+The simplest way to install and use Simpl-ES is to use Composer, as there is a package on Packagist. Just add this to your project composer.json file :
 
 	{
 		"minimum-stability": "dev",
