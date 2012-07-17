@@ -4,8 +4,8 @@
 	"type": "library",
 	"authors": [
 		{
-			"name": "V-Technologies",
-			"email": ""
+			"name": "Sebastien Charrier, V-Technologies",
+			"email": "sebastien@vtech.fr"
 		}
 	],
 	"require": {},
