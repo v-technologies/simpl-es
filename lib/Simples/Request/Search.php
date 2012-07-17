@@ -148,8 +148,13 @@ class Simples_Request_Search extends Simples_Request {
 		if (empty($body['facets']) && $this->_facets->count()) {
 			$body['facets'] = $this->_facets->to('array') ;
 		}
+
+		// Sort format
+		if (!empty($body['sort'])) {
+			$body['sort'] = $this->_prepareSort($body['sort']) ;		
+		}
 		
-		// Reformatage des highlights
+		// Highlights format
 		if (!empty($body['highlight']['fields'])) {
 			$highlight = array() ;
 			foreach($body['highlight']['fields'] as $key => $value) {
@@ -169,6 +174,35 @@ class Simples_Request_Search extends Simples_Request {
                 }
 		
 		return $body ;
+	}
+
+	/**
+	 * Prepare the sort clause : string, array, mixed.
+	 * 
+	 * @param  mixed $sort String or array describing the sort clause
+	 * @return array       Normalized array
+	 */
+	protected function _prepareSort($sort) {
+		if (is_array($sort)) {
+			$_sort = array() ;
+			foreach($sort as $key => $value) {
+				if (is_numeric($key)) {
+					$_sub = $this->_prepareSort($value) ;
+					if (is_array($_sub)) {
+						$_sort = array_merge($_sort, $_sub) ;
+					} else {
+						$_sort[] = $_sub ;
+					}
+				} else {
+					$_sort[$key] = $value ;
+				}
+			}
+			$sort = $_sort ;
+		} elseif (preg_match('/^(.*) +(.*)$/', $sort, $matches)) {
+			$sort = array($matches[1] => $matches[2]) ;
+		}
+
+		return $sort ;
 	}
 	
 	/**

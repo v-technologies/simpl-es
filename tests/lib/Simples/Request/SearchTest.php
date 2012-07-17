@@ -78,20 +78,33 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, $facets[1]['count']) ;
 		
 	}
+
+	public function test_sort() {
+		$request = $this->client->search();
+		$request->sort('Client.name') ;
+		$body = $request->body() ;
+		$this->assertEquals('Client.name', $body['sort']) ;
+
+		$request->sort('Client.name desc') ;
+		$body = $request->body() ;
+		$this->assertEquals(array('Client.name' => 'desc'), $body['sort']) ;
+
+		$request->sort(array('Client.name asc', 'Client.age' => 'desc', 'Client.location')) ;
+		$body = $request->body() ;
+		$this->assertEquals(array('Client.name' => 'asc', 'Client.age' => 'desc', 'Client.location'), $body['sort']) ;
+	}
 	
 	public function testFluid() {
 		$request = $this->client->search();
 		$request->query('scharrier')
 				->from(10)
-				->size(5)
-				->sort('Client.name desc') ;
+				->size(5) ;
 		
 		$body = $request->body() ;
 		$this->assertEquals('query', key($body)) ;
 		$this->assertEquals('scharrier', $body['query']['query_string']['query']) ;
 		$this->assertEquals(10, $body['from']) ;
 		$this->assertEquals(5, $body['size']) ;
-		$this->assertEquals('Client.name desc', $body['sort']) ;
 
 		// Break fluid calls
 		$request = $this->client->search() ;
@@ -139,8 +152,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 					->field('type')->match(array('administrator','visitor'))
 				->not()
 					->field('connected')->match(true)
-			->size(5)
-			->sort('username asc') ;
+			->size(5) ;
 		
 		$res = $request->to('array') ;
 		$this->assertTrue(isset($res['query']['bool']['should'])) ;
