@@ -45,6 +45,20 @@ Simpl-ES is continuously tested on PHP 5.2.x, 5.3.x and 5.4.x. . It's actually d
 
 We have implemented PSR-0 guidelines, so you can use your generic autoload method to work with it.
 
+Installation
+------------
+
+The simpliest way to install and use Simpl-ES is to use Composer, as there is a package on Packagist. Just add this to your project composer.json file :
+
+	{
+		"minimum-stability": "dev",
+	    "require": {
+	        "v-technologies/simpl-es": "*"
+	    }
+	}
+
+As there isn't yet a stable version, you have to add the "minimum-stability" clause to your file. If you don't do that, Composer won't be able to see Simpl-ES.
+
 Help us
 -------
 
