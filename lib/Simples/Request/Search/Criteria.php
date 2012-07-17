@@ -186,7 +186,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data = $this->get() ;
 		
 		if (!isset($data['in']) || !isset($data['value'])) {
-			throw new Simples_Request_Exception('Key "in" or "value" empty') ;
+			throw new Simples_Request_Exception('Key "in" or "value" empty', $data) ;
 		}
 
 		$in = $data['in'] ;
@@ -229,7 +229,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data = $this->get() ;
 		
 		if (!isset($data['in']) || !isset($data['value'])) {
-			throw new Simples_Request_Exception('Key "in" or "value" empty') ;
+			throw new Simples_Request_Exception('Key "in" or "value" empty', $data) ;
 		}
 
 		$in = $data['in'] ;
@@ -271,7 +271,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data = $this->get() ;
 		
 		if (!isset($data['in'])) {
-			throw new Simples_Request_Exception('Key "in" is empty') ;
+			throw new Simples_Request_Exception('Key "in" is empty', $data) ;
 		}
 
 		$in = $data['in'] ;
@@ -305,7 +305,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data = $this->get() ;
 		
 		if (!isset($data['value'])) {
-			throw new Simples_Request_Exception('Key "value" is empty') ;
+			throw new Simples_Request_Exception('Key "value" is empty', $data) ;
 		}
 
 		$value = $data['value'] ;
@@ -330,7 +330,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data = $this->get() ;
 		
 		if (!isset($data['in'])) {
-			throw new Simples_Request_Exception('Key "in" is empty') ;
+			throw new Simples_Request_Exception('Key "in" is empty', $data) ;
 		}
 
 		$in = $data['in'] ;
@@ -376,7 +376,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data = $this->get() ;
 		
 		if (!isset($data['in'])) {
-			throw new Simples_Request_Exception('Key "in" empty') ;
+			throw new Simples_Request_Exception('Key "in" empty', $data) ;
 		}
 
 		$in = $data['in'] ;
@@ -418,7 +418,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		$data = $this->get() ;
 		
 		if (!isset($data['in'])) {
-			throw new Simples_Request_Exception('Key "in" is empty') ;
+			throw new Simples_Request_Exception('Key "in" is empty', $data) ;
 		}
 
 		$in = $data['in'] ;
@@ -433,7 +433,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		unset($data['in']) ;
 
 		if (empty($values)) {
-			throw new Simples_Request_Exception('Keys "values","lat","lon" are empty') ;
+			throw new Simples_Request_Exception('Keys "values","lat","lon" are empty', $data) ;
 		}
 		
 			
