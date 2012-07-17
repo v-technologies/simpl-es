@@ -1,7 +1,7 @@
 {
 	"name": "v-technologies/simpl-es",
 	"type": "library",
-	"description": "ElasticSearch PHP API. Simplier. Really. ",
+	"description": "ElasticSearch PHP API. Simpler. Really. ",
 	"authors": [
 		{
 			"name": "Sebastien Charrier, V-Technologies",
