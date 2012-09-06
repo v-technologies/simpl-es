@@ -21,6 +21,9 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 				array('firstname' => 'Ray' , 'lastname' => 'Manzarek'),
 				array('firstname' => 'Robbie' , 'lastname' => 'Krieger'),
 				array('firstname' => 'John' , 'lastname' => 'Densmore')
+			),
+			'sub' => array(
+				array('integer' => '9', 'string' => 9)
 			)
 		) ;
 		
@@ -62,14 +65,7 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$res = $document->to('array') ;
 		$this->assertEquals('Jim', $res['_source']['firstname']) ;
 		$this->assertEquals('music', $res['_index']) ;
-		
-		// Test clean
-		$document = new Simples_Document($this->data['standard']) ;
-		$res = $document->to('array', array('clean' => true)) ;
-		$this->assertFalse(isset($res['empty'])) ;
-		$this->assertTrue($res['integer'] === 9.0);
-		$this->assertTrue($res['float'] === 1.11);
-		
+				
 		// Test source
 		$document = new Simples_Document($this->data['standard']) ;
 		$res = $document->to('array', array('source' => true)) ;
@@ -101,5 +97,19 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$document = new Simples_Document($this->data['source'], array('source' => false)) ;
 		$res = $document->to('array', array('source' => true)) ;
 		$this->assertTrue(isset($res['_source']['_source']['firstname'])) ;
+	}
+
+	public function testClean() {
+		// Test clean
+		$document = new Simples_Document($this->data['standard'], array('mapping' => array(
+			'sub.integer' => 'integer',
+			'sub.string' => 'string'
+		))) ;
+		$res = $document->to('array', array('clean' => true)) ;
+		$this->assertFalse(isset($res['empty'])) ;
+		$this->assertTrue($res['integer'] === 9.0);
+		$this->assertTrue($res['float'] === 1.11);
+		$this->assertTrue($res['sub'][0]['integer'] === 9);
+		$this->assertTrue($res['sub'][0]['string'] === '9');
 	}
 }

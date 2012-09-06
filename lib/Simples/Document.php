@@ -25,11 +25,13 @@ class Simples_Document extends Simples_Base {
 	/**
 	 * Configuration:
 	 * - source (bool) : force or not if we are working on a document in the ES hit format or in a standard document
+	 * - mapping (array) : force some types when cleaning the object (clean === true in the to() call)
 	 * 
-	 * @var array
+ 	 * @var array
 	 */
 	protected $_config = array(
-		'source' => null
+		'source' => null,
+		'mapping' => array()
 	);
 	
 	/**
@@ -78,6 +80,22 @@ class Simples_Document extends Simples_Base {
 			$this->_data = $data ;
 		}
 		
+		return $this ;
+	}
+
+	/**
+	 * Delete all the data or only the $key field.
+	 * 
+	 * @param  string $key          Field to delete.
+	 * @return Simples_Document 	$this instance (for fluid calls)
+	 */
+	public function delete($key = null) {
+		if (!isset($key)) {
+			$this->_data = array() ;
+		} elseif (isset($this->_data[$key])) {
+			unset($this->_data[$key]) ;
+		}
+
 		return $this ;
 	}
 	
@@ -190,14 +208,25 @@ class Simples_Document extends Simples_Base {
 	 * 
 	 * @param array		$data	Object (by reference)
 	 */
-	protected function _clean(& $data) {
+	protected function _clean(& $data, $path = array()) {
 		foreach($data as $key => $value) {
-			if (is_array($value)) {
-				$this->_clean($data[$key]) ;
-			} elseif ((is_scalar($value) && !strlen($value)) || !isset($value)) {
-				unset($data[$key]) ;
-			} elseif (is_numeric($value)) {
-				$data[$key] = (float) $value ;
+			// Current path calculation
+			$_keys = $path ;
+			if (!is_numeric($key)) {
+				$_keys[] = $key ;
+			}
+			$_path = implode($_keys, '.') ;
+			if (isset($this->_config['mapping'][$_path])) {
+				// We wanna force the type
+				settype($data[$key], $this->_config['mapping'][$_path]) ;
+			} else {
+				if (is_array($value)) {
+					$this->_clean($data[$key], $_keys) ;
+				} elseif ((is_scalar($value) && !strlen($value)) || !isset($value)) {
+					unset($data[$key]) ;
+				} elseif (is_numeric($value)) {
+					$data[$key] = (float) $value ;
+				}
 			}
 		}
 	}
