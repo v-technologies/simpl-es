@@ -109,5 +109,11 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse(isset($res[1]['empty'])) ;
 		$this->assertTrue($res[1]['zero'] === 0.0) ;
 		$this->assertTrue($res[1]['float'] === 1.2) ;
+
+		$request = $this->client->index($data, array('clean' => true, 'cast' => array('zero' => 'string', 'float' => 'integer'))) ;
+		$res = $request->to('array') ;
+		$this->assertTrue($res[1]['zero'] === '0') ;
+		$this->assertTrue($res[1]['float'] === 1) ;
+
 	}
 }

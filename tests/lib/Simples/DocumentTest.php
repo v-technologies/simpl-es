@@ -101,7 +101,7 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 
 	public function testClean() {
 		// Test clean
-		$document = new Simples_Document($this->data['standard'], array('mapping' => array(
+		$document = new Simples_Document($this->data['standard'], array('cast' => array(
 			'sub.integer' => 'integer',
 			'sub.string' => 'string'
 		))) ;
@@ -111,5 +111,9 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($res['float'] === 1.11);
 		$this->assertTrue($res['sub'][0]['integer'] === 9);
 		$this->assertTrue($res['sub'][0]['string'] === '9');
+
+		// Runtime casting
+		$res = $document->to('array', array('clean' => true, 'cast' => array('sub.string' => 'float'))) ;
+		$this->assertTrue($res['sub'][0]['string'] === 9.0);
 	}
 }

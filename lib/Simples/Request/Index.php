@@ -27,7 +27,13 @@ class Simples_Request_Index extends Simples_Request {
 	) ;
 	
 	/**
-	 * Request options.
+	 * Request options :
+	 * - index (string) : index name
+	 * - type (string) : index type
+	 * - id (mixed) : object id, when indexing only one object
+	 * - refresh (bool) : should we wait the index refresh before continuing ?
+	 * - clean (bool) : should we clean the records before indexing ?
+	 * - cast (array) : type casting for specific keys, when cleaning
 	 * 
 	 * @var array
 	 */
@@ -36,7 +42,8 @@ class Simples_Request_Index extends Simples_Request {
 		'type' => null,
 		'id' => null,
 		'refresh' => null,
-		'clean' => false
+		'clean' => false,
+		'cast' => array()
 	) ;
 	
 	/**
@@ -133,6 +140,7 @@ class Simples_Request_Index extends Simples_Request {
 				) ;
 				if (isset($document->id)) {
 					$action['index']['_id'] = $document->id ;
+					$document->delete('id') ;
 				}
 				$json .= json_encode($action) . "\n" ;
 				$json .= $document->to('json', $this->_options) . "\n" ;

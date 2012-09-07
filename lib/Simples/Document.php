@@ -25,13 +25,13 @@ class Simples_Document extends Simples_Base {
 	/**
 	 * Configuration:
 	 * - source (bool) : force or not if we are working on a document in the ES hit format or in a standard document
-	 * - mapping (array) : force some types when cleaning the object (clean === true in the to() call)
+	 * - cast (array) : force some types when cleaning the object (clean === true in the to() call)
 	 * 
  	 * @var array
 	 */
 	protected $_config = array(
 		'source' => null,
-		'mapping' => array()
+		'cast' => array()
 	);
 	
 	/**
@@ -167,13 +167,14 @@ class Simples_Document extends Simples_Base {
 	protected function _data(array $options = array()) {
 		$options += array(
 			'clean' => false,
-			'source' => 'auto'
+			'source' => 'auto',
+			'cast' => $this->_config['cast']
 		);
 		
 		$data = parent::_data($options) ;
 		
 		if ($options['clean']) {
-			$this->_clean($data) ;
+			$this->_clean($data, $options) ;
 		}
 		
 		$source = (bool) $options['source'] ;
@@ -208,7 +209,7 @@ class Simples_Document extends Simples_Base {
 	 * 
 	 * @param array		$data	Object (by reference)
 	 */
-	protected function _clean(& $data, $path = array()) {
+	protected function _clean(& $data, array $options = array(), $path = array()) {
 		foreach($data as $key => $value) {
 			// Current path calculation
 			$_keys = $path ;
@@ -216,12 +217,12 @@ class Simples_Document extends Simples_Base {
 				$_keys[] = $key ;
 			}
 			$_path = implode($_keys, '.') ;
-			if (isset($this->_config['mapping'][$_path])) {
+			if (isset($options['cast'][$_path])) {
 				// We wanna force the type
-				settype($data[$key], $this->_config['mapping'][$_path]) ;
+				settype($data[$key], $options['cast'][$_path]) ;
 			} else {
 				if (is_array($value)) {
-					$this->_clean($data[$key], $_keys) ;
+					$this->_clean($data[$key], $options, $_keys) ;
 				} elseif ((is_scalar($value) && !strlen($value)) || !isset($value)) {
 					unset($data[$key]) ;
 				} elseif (is_numeric($value)) {
