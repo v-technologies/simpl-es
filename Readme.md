@@ -1,6 +1,6 @@
 # Simpl-ES : an ElasticSearch PHP API. Simpler. Really.
 
-[![Build Status](https://secure.travis-ci.org/scharrier/simpl-es.png)](http://travis-ci.org/scharrier/simpl-es) [![Maintained Status](http://stillmaintained.com/scharrier/simpl-es.png)](http://stillmaintained.com/scharrier/simpl-es)
+[![Build Status](https://secure.travis-ci.org/scharrier/simpl-es.png)](http://travis-ci.org/v-technologies/simpl-es) [![Maintained Status](http://stillmaintained.com/scharrier/simpl-es.png)](http://stillmaintained.com/scharrier/simpl-es)
 
 What ?!
 -------
