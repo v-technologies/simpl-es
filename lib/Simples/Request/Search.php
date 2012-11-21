@@ -219,6 +219,7 @@ class Simples_Request_Search extends Simples_Request {
 		if (isset($query)) {
 			$this->_query->add($query, $options) ;
 		}
+		
 		return $this ;
 	}
 	

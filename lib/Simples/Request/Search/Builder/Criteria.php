@@ -53,7 +53,7 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 */
 	public function add($criteria, array $options = array()) {
 		$criteria = $this->_criteria($criteria, $options) ;
-		$last = $this->_last() ;
+		$last = $this->_last(false) ;
 		if ($last) {
 			if ($last->mergeable($criteria)) {
 				$last->merge($criteria) ;
@@ -79,13 +79,21 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 * 
 	 * @return mixed Criteria or null if nothing.
 	 */
-	protected function _last() {
+	protected function _last($create = true) {
 		$count = count($this->_criteria[$this->_clause]) ;
 		if ($count) {
 			$last = $this->_criteria[$this->_clause][$count - 1] ;
 			return $last ;
 		}
-		return null ;
+		
+		if ($create) {
+			// Not last for the moment : we create it
+			$last = $this->_criteria(array(), array()) ;
+			$this->_criteria[$this->_clause][] = $last ;
+			return $last ;
+		} 
+
+		return false ;		
 	}
 	
 	/**
@@ -209,7 +217,7 @@ abstract class Simples_Request_Search_Builder_Criteria extends Simples_Request_S
 	 * @return mixed Criteria or this.
 	 */
 	public function instance() {
-		$last = $this->_last() ;
+		$last = $this->_last(false) ;
 		if ($last) {
 			return $last ;
 		}

@@ -332,5 +332,11 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 			->options(array('type' => 'missing')) ;
 		$res = $request->to('array') ;
 		$this->assertTrue(isset($res['filter']['missing'])) ;
+
+		// Test method call
+		$request = $this->client->search() ;
+		$request->query()->options(array('type' => 'geo_distance'))->match('value')->in('field') ;
+		$res = $request->to('array') ;
+		$this->assertTrue(isset($res['query']['geo_distance'])) ;
 	}
 }
