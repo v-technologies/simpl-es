@@ -297,7 +297,7 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	}
 
 	/**
-	 * Prepare for a "geo_bounding_box" clause.
+	 * Prepare for a "ids" clause.
 	 * 
 	 * @return array
 	 */
