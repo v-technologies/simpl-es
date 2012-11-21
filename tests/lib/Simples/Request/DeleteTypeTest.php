@@ -13,7 +13,7 @@ class Simples_Request_DeleteTypeTest extends PHPUnit_Framework_TestCase {
 
 	public function testDelete() {
 		// Fake record
-		$this->client->index(array('some'=>'data'), array('refresh' => true)) ;
+		$this->client->index(array('some'=>'data'), array('refresh' => true))->execute() ;
 		
 		$request = $this->client->deleteType() ;
 		
