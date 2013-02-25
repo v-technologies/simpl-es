@@ -22,7 +22,7 @@ class Simples_Request_Index extends Simples_Request {
 			'options' => array('index','type')
 		),
 		'inject' => array(
-			'params' => array('refresh')
+			'params' => array('refresh','parent')
 		)
 	) ;
 	
@@ -42,6 +42,7 @@ class Simples_Request_Index extends Simples_Request {
 		'type' => null,
 		'id' => null,
 		'refresh' => null,
+		'parent' => null,
 		'clean' => false,
 		'cast' => array()
 	) ;
