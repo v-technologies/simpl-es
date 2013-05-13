@@ -87,6 +87,12 @@ class Simples_Response_Search extends Simples_Response {
 			if (is_numeric($key) && intval($key) > 0 || $key === '0') {
 				$key = intval($key);
 			}
+			
+			// special case : highlight on field.subfield.subsubfield => replace in field.0.subfield.0.subsubfield
+			if (!isset($_list[$key]) && isset($_list[0][$key])) {
+				$_list =& $_list[0];
+			}
+			
 			if ($i === count($path) - 1) {
 				// Special case : base value is a string and ES gives us an array with only one value.
 				if (is_array($value) && count($value) === 1 && isset($value[0]) && isset($_list[$key]) && is_string($_list[$key])) {
