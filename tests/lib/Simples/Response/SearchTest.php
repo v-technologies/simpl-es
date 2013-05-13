@@ -44,6 +44,28 @@ class Simples_Response_SearchTest extends PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals('<em>Sebastien<em>', $response->hits->hits->{0}->_source->Utilisateur->name) ;
 		
+		// special case for subarray formated data
+		$response = new Simples_Response_Search(array(
+			'hits' => array(
+				'hits' => array(
+					array(
+						'_source' => array(
+							'Utilisateur' => array(
+								0 => array(
+									'name' => array(0 => 'Sebastien')
+								)
+							)
+						),
+						'highlight' => array(
+							'Utilisateur.name' => array('<em>Sebastien<em>')
+						)
+					)
+				)
+			)
+		), array('highlight' => Simples_Request_Search::HIGHLIGHT_REPLACE)) ;
+		
+		$this->assertEquals('<em>Sebastien<em>', $response->hits->hits->{0}->_source->Utilisateur->{0}->name->{0}) ;
+		
 	}
 	
 	public function testHits() {
