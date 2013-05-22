@@ -2,9 +2,9 @@
 require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
 class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
-	
+
 	/**
-	 * Set up some fixtures. 
+	 * Set up some fixtures.
 	 */
 	public function setUp() {
 		$this->data['standard'] = array(
@@ -26,7 +26,7 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 				array('integer' => '9', 'string' => 9)
 			)
 		) ;
-		
+
 		$this->data['source'] = array(
 			'_index' => 'music',
 			'_type' => 'artists',
@@ -36,43 +36,46 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 			)
 		);
 	}
-	
+
 	public function testConstruct() {
 		$request = new Simples_Document() ;
 		$this->assertTrue($request instanceof Simples_Document) ;
 	}
-	
+
 	public function testAccessors() {
 		$document = new Simples_Document($this->data['standard']) ;
-		
+
 		$this->assertEquals('Jim', $document->firstname);
 		$this->assertTrue($document->band instanceof Simples_Document) ;
-		$this->assertTrue($document->categories instanceof Simples_Document) ;
+		$this->assertFalse($document->categories instanceof Simples_Document) ;
 		$this->assertTrue($document->friends instanceof Simples_Document_Set) ;
 		$this->assertNull($document->properties()) ;
-		
+
+		$document->band->created = '1965' ;
+		$this->assertEquals('1965',$document->band->created) ;
+
 		$document = new Simples_Document($this->data['source']) ;
 		$this->assertEquals('Jim', $document->firstname);
 		$this->assertEquals('music', $document->properties()->index) ;
 	}
-	
+
 	public function testToArray() {
 		$document = new Simples_Document($this->data['standard']) ;
 		$res = $document->to('array') ;
 		$this->assertEquals('Jim', $res['firstname']) ;
-		
+
 		$document = new Simples_Document($this->data['source']) ;
 		$res = $document->to('array') ;
 		$this->assertEquals('Jim', $res['_source']['firstname']) ;
 		$this->assertEquals('music', $res['_index']) ;
-				
+
 		// Test source
 		$document = new Simples_Document($this->data['standard']) ;
 		$res = $document->to('array', array('source' => true)) ;
 		$this->assertTrue(isset($res['_source'])) ;
 		$res = $document->to('array', array('source' => 'auto')) ;
 		$this->assertFalse(isset($res['_source'])) ;
-		
+
 		$document = new Simples_Document($this->data['source']) ;
 		$res = $document->to('array', array('source' => false)) ;
 		$this->assertFalse(isset($res['_source'])) ;
