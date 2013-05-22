@@ -2,18 +2,18 @@
 
 /**
  * Index.
- * 
+ *
  * Index an object in the index/type defined.
- * 
+ *
  * @author Sébastien Charrier <scharrier@gmail.com>
  * @package	Simples
  * @subpackage Request
  */
 class Simples_Request_Index extends Simples_Request {
-	
+
 	/**
 	 * Definition
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $_definition = array(
@@ -25,7 +25,7 @@ class Simples_Request_Index extends Simples_Request {
 			'params' => array('refresh','parent')
 		)
 	) ;
-	
+
 	/**
 	 * Request options :
 	 * - index (string) : index name
@@ -34,7 +34,7 @@ class Simples_Request_Index extends Simples_Request {
 	 * - refresh (bool) : should we wait the index refresh before continuing ?
 	 * - clean (bool) : should we clean the records before indexing ?
 	 * - cast (array) : type casting for specific keys, when cleaning
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $_options = array(
@@ -46,17 +46,17 @@ class Simples_Request_Index extends Simples_Request {
 		'clean' => false,
 		'cast' => array()
 	) ;
-	
+
 	/**
 	 * Are we in bulk mode ?
-	 * 
+	 *
 	 * @var bool
 	 */
 	protected $_bulk = false ;
-	
+
 	/**
 	 * Path : id management.
-	 * 
+	 *
 	 * @return string	API path
 	 */
 	public function path() {
@@ -73,15 +73,15 @@ class Simples_Request_Index extends Simples_Request {
 				$path->directory($this->_options['id']) ;
 			}
 		}
-		
+
 		return $path ;
 	}
-	
+
 	/**
 	 * Overrides body for bulk indexing.
-	 * 
+	 *
 	 * @param mixed		$body	Data to index.
-	 * @return mixed			Data to index. 
+	 * @return mixed			Data to index.
 	 */
 	public function body($body = null) {
 		if (isset($body)) {
@@ -97,35 +97,35 @@ class Simples_Request_Index extends Simples_Request {
 			}
 			return $this ;
 		}
-		
+
 		if (isset($this->_body)) {
 			return $this->_body ;
 		}
-		
+
 		return array() ;
 	}
-	
+
 	/**
 	 * Test if the request is in bulk mode.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function bulk() {
 		return $this->_body instanceof Simples_Document_Set ;
 	}
-	
+
 	/**
 	 * Overrides toArray processing for bulk index.
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function _toArray($data, array $options = array()) {
 		return $data->to('array', $this->_options) ; ;
 	}
-	
+
 	/**
 	 * Overrides toJson processing for bulk index.
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function _toJson($data, array $options = array()) {
@@ -140,11 +140,15 @@ class Simples_Request_Index extends Simples_Request {
 					)
 				) ;
 				if (isset($document->id)) {
+					// Document without properties, but we specified an id
 					$action['index']['_id'] = $document->id ;
-					$document->delete('id') ;
+					unset($document->id) ;
+				} elseif ($document->properties()->id) {
+					// Document with properties (directly from ES)
+					$action['index']['_id'] = $document->properties()->id ;
 				}
 				$json .= json_encode($action) . "\n" ;
-				$json .= $document->to('json', $this->_options) . "\n" ;
+				$json .= $document->to('json', array('source' => false) +$this->_options) . "\n" ;
 			}
 		} else {
 			if (!empty($data)) {
@@ -153,12 +157,12 @@ class Simples_Request_Index extends Simples_Request {
 		}
 		return $json ;
 	}
-	
+
 	/**
 	 * Specific response object.
-	 * 
+	 *
 	 * @param array		$data		Search request results.
-	 * @return \Simples_Response_Search 
+	 * @return \Simples_Response_Search
 	 */
 	protected function _response($data) {
 		return new Simples_Response_Bulk($data, $this->options()) ;
