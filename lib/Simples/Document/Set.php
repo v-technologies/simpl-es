@@ -2,48 +2,48 @@
 
 /**
  * Set of Elasticsearch documents.
- * 
+ *
  * @author Sébastien Charrier <scharrier@gmail.com>
  * @package	Simples
  * @subpackage Document
  */
 class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Countable {
-	
+
 	/**
 	 * Set data.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $_data = array() ;
 
 	/**
 	 * Configuration.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $_config = array(
 		'source' => null
 	) ;
-	
+
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param array $set	Set of documents
 	 */
 	public function __construct($set = null, array $options = null) {
 		if (isset($options)) {
 			$this->config($options) ;
-		} 
+		}
 		if (isset($set)) {
 			$this->set($set) ;
 		}
 	}
-	
+
 	/**
 	 * Sets the documents.
-	 * 
+	 *
 	 * @param array $set		Set of documents.
-	 * @throws Simples_Document_Exception 
+	 * @throws Simples_Document_Exception
 	 */
 	public function set($set) {
 		if (!self::check($set)) {
@@ -60,41 +60,56 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 				}
 			}
 		}
-		
+
 		return $this ;
 	}
 
 	/**
 	 * Get an element from the set.
-	 * 
+	 *
 	 * @param  int $position 		Element position
 	 * @return Simples_Document     Element, if exists (null if not)
 	 */
 	public function get($position) {
 		return (isset($this->_data[$position])) ? $this->_data[$position] : null ;
 	}
-	
+
 	/**
 	 * IteratorAggregate implementation.
-	 * 
-	 * @return \ArrayIterator 
+	 *
+	 * @return \ArrayIterator
 	 */
 	public function getIterator() {
 		return new ArrayIterator($this->_data) ;
 	}
-	
+
 	/**
 	 * Countable implementation : counts the documents.
-	 * 
+	 *
 	 * @return int	Docs count.
 	 */
 	public function count() {
 		return count($this->_data) ;
 	}
-	
+
+	/**
+	 * Combine keys and values from the set into an key=>value hash.
+	 *
+	 * @param  string $key_path   Key extraction path
+	 * @param  string $value_path Value extraction path
+	 * @return array              Combined array
+	 */
+	public function combine($key_path, $value_path) {
+		$combined = array() ;
+		foreach($this->_data as $doc) {
+			$combined[$doc->get($key_path)] = $doc->get($value_path) ;
+		}
+		return $combined ;
+	}
+
 	/**
 	 * Static callable : check if data can be a Simples_Document_Set.
-	 * 
+	 *
 	 * @param mixed		$data		Data to test.
 	 * @return boolean
 	 */
@@ -115,10 +130,10 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 		}
 		return true ;
 	}
-	
+
 	/**
 	 * Array transformation.
-	 * 
+	 *
 	 * @return array	Array structured docs.
 	 */
 	protected function _toArray($data, array $options = array()) {
@@ -128,10 +143,10 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 		}
 		return $return ;
 	}
-	
+
 	/**
 	 * Json transformation.
-	 * 
+	 *
 	 * @return string	Json structured docs.
 	 */
 	protected function _toJson($data, array $options = array()) {

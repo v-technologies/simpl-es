@@ -181,8 +181,22 @@ class Simples_Document extends Simples_Base {
 			return $this->_data ;
 		}
 
+		// First level key
 		if (isset($this->_data[$path])) {
 			return $this->_data[$path] ;
+		}
+
+		// Access from a string path
+		if (strpos($path, '.') !== false) {
+			$path = explode('.', $path) ;
+			$current = $this ;
+			foreach($path as $level) {
+				if (!isset($current->{$level})) {
+					return null ;
+				}
+				$current = $current->{$level} ;
+			}
+			return $current ;
 		}
 
 		return null ;

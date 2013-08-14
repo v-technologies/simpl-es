@@ -53,10 +53,14 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 
 		$document->band->created = '1965' ;
 		$this->assertEquals('1965',$document->band->created) ;
+		$this->assertEquals('1965',$document->get('band.created')) ;
+		$this->assertEquals(null,$document->get('band.createeed')) ;
 
 		$document = new Simples_Document($this->data['source']) ;
 		$this->assertEquals('Jim', $document->firstname);
 		$this->assertEquals('music', $document->properties()->index) ;
+
+
 	}
 
 	public function testToArray() {
