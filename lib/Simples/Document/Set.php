@@ -93,6 +93,20 @@ class Simples_Document_Set extends Simples_Base implements IteratorAggregate, Co
 	}
 
 	/**
+	 * Extract some values from the documents of the set.
+	 *
+	 * @param  string $path Path of the data to extract
+	 * @return array        Array of data
+	 */
+	public function pluck($path) {
+		$values = array() ;
+		foreach($this->_data as $doc) {
+			$values[] = $doc->get($path) ;
+		}
+		return $values ;
+	}
+
+	/**
 	 * Combine keys and values from the set into an key=>value hash.
 	 *
 	 * @param  string $key_path   Key extraction path

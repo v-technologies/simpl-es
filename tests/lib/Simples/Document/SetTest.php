@@ -71,7 +71,7 @@ class Simples_Document_SetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(json_encode($data), $res) ;
 	}
 
-	public function testList() {
+	public function testExtract() {
 		$data = array(
 			array('id' => 1, 'is' => 'A Simples_Document', 'empty' => '', 'sub' => array('key' => 'value')),
 			array('id' => 2, 'is' => 'Another Simples_Document', 'zero' => '0')
@@ -89,6 +89,9 @@ class Simples_Document_SetTest extends PHPUnit_Framework_TestCase {
 			1 => 'value',
 			2 => null
 		), $res) ;
+
+		$res = $set->pluck('id') ;
+		$this->assertEquals(array(1,2), $res) ;
 	}
 
 	public function testSource() {
