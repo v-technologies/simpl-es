@@ -147,8 +147,13 @@ class Simples_Request_Index extends Simples_Request {
 					// Document with properties (directly from ES)
 					$action['index']['_id'] = $document->properties()->id ;
 				}
+
+				$doc_content = $document->to('json', array('source' => false) +$this->_options) ;
+				if (empty($doc_content)) {
+					throw new Simples_Document_Exception('Bulk index error : empty document in documents set') ;
+				}
 				$json .= json_encode($action) . "\n" ;
-				$json .= $document->to('json', array('source' => false) +$this->_options) . "\n" ;
+				$json .= $doc_content . "\n" ;
 			}
 		} else {
 			if (!empty($data)) {
