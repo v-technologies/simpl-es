@@ -232,6 +232,13 @@ class Simples_Document extends Simples_Base {
 		return isset($this->_data[$path]) ;
 	}
 
+	/**
+	 * Magic set. gives the avility to call :
+	 * $response->param = 'value' ;
+	 *
+	 * @param string $name  Property name
+	 * @param mixed $value  Property value
+	 */
 	public function __set($name, $value) {
 		$this->set($name, $value) ;
 	}
