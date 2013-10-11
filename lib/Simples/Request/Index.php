@@ -71,6 +71,12 @@ class Simples_Request_Index extends Simples_Request {
 			// Object id transmited : we had it to the url.
 			if (isset($this->_options['id'])) {
 				$path->directory($this->_options['id']) ;
+			} elseif ($this->_body instanceof Simples_Document) {
+				if ($this->_body->id) {
+					$path->directory($this->_body->id) ;
+				} elseif ($this->_body->properties() && $this->_body->properties()->id) {
+					$path->directory($this->_body->properties()->id) ;
+				}
 			}
 		}
 

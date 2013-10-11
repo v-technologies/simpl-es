@@ -46,10 +46,12 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 		
 		// From a document
 		$doc = new Simples_Document(array(
+			'id' => '666',
 			'content' => 'Test',
 			'user' => 'jmorrison'
 		)) ;
 		$request = $this->client->index($doc) ;
+		$this->assertEquals('/twitter/tweet/666/', (string) $request->path()) ;
 		$res = $request->to('array') ;
 		$this->assertEquals('jmorrison', $res['user']) ;
 	}
