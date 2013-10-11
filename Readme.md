@@ -1,6 +1,6 @@
 # Simpl-ES : an ElasticSearch PHP API. Simpler. Really.
 
-[![Build Status](https://secure.travis-ci.org/scharrier/simpl-es.png)](http://travis-ci.org/v-technologies/simpl-es)
+[![Build Status](https://secure.travis-ci.org/v-technologies/simpl-es.png)](http://travis-ci.org/v-technologies/simpl-es)
 
 What ?!
 -------
@@ -10,7 +10,7 @@ So here we are : Simpl-ES (Simples, for intimate) is the ES  PHP client for lazy
 
 Teasing
 -------
-	
+
 	// Connect
 	$client = Simples::connect(array(
 		'host' => 'my.es-server.net',
