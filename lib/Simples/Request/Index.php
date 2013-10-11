@@ -144,6 +144,7 @@ class Simples_Request_Index extends Simples_Request {
 					$action['index']['_id'] = $document->id ;
 					unset($document->id) ;
 				} elseif ($document->properties()->id) {
+				} elseif ($document->properties() && $document->properties()->id) {
 					// Document with properties (directly from ES)
 					$action['index']['_id'] = $document->properties()->id ;
 				}
