@@ -12,6 +12,13 @@
 class Simples_Request_Index extends Simples_Request {
 
 	/**
+	 * Bulk action name.
+	 *
+	 * @var string
+	 */
+	protected $_action = 'index' ;
+
+	/**
 	 * Definition
 	 *
 	 * @var array
@@ -140,34 +147,42 @@ class Simples_Request_Index extends Simples_Request {
 			$iterator = $data->getIterator() ;
 			foreach($iterator as $document) {
 				$action = array(
-					'index' => array(
+					$this->_action => array(
 						'_index' => $this->_options['index'],
 						'_type' => $this->_options['type']
 					)
 				) ;
 				if (isset($document->id)) {
 					// Document without properties, but we specified an id
-					$action['index']['_id'] = $document->id ;
-					unset($document->id) ;
-				} elseif ($document->properties()->id) {
+					$action[$this->_action]['_id'] = $document->id ;
 				} elseif ($document->properties() && $document->properties()->id) {
 					// Document with properties (directly from ES)
-					$action['index']['_id'] = $document->properties()->id ;
+					$action[$this->_action]['_id'] = $document->properties()->id ;
 				}
 
-				$doc_content = $document->to('json', array('source' => false) +$this->_options) ;
+				$doc_content = $this->_jsonDoc($document, array('source' => false)) ;
 				if (empty($doc_content)) {
-					throw new Simples_Document_Exception('Bulk index error : empty document in documents set') ;
+					throw new Simples_Document_Exception('Bulk ' . $this->_action . ' error : empty document in documents set') ;
 				}
 				$json .= json_encode($action) . "\n" ;
 				$json .= $doc_content . "\n" ;
 			}
 		} else {
 			if (!empty($data)) {
-				$json = $data->to('json', $this->_options) ;
+				$json = $this->_jsonDoc($data) ;
 			}
 		}
 		return $json ;
+	}
+
+	/**
+	 * Returns the doc in json (here to be override in Simples_Request_Uopdate)
+	 *
+	 * @param  Simples_Document $document Doc to index
+	 * @return string                     Json string
+	 */
+	protected function _jsonDoc(Simples_Document $document, array $options = array()) {
+		return $document->to('json', $options + $this->_options) ;
 	}
 
 	/**
