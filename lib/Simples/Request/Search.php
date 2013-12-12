@@ -194,12 +194,12 @@ class Simples_Request_Search extends Simples_Request {
 						$_sort[] = $_sub ;
 					}
 				} else {
-					$_sort[$key] = $value ;
+					$_sort[] = array($key => $value) ;
 				}
 			}
 			$sort = $_sort ;
 		} elseif (preg_match('/^(.*) +(.*)$/', $sort, $matches)) {
-			$sort = array($matches[1] => $matches[2]) ;
+			$sort = array(array($matches[1] => $matches[2])) ;
 		}
 
 		return $sort ;

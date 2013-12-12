@@ -89,11 +89,15 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 
 		$request->sort('Client.name desc') ;
 		$body = $request->body() ;
-		$this->assertEquals(array('Client.name' => 'desc'), $body['sort']) ;
+		$this->assertEquals(array(array('Client.name' => 'desc')), $body['sort']) ;
 
 		$request->sort(array('Client.name asc', 'Client.age' => 'desc', 'Client.location')) ;
 		$body = $request->body() ;
-		$this->assertEquals(array('Client.name' => 'asc', 'Client.age' => 'desc', 'Client.location'), $body['sort']) ;
+		$this->assertEquals(array(array('Client.name' => 'asc'), array('Client.age' => 'desc'), 'Client.location'), $body['sort']) ;
+
+		$request->sort(array('_score', 'Client.name' => array('missing' => '_first'), 'Client.age')) ;
+		$body = $request->body() ;
+		$this->assertEquals(array('_score', array('Client.name' => array('missing' => '_first')), 'Client.age'), $body['sort']) ;
 	}
 
 	public function testFluid() {
