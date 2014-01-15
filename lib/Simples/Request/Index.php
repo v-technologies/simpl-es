@@ -160,6 +160,10 @@ class Simples_Request_Index extends Simples_Request {
 					$action[$this->_action]['_id'] = $document->properties()->id ;
 				}
 
+				if (isset($document->parent)) {
+					$action[$this->_action]['_parent'] = $document->parent ;
+				}
+
 				$doc_content = $this->_jsonDoc($document, array('source' => false)) ;
 				if (empty($doc_content)) {
 					throw new Simples_Document_Exception('Bulk ' . $this->_action . ' error : empty document in documents set') ;
