@@ -309,6 +309,30 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2, $res['size']) ;
 	}
 
+	public function testFilterFieldFilterMatch() {
+		$request = $this->client->search()
+			->query()
+				->match('Sebastien')
+			->filter()
+				->field('type')->match('administrator')
+			->filters(array('level'=>1))
+			->facets(array('type','level'))
+			->size(2) ;
+		$resField = $request->to('array') ;
+
+		$request = $this->client->search()
+			->query()
+				->match('Sebastien')
+			->filter()
+				->match('administrator')->in('type')
+			->filters(array('level'=>1))
+			->facets(array('type','level'))
+			->size(2) ;
+		$resMatch = $request->to('array') ;
+
+		$this->assertSame($resField, $resMatch) ;
+	}
+
 	public function testHighlight() {
 		$request = $this->client->search()->highlight(array(
 			'fields' => array(
