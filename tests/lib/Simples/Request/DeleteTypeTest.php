@@ -7,7 +7,7 @@ class Simples_Request_DeleteTypeTest extends PHPUnit_Framework_TestCase {
 	public $client ;
 	
 	public function setUp() {
-		$this->client = new Simples_Transport_Http(array('index' => 'test_delete', 'type' => 'test_delete_type'));			
+		$this->client = new Simples_Transport_Http(array('host' => ES_HOST, 'index' => 'test_delete', 'type' => 'test_delete_type'));
 		$this->client->createIndex()->execute() ;
 	}
 

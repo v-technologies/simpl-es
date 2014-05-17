@@ -31,7 +31,7 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 		$res = $request->execute() ;
 		$this->assertTrue($request->execute() instanceof Simples_Response) ;
 		
-		$res = $request->client(new Simples_Transport_Http())->execute() ;
+		$res = $request->client(new Simples_Transport_Http(array('host' => ES_HOST)))->execute() ;
 		$this->assertTrue($res->get('ok') === true) ;
 	}
 	

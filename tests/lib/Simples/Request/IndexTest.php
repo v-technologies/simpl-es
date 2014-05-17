@@ -8,6 +8,7 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$this->client = new Simples_Transport_Http(array(
+				'host' => ES_HOST,
 				'index' => 'twitter',
 				'type' => 'tweet'
 		));
@@ -15,7 +16,7 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 	
 	public function testIndex() {
 		try {
-			$request = new Simples_Request_Index(new Simples_Transport_Http());
+			$request = new Simples_Request_Index(new Simples_Transport_Http(array('host' => ES_HOST)));
 			$this->fail();
 		} catch (Exception $e) {
 			

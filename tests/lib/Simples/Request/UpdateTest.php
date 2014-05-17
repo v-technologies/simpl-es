@@ -6,6 +6,7 @@ class Simples_Request_UpdateTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$this->client = new Simples_Transport_Http(array(
+				'host' => ES_HOST,
 				'index' => 'twitter',
 				'type' => 'tweet',
 				'log' => true

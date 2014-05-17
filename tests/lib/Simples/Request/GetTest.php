@@ -6,6 +6,7 @@ class Simples_Request_GetTest extends PHPUnit_Framework_TestCase {
 
 	public function testGet() {
 		$client = new Simples_Transport_Http(array(
+			'host' => ES_HOST,
 			'index' => 'twitter',
 			'type' => 'tweet'
 		));
@@ -16,6 +17,8 @@ class Simples_Request_GetTest extends PHPUnit_Framework_TestCase {
 
 	public function testMultiple() {
 		$client = new Simples_Transport_Http(array(
+			'host' => ES_HOST,
+			'index' => 'twitter',
 			'index' => 'twitter',
 			'type' => 'tweet'
 		));
