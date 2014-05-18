@@ -1,6 +1,7 @@
 # Simpl-ES : an ElasticSearch PHP API. Simpler. Really.
 
 [![Build Status](https://secure.travis-ci.org/v-technologies/simpl-es.png)](http://travis-ci.org/v-technologies/simpl-es)
+Version of Elasticsearch supported : *0.90.5*
 
 What ?!
 -------
