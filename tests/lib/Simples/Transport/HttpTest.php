@@ -26,6 +26,9 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 		
 	}
 	
+	/**
+	 * @expectedException \Exception
+	 */
 	public function testCheck() {
 		$transport = new Simples_Transport_Http(array('host' => ES_HOST)) ;
 		
@@ -34,13 +37,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 			'port' => 80
 		)) ;
 		
-		try {
-			$transport->connect() ;
-		} catch(Exception $e) {
-			return ;
-		}
-		
-		$this->fail() ;
+		$transport->connect() ;
 	}
 	
 	public function testUrl() {
