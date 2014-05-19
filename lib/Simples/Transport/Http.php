@@ -64,7 +64,7 @@ class Simples_Transport_Http extends Simples_Transport {
 			if (!isset($res)) {
 				throw new Simples_Transport_Exception('Invalid JSON or empty response') ;
 			}
-			if (!isset($res['ok']) || (isset($res['ok']) && $res['ok'] !== true)) {
+			if (!isset($res['status']) || (isset($res['status']) && $res['status'] !== 200)) {
 				throw new Simples_Transport_Exception('Bad response from ElasticSearch server. Are you sure you\'re calling the good guy ?') ;
 			}
 		}
