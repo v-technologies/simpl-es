@@ -39,8 +39,8 @@ class Simples_Response_Search extends Simples_Response {
 	 * @return \Simples_Document_Set|null		A set of results.
 	 */
 	public function hits() {
-		if (isset($this->_data['hits']['hits'])) {
-			return new Simples_Document_Set($this->_data['hits']['hits'], array('source' => true)) ;
+		if (isset($this->_data['body']['hits']['hits'])) {
+			return new Simples_Document_Set($this->_data['body']['hits']['hits'], array('source' => true));
 		}
 		return null ;
 	}
@@ -51,8 +51,8 @@ class Simples_Response_Search extends Simples_Response {
 	 * @return \Simples_Document Facets
 	 */
 	public function facets() {
-		if (isset($this->_data['facets'])) {
-			return new Simples_Document($this->_data['facets']) ;
+		if (isset($this->_data['body']['facets'])) {
+			return new Simples_Document($this->_data['body']['facets']);
 		}
 	}
 
@@ -63,11 +63,11 @@ class Simples_Response_Search extends Simples_Response {
 	 * @return array		Response data with highlights.
 	 */
 	protected function _replaceHighlights(array &$data) {
-		if (isset($data['hits']['hits'])) {
-			foreach($data['hits']['hits'] as $i => $record) {
+		if (isset($data['body']['hits']['hits'])) {
+			foreach($data['body']['hits']['hits'] as $i => $record) {
 				if (isset($record['_source']) && isset($record['highlight'])) {
 					foreach($record['highlight'] as $path => $value) {
-						$data['hits']['hits'][$i]['_source'] = $this->_insert($data['hits']['hits'][$i]['_source'], $path, $value) ;
+						$data['body']['hits']['hits'][$i]['_source'] = $this->_insert($data['body']['hits']['hits'][$i]['_source'], $path, $value);
 					}
 				}
 			}

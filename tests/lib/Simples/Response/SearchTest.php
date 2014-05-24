@@ -6,83 +6,91 @@ class Simples_Response_SearchTest extends PHPUnit_Framework_TestCase {
 	
 	public function testHighlight() {
 		$response = new Simples_Response_Search(array(
-			'hits' => array(
+			'body' => array(
 				'hits' => array(
-					array(
-						'_source' => array(
-							'Utilisateur' => array(
-								'name' => 'Sebastien'
+					'hits' => array(
+						array(
+							'_source' => array(
+								'Utilisateur' => array(
+									'name' => 'Sebastien'
+								)
+							),
+							'highlight' => array(
+								'Utilisateur.name' => '<em>Sebastien<em>'
 							)
-						),
-						'highlight' => array(
-							'Utilisateur.name' => '<em>Sebastien<em>'
 						)
 					)
 				)
 			)
 		), array('highlight' => Simples_Request_Search::HIGHLIGHT_REPLACE)) ;
 		
-		$this->assertEquals('<em>Sebastien<em>', $response->hits->hits->{0}->_source->Utilisateur->name) ;
+		$this->assertEquals('<em>Sebastien<em>', $response->body->hits->hits->{0}->_source->Utilisateur->name);
 		
 		// Special ES case : highlight returned as an array
 		$response = new Simples_Response_Search(array(
-			'hits' => array(
+			'body' => array(
 				'hits' => array(
-					array(
-						'_source' => array(
-							'Utilisateur' => array(
-								'name' => 'Sebastien'
+					'hits' => array(
+						array(
+							'_source' => array(
+								'Utilisateur' => array(
+									'name' => 'Sebastien'
+								)
+							),
+							'highlight' => array(
+								'Utilisateur.name' => array('<em>Sebastien<em>')
 							)
-						),
-						'highlight' => array(
-							'Utilisateur.name' => array('<em>Sebastien<em>')
 						)
 					)
 				)
 			)
 		), array('highlight' => Simples_Request_Search::HIGHLIGHT_REPLACE)) ;
 		
-		$this->assertEquals('<em>Sebastien<em>', $response->hits->hits->{0}->_source->Utilisateur->name) ;
+		$this->assertEquals('<em>Sebastien<em>', $response->body->hits->hits->{0}->_source->Utilisateur->name);
 		
 		// special case for subarray formated data
 		$response = new Simples_Response_Search(array(
-			'hits' => array(
+			'body' => array(
 				'hits' => array(
-					array(
-						'_source' => array(
-							'Utilisateur' => array(
-								0 => array(
-									'name' => array(0 => 'Sebastien')
+					'hits' => array(
+						array(
+							'_source' => array(
+								'Utilisateur' => array(
+									0 => array(
+										'name' => array(0 => 'Sebastien')
+									)
 								)
+							),
+							'highlight' => array(
+								'Utilisateur.name' => array('<em>Sebastien<em>')
 							)
-						),
-						'highlight' => array(
-							'Utilisateur.name' => array('<em>Sebastien<em>')
 						)
 					)
 				)
 			)
 		), array('highlight' => Simples_Request_Search::HIGHLIGHT_REPLACE)) ;
 		
-		$this->assertEquals('<em>Sebastien<em>', $response->hits->hits->{0}->_source->Utilisateur->{0}->name->{0}) ;
+		$this->assertEquals('<em>Sebastien<em>', $response->body->hits->hits->{0}->_source->Utilisateur->{0}->name->{0});
 		
 	}
 	
 	public function testHits() {
 		$response = new Simples_Response_Search(array(
-			'hits' => array(
+			'body' => array(
 				'hits' => array(
-					array(
-						'_source' => array(
-							'Utilisateur' => array(
-								'name' => 'Jim Morrison'
+					'hits' => array(
+						array(
+							'_source' => array(
+								'Utilisateur' => array(
+									'name' => 'Jim Morrison'
+								)
 							)
-						)
-					),
-					array(
-						'_source' => array(
-							'Utilisateur' => array(
-								'name' => 'Ray Manzareck'
+						),
+						array(
+							'_source' => array(
+								'Utilisateur' => array(
+									'name' => 'Ray Manzareck'
+								)
 							)
 						)
 					)
@@ -99,5 +107,25 @@ class Simples_Response_SearchTest extends PHPUnit_Framework_TestCase {
 		
 		$expected = array('Jim Morrison', 'Ray Manzareck') ;
 		$this->assertEquals($expected, $test) ;
+	}
+
+	public function testFacets() {
+		$response = new Simples_Response_Search(array(
+			'body' => array(
+				'facets' => array(
+					'wow_facets' => array(
+						'filter' => array(
+							'term' => array(
+								'field' => 'wow'
+							)
+						)
+					)
+				)
+			)
+		));
+		
+		$this->assertEquals(1, count($response->facets()));
+		
+		$this->assertEquals('wow', $response->facets()->wow_facets->filter->term->field);
 	}
 }
