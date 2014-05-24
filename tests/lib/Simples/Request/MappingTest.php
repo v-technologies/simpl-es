@@ -13,7 +13,11 @@ class Simples_Request_MappingTest extends PHPUnit_Framework_TestCase {
 		));
 		$this->client->createIndex()->execute() ;
 	}
-	
+
+	public function tearDown() {
+		$this->client->deleteIndex()->execute() ;
+	}
+
 	public function testPath() {
 		$request = $this->client->mapping() ;
 		$this->assertEquals('/music/composers/_mapping/', (string) $request->path()) ;
@@ -64,16 +68,9 @@ class Simples_Request_MappingTest extends PHPUnit_Framework_TestCase {
 		);
 		$request = $this->client->mapping($mapping) ;
 		$response = $request->execute() ;
-		$this->assertTrue($response->ok) ;
-		
-		// Wait 'til replication is done.
-		sleep(1) ;
+		$this->assertEquals(200, $response->http->http_code) ;
 		
 		$response = $this->client->mapping()->execute() ;
-		$this->assertEquals($mapping, $response->to('array')) ;
-	}
-	
-	public function tearDown() {
-		$this->client->deleteIndex()->execute() ;
+		$this->assertEquals($mapping, $response->body->music->mappings->to('array')) ;
 	}
 }

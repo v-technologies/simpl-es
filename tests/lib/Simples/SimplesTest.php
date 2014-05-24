@@ -15,7 +15,7 @@ class SimplesTest extends PHPUnit_Framework_TestCase {
 		
 		$client = Simples::connect() ;
 		$this->assertEquals(ES_HOST, $client->config('host')) ;
-		$this->assertEquals(true, Simples::current()->status()->ok) ;
+		$this->assertEquals(true, Simples::current()->status()->execute()->http->http_code);
 		
 		Simples::current()->config(array(
 			'index' => 'twitter',
@@ -34,7 +34,7 @@ class SimplesTest extends PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals('Static usage', Simples::current()->get(array(
 			'id' => 1
-		))->_source->from) ; 
+		))->body->_source->from);
 	}
 	
 	public function testMultiConnect() {

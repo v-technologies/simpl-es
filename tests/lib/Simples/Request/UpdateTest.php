@@ -6,11 +6,16 @@ class Simples_Request_UpdateTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$this->client = new Simples_Transport_Http(array(
-				'host' => ES_HOST,
-				'index' => 'twitter',
-				'type' => 'tweet',
-				'log' => true
+			'host' => ES_HOST,
+			'index' => 'twitter',
+			'type' => 'tweet',
+			'log' => true
 		));
+		$this->client->createIndex()->execute() ;
+	}
+
+	public function tearDown() {
+		$this->client->deleteIndex()->execute() ;
 	}
 
 	public function testUpdate() {
@@ -25,7 +30,7 @@ class Simples_Request_UpdateTest extends PHPUnit_Framework_TestCase {
 		), array('id' => 1)) ;
 		$this->assertEquals('/twitter/tweet/1/_update/', (string) $request->path()) ;
 		$request->execute() ;
-		$this->assertEquals('scharrier', $this->client->get(1)->execute()->_source->fullname) ;
+		$this->assertEquals('scharrier', $this->client->get(1)->execute()->body->_source->fullname);
 
 		// From a document
 		$doc = new Simples_Document(array(
@@ -35,7 +40,7 @@ class Simples_Request_UpdateTest extends PHPUnit_Framework_TestCase {
 		$request = $this->client->update($doc) ;
 		$this->assertEquals('/twitter/tweet/1/_update/', (string) $request->path()) ;
 		$request->execute() ;
-		$this->assertEquals('Sébastien Charrier', $this->client->get(1)->execute()->_source->fullname) ;
+		$this->assertEquals('Sébastien Charrier', $this->client->get(1)->execute()->body->_source->fullname);
 	}
 
 	public function testBulk() {
@@ -54,6 +59,6 @@ class Simples_Request_UpdateTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('/_bulk/', (string) $request->path()) ;
 
 		$request->execute() ;
-		$this->assertEquals('Morrison (Composer, singer)', $this->client->get(1)->execute()->_source->lastname) ;
+		$this->assertEquals('Morrison (Composer, singer)', $this->client->get(1)->execute()->body->_source->lastname);
 	}
 }

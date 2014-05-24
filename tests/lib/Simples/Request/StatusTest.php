@@ -6,7 +6,7 @@ class Simples_Request_StatusTest extends PHPUnit_Framework_TestCase {
    public function testStatus() {
 	   $client = new Simples_Transport_Http(array('host' => ES_HOST)) ;
 	   $results = $client->status()->execute() ;
-	   //TODO test HTTP code
-	   $this->assertTrue(isset($results->_shards->total)) ;
+	   $this->assertTrue(isset($results->body->_shards->total));
+	   $this->assertEquals(200, $results->http->http_code);
    }
 }

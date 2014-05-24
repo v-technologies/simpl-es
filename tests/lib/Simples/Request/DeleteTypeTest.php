@@ -11,6 +11,10 @@ class Simples_Request_DeleteTypeTest extends PHPUnit_Framework_TestCase {
 		$this->client->createIndex()->execute() ;
 	}
 
+	public function tearDown() {
+		$this->client->deleteIndex()->execute() ;
+	}
+
 	public function testDelete() {
 		// Fake record
 		$this->client->index(array('some'=>'data'), array('refresh' => true))->execute() ;
@@ -21,13 +25,6 @@ class Simples_Request_DeleteTypeTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('/test_delete/test_delete_type/', (string) $request->path()) ;
 		
 		$response = $request->execute() ;
-		$this->assertTrue($response->ok) ;
+		$this->assertEquals(200, $response->http->http_code) ;
 	}
-	
-	public function tearDown() {
-		if ($this->client) {
-			$this->client->deleteIndex()->execute() ;
-		}
-	}
-
 }

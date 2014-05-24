@@ -4,16 +4,14 @@ require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootst
 
 class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 
-	public $client ;
-
 	public function setUp() {
 		$this->client = new Simples_Transport_Http(array(
 			'host' => ES_HOST,
 			'index' => 'twitter',
 			'type' => 'tweet'
 		));
+		$this->client->createIndex()->execute();
 
-		$this->client->deleteIndex()->execute() ;
 
 		$res = $this->client->index(array(
 			'content' => 'First',
@@ -35,9 +33,12 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 			'type' => 'tweet',
 			'priority' => 2
 		), array('id' => 3, 'refresh' => true))->execute();
-
-		sleep(1) ;
 	}
+
+	public function tearDown() {
+		$this->client->deleteIndex()->execute() ;
+	}
+
 
 	public function testSearch() {
 		$request = $this->client->search() ;
@@ -57,16 +58,16 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $res) ;
 
 		$res = $request->execute() ;
-		$this->assertEquals(2, $res->hits->total) ;
+		$this->assertEquals(2, $res->body->hits->total) ;
 
-		$this->assertEquals(1, $this->client->search('retweet:scharrier')->hits->total) ;
+		$this->assertEquals(1, $this->client->search('retweet:scharrier')->body->hits->total) ;
 
 		$request = $this->client->search(array(
 			'query' => array(
 				'term' => array('user' => 'scharrier')
 			)
 		));
-		$this->assertEquals(1, $request->hits->total) ;
+		$this->assertEquals(1, $request->body->hits->total) ;
 
 		// Base facet tests
 		$request = $this->client->search(array(
@@ -76,7 +77,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		)) ;
 
 		$response = $request->execute();
-		$facets = $response->facets->type->terms->to('array') ;
+		$facets = $response->body->facets->type->terms->to('array') ;
 		$this->assertEquals(2, $facets[0]['count']) ;
 		$this->assertEquals(1, $facets[1]['count']) ;
 
@@ -170,7 +171,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 
 		// Real call check
 		$response = $request->execute() ;
-		$this->assertTrue(isset($response->took)) ;
+		$this->assertTrue(isset($response->body->took)) ;
 	}
 
 	public function testFilterBuilder() {

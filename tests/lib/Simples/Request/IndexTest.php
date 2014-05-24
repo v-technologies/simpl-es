@@ -8,12 +8,18 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 		$this->client = new Simples_Transport_Http(array(
-				'host' => ES_HOST,
-				'index' => 'twitter',
-				'type' => 'tweet'
+			'host' => ES_HOST,
+			'index' => 'twitter',
+			'type' => 'tweet',
+			'log' => true
 		));
+		$this->client->createIndex()->execute() ;
 	}
-	
+
+	public function tearDown() {
+		$this->client->deleteIndex()->execute() ;
+	}
+
 	public function testIndex() {
 		try {
 			$request = new Simples_Request_Index(new Simples_Transport_Http(array('host' => ES_HOST)));
@@ -28,14 +34,14 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 		), array('id' => 1));
 		$this->assertEquals('/twitter/tweet/1/', (string) $request->path());
 
-		$this->assertTrue($request->ok);
-		$this->assertEquals(1, $request->_id);
+		$this->assertEquals(201, $request->execute()->http->http_code);
+		$this->assertEquals(1, $request->body->_id);
 
 		$request = $this->client->index(array(
 				'user' => 'vtechnologies',
 		), array('id' => 2)) ;
 		$this->assertEquals('/twitter/tweet/2/', (string) $request->path());
-		$this->assertEquals(2, $request->_id);
+		$this->assertEquals(2, $request->body->_id);
 		
 		
 		$request = $this->client->index(array(
