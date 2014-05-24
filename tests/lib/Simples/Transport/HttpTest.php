@@ -4,32 +4,27 @@ require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootst
 class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 
     public function testConnection() {
-		try {
-			$transport = new Simples_Transport_Http(array('host' => ES_HOST)) ;
-			$transport->connect() ;
-			$this->assertTrue($transport->connected()) ;
-			$this->assertTrue($transport instanceof Simples_Transport_Http) ;
-			
-			$transport->disconnect() ;
-			$this->assertFalse($transport->connected()) ;
-		} catch (Exception $e) {
-			$this->markTestSkipped($e->getMessage()) ;
-		}
+		$transport = new Simples_Transport_Http(array('host' => ES_HOST)) ;
+		$transport->connect() ;
+		$this->assertTrue($transport->connected()) ;
+		$this->assertTrue($transport instanceof Simples_Transport_Http) ;
 		
-		try {
-			$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
-			$transport->connect() ;
-			$this->fail();
-		} catch (Exception $e) {
-		}
-		
-		
+		$transport->disconnect() ;
+		$this->assertFalse($transport->connected()) ;
+	}
+
+	/**
+	 * @expectedException \Exception
+	 */
+    public function testConnectionException() {
+		$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
+		$transport->connect() ;
 	}
 	
 	/**
 	 * @expectedException \Exception
 	 */
-	public function testCheck() {
+	public function testConnectionExceptionOnConfig() {
 		$transport = new Simples_Transport_Http(array('host' => ES_HOST)) ;
 		
 		$transport->config(array(
