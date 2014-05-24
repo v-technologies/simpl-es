@@ -41,8 +41,8 @@ class Simples_Response_Get extends Simples_Response {
 	 * @return Simples_Document_Set All documents
 	 */
 	public function documents() {
-		if (isset($this->_data['docs'])) {
-			return new Simples_Document_Set($this->_data['docs'], array('source' => true)) ;
+		if (isset($this->_data['body']['docs'])) {
+			return new Simples_Document_Set($this->_data['body']['docs'], array('source' => true));
 		}
 		return null ;
 	}
