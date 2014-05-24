@@ -28,11 +28,12 @@ class Simples_RequestTest extends PHPUnit_Framework_TestCase {
 	
 	public function testExecute() {
 		$request = new Simples_Request_Custom() ;
-		$res = $request->execute() ;
+
+		$response = $request->execute() ;
 		$this->assertTrue($request->execute() instanceof Simples_Response) ;
 		
-		$res = $request->client(new Simples_Transport_Http(array('host' => ES_HOST)))->execute() ;
-		$this->assertTrue($res->get('ok') === true) ;
+		$response = $request->client(new Simples_Transport_Http(array('host' => ES_HOST, 'log' => true)))->execute() ;
+		$this->assertEquals(200, $response->http->http_code);
 	}
 	
 	public function testTo() {
