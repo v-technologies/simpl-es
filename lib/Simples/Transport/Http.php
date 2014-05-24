@@ -64,7 +64,7 @@ class Simples_Transport_Http extends Simples_Transport {
 			if (!isset($res)) {
 				throw new Simples_Transport_Exception('Invalid JSON or empty response') ;
 			}
-			if (!isset($res['status']) || (isset($res['status']) && $res['status'] !== 200)) {
+			if (!isset($res['body']['status']) || (isset($res['body']['status']) && $res['body']['status'] !== 200)) {
 				throw new Simples_Transport_Exception('Bad response from ElasticSearch server. Are you sure you\'re calling the good guy ?') ;
 			}
 		}
@@ -146,7 +146,9 @@ class Simples_Transport_Http extends Simples_Transport {
 			throw new Simples_Transport_Exception('The ES server returned an empty response.') ;
 		}
 		
-		$return = json_decode($response, true) ;
+		$return = array();
+		$return['body'] = json_decode($response, true) ;
+		$return['http'] = curl_getinfo($this->_connection);
 		
 		if ($return === null) {
 			throw new Simples_Transport_Exception('Cannot JSON decode the response : ' . $response) ;

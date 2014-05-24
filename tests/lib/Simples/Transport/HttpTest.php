@@ -54,8 +54,11 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	public function testCall() {
 		$transport = new Simples_Transport_Http(array('host' => ES_HOST)) ;
 		$res = $transport->call() ;
-		$this->assertTrue($res['ok']);
-		$this->assertTrue(isset($res['version']['number'])) ;
+		$this->assertTrue(isset($res['http']['http_code'])) ;
+		$this->assertSame(200, $res['http']['http_code']) ;
+		$this->assertTrue(isset($res['body']['status'])) ;
+		$this->assertSame(200, $res['body']['status']) ;
+		$this->assertTrue(isset($res['body']['version']['number'])) ;
 	}
 	
 	public function testMagicCall() {
