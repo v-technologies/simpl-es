@@ -54,16 +54,16 @@ class Simples_Response extends Simples_Base {
 	 */
 	protected function _check(array $data) {
 		// Intercepted ES error
-		if (isset($data['error'])) {
-			throw new Simples_Response_Exception($data) ;
+		if (isset($data['body']['error'])) {
+			throw new Simples_Response_Exception($data['body']) ;
 		}
 		// Shard failure
-		if (!empty($data['_shards']['failed'])) {
-			if (empty($data['_shards']['failures'])) {
+		if (!empty($data['body']['_shards']['failed'])) {
+			if (empty($data['body']['_shards']['failures'])) {
 				throw new Simples_Response_Exception('An error has occured on a shard during request parsing') ;
 			} else {
 				$errors = array() ;
-				foreach($data['_shards']['failures'] as $failure) {
+				foreach($data['body']['_shards']['failures'] as $failure) {
 					if (!empty($failure['reason'])) {
 						$errors[] = $failure['reason'] ;
 					}
@@ -71,6 +71,7 @@ class Simples_Response extends Simples_Base {
 				throw new Simples_Response_Exception('Some errors have occured on a shard during request parsing : ' . implode($errors)) ;
 			}
 		}
+		//TODO use http codes
 	}
 	
 	/**

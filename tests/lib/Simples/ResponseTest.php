@@ -19,51 +19,67 @@ class Simples_ResponseTest extends PHPUnit_Framework_TestCase {
 	
 	public function testAccessors() {
 		$response = new Simples_Response(array(
-			'ok' => true,
-			'version' => array(
-				'number' => '0.18.5'
+			'body' => array(
+				'status' => 200,
+				'version' => array(
+					'number' => '0.18.5'
+				)
+			),
+			'http' => array(
+				'http_code' => 200
 			)
 		)) ;
-		$this->assertEquals(true, $response->ok);
-		$this->assertTrue($response->version instanceof Simples_Response) ;
-		$this->assertEquals('0.18.5', $response->version->number) ;
+		$this->assertTrue($response->get('body') instanceof Simples_Response) ;
+		$this->assertEquals(200, $response->get('body')->get('status'));
+		$this->assertTrue($response->body instanceof Simples_Response) ;
+		$this->assertEquals(200, $response->body->status);
+		$this->assertTrue($response->body->version instanceof Simples_Response) ;
+		$this->assertEquals('0.18.5', $response->body->version->number) ;
+		$this->assertTrue($response->http instanceof Simples_Response) ;
+		$this->assertEquals(200, $response->http->http_code);
 	}
 	
-	public function testException() {
-		try {
-			$response = new Simples_Response(array(
+	/**
+	 * @expectedException \Simples_Response_Exception
+	 * @expectedExceptionMessage My error message
+	 */
+	public function testHttpException() {
+		$response = new Simples_Response(array(
+			'body' => array(
 				'error' => 'My error message',
 				'status' => 400
-			)) ;
-			$this->fail('No exception') ;
-		} catch (Simples_Response_Exception $e) {
-			$this->assertEquals(400, $e->status) ;
-			$this->assertEquals('My error message', $e->error) ;
-		}
-		
-		try {
-			$response = new Simples_Response(array(
+			)
+		));
+	}
+
+	/**
+	 * @expectedException \Simples_Response_Exception
+	 * @expectedExceptionMessage An error has occured on a shard during request parsing
+	 */
+	public function testParsingException() {
+		$response = new Simples_Response(array(
+			'body' => array(
 				'_shards' => array(
 					'failed' => 2
 				)
-			)) ;
-			$this->fail('No exception') ;
-		} catch (Simples_Response_Exception $e) {
-			$this->assertEquals('An error has occured on a shard during request parsing', $e->error) ;
-		}
-		
-		try {
-			$response = new Simples_Response(array(
+			)
+		));
+	}
+
+	/**
+	 * @expectedException \Simples_Response_Exception
+	 * @expectedExceptionMessage Some errors have occured on a shard during request parsing : Shard error
+	 */
+	public function testShardException() {
+		$response = new Simples_Response(array(
+			'body' => array(
 				'_shards' => array(
 					'failed' => 2,
 					'failures' => array(
 						array('reason' => 'Shard error')
 					)
 				)
-			)) ;
-			$this->fail('No exception') ;
-		} catch (Simples_Response_Exception $e) {
-			$this->assertEquals('Some errors have occured on a shard during request parsing : Shard error', $e->error) ;
-		}
+			)
+		));
 	}
 }
