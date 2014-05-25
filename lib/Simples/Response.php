@@ -87,14 +87,41 @@ class Simples_Response extends Simples_Base {
 			return $this->_data ;
 		}
 		
-		if (isset($this->_data[$path])) {
-			if (is_array($this->_data[$path])) {
-				return new self($this->_data[$path]) ;
+		$get = function(array $path) {
+			$data = $this->_data;
+			foreach ($path as $value) {
+				if (!isset($data[$value])) {
+					return null;
+				}
+
+				$data = $data[$value];
 			}
-			return $this->_data[$path] ;
+
+			if (is_array($data)) {
+				return new self($data);
+			}
+			return $data;
+		};
+
+		$direct = $get(array($path));
+
+		if (!is_null($direct)) {
+			return $direct;
 		}
-		
-		return null ;
+
+		$direct = $get(array($path));
+
+		if (!is_null($direct)) {
+			return $direct;
+		}
+
+		$body = $get(array('body', $path));
+
+		if (!is_null($body)) {
+			return $body;
+		}
+
+		return $get(array('http', $path));
 	}
 	
 	/**

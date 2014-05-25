@@ -30,13 +30,14 @@ class Simples_ResponseTest extends PHPUnit_Framework_TestCase {
 			)
 		)) ;
 		$this->assertTrue($response->get('body') instanceof Simples_Response) ;
-		$this->assertEquals(200, $response->get('body')->get('status'));
 		$this->assertTrue($response->body instanceof Simples_Response) ;
 		$this->assertEquals(200, $response->body->status);
+		$this->assertEquals(200, $response->status);
 		$this->assertTrue($response->body->version instanceof Simples_Response) ;
 		$this->assertEquals('0.18.5', $response->body->version->number) ;
 		$this->assertTrue($response->http instanceof Simples_Response) ;
 		$this->assertEquals(200, $response->http->http_code);
+		$this->assertEquals(200, $response->http_code);
 	}
 	
 	/**
