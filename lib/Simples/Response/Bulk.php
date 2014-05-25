@@ -18,10 +18,10 @@ class Simples_Response_Bulk extends Simples_Response {
 	 */
 	public function set($key = null, $data = null) {
 		// Bulk response check
-		if (isset($key['items'])) {
-			foreach($key['items'] as $i => $action) {
+		if (isset($key['body']['items'])) {
+			foreach($key['body']['items'] as $i => $action) {
 				$response = $action[key($action)] ;
-				$this->_check($response) ;
+				$this->_check(array('body' => $response)) ;
 			}
 		}
 		$this->_data = $key ;

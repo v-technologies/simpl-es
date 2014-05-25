@@ -17,10 +17,12 @@ class Simples_Response_BulkTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testException() {
 		$response = new Simples_Response_Bulk(array(
-			'took' => '1',
-			'items' => array(					
-				'index' => array(
-					array('error' => 'This is an error. Oops.')
+			'body' => array(
+				'took' => '1',
+				'items' => array(					
+					'index' => array(
+						array('error' => 'This is an error. Oops.')
+					)
 				)
 			)
 		)) ;
