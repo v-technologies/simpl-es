@@ -2,6 +2,8 @@
 
 [![Build Status](https://secure.travis-ci.org/v-technologies/simpl-es.png)](http://travis-ci.org/v-technologies/simpl-es)
 
+Version of ElasticSearch supported : **1.2.x**
+
 What ?!
 -------
 Yep. It's another Elasticsearch PHP client. Everybody knows Elastica, wich is (was ? ;)) certainly the most advanced client in our PHP world. This is a great work (and a source of inspiration for me), but it's too complex in my opinion. I love fluid interfaces, magic deductions, and I really hate writing code when system can think for me.
@@ -26,6 +28,7 @@ Teasing
 		->not()
 			->match('inspiration')->in(array('type','status'))
 		->facets(array('type','status'))
+		->aggs(array('type', 'status'))
 		->size(5)
 		->execute() ;
 
@@ -41,7 +44,7 @@ be sure it will evolve quickly, in the next days/weeks !
 Compatibility
 -------------
 
-Simpl-ES is continuously tested on PHP 5.2.x, 5.3.x, 5.4.x and 5.5.x . It's actually developped for a 5.2 usage, but we will certainly create a 5.3 branche in order to use namespaces.
+Simpl-ES is continuously tested on PHP 5.4.x and 5.5.x . It's actually developped for a 5.4 usage.
 
 We have implemented PSR-0 guidelines, so you can use your generic autoload method to work with it.
 
@@ -68,3 +71,4 @@ Contact
 -------
 
 Sébastien Charrier : sebastien@vtech.fr
+Christophe Sicard : christophe@vtech.fr
