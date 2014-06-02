@@ -57,6 +57,17 @@ class Simples_Response_Search extends Simples_Response {
 	}
 
 	/**
+	 * Direct access to aggregations as a document.
+	 *
+	 * @return \Simples_Document Aggregates
+	 */
+	public function aggregations() {
+		if (isset($this->_data['body']['aggregations'])) {
+			return new Simples_Document($this->_data['body']['aggregations']);
+		}
+	}
+
+	/**
 	 * Re-inject highlighted results in the main results.
 	 *
 	 * @param array $data	Response data.

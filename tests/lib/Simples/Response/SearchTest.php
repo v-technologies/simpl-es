@@ -128,4 +128,28 @@ class Simples_Response_SearchTest extends PHPUnit_Framework_TestCase {
 		
 		$this->assertEquals('wow', $response->facets()->wow_facets->filter->term->field);
 	}
+
+	public function testAggregations() {
+		$response = new Simples_Response_Search(array(
+			'body' => array(
+				'aggregations' => array(
+					'user' => array(
+						'buckets' => array(
+							array(
+								'key' => 'scharrier',
+								'doc_count' => 1
+							),
+							array(
+								'key' => 'vtechnologies',
+								'doc_count' => 3
+							),
+						 )
+					 )
+				)
+			)
+		));
+
+		$this->assertEquals(1, count($response->aggregations()));
+		$this->assertEquals(2, count($response->aggregations()->user->buckets));
+	}
 }

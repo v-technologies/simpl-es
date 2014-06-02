@@ -42,6 +42,7 @@ class Simples_Request_Search extends Simples_Request {
 		'query' => null,
 		'filter' => null,
 		'facets' => null,
+		'aggs' => null,
 		'from' => null,
 		'size' => null,
 		'sort' => null,
@@ -89,6 +90,13 @@ class Simples_Request_Search extends Simples_Request {
 	protected $_facets;
 
 	/**
+	 * Aggregates builder.
+	 *
+	 * @var Simples_Request_Search_Builder_Aggs
+	 */
+	protected $_aggs;
+
+	/**
 	 * Request options.
 	 * 
 	 * @var array
@@ -113,6 +121,7 @@ class Simples_Request_Search extends Simples_Request {
 		$this->_query = new Simples_Request_Search_Builder_Query(null, $this) ;
 		$this->_filters = new Simples_Request_Search_Builder_Filters(null, $this) ;
 		$this->_facets = new Simples_Request_Search_Builder_Facets(null, $this) ;
+		$this->_aggs = new Simples_Request_Search_Builder_Aggs(null, $this);
 		
 		// Simple query_string search : give it to builder.
 		if (isset($body['query']) && is_string($body['query'])) {
@@ -147,6 +156,10 @@ class Simples_Request_Search extends Simples_Request {
 		
 		if (empty($body['facets']) && $this->_facets->count()) {
 			$body['facets'] = $this->_facets->to('array') ;
+		}
+
+		if (empty($body['aggs']) && $this->_aggs->count()) {
+			$body['aggs'] = $this->_aggs->to('array');
 		}
 
 		// Sort format
@@ -259,6 +272,24 @@ class Simples_Request_Search extends Simples_Request {
 	}
 	
 	/**
+	 * Add an aggregate.
+	 *
+	 * @param mixed		$aggregate			Setter : Query definition.
+	 * @return \Simples_Request_Search	This instance
+	 */
+	public function agg($agg =null, $options = array()) {
+		// Save current subobject
+		$this->_current = 'aggs';
+		$this->_fluid = true;
+
+		if (isset($agg)) {
+			$this->_aggs->add($agg, $options);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Add multiples field queries one time. It's a simplified call wich permit to give this kind of array :
 	 * $request->queries(array(
 	 *		'field' => 'value',
@@ -327,6 +358,32 @@ class Simples_Request_Search extends Simples_Request {
 		return $this ;
 	}
 	
+	/**
+	 * Add multiples aggregates one time. Support simple calls or full definitions calls :
+	 * $request->aggregates(array(
+	 *		'field_1',
+	 *		'field_2'
+	 * )) ;
+	 *
+	 * @param array $aggregates Aggregates definitions.
+	 * @return \Simples_Request_Search
+	 */
+	public function aggs(array $aggregates) {
+		$this->_current = 'aggs';
+		$this->_fluid = true;
+
+		foreach($aggregates as $key => $value) {
+			if (!is_numeric($key)) {
+				if (!is_array($value)) {
+					$value = array('in' => $value);
+				}
+				$value = array('name' => $key) + $value;
+			}
+			$this->_aggregates->add($value);
+		}
+		return $this;
+	}
+
 	/**
 	 * Set the from param.
 	 * 

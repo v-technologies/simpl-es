@@ -83,7 +83,14 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 
 	}
 
-	public function test_sort() {
+	public function testSearchWithAggregates() {
+		$request = $this->client->search();
+		$request->agg('user');
+		$response = $request->execute();
+		$this->assertEquals(2, count($response->aggregations()->user->buckets));
+	}
+
+	public function testSort() {
 		$request = $this->client->search();
 		$request->sort('Client.name') ;
 		$body = $request->body() ;
@@ -100,6 +107,22 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$request->sort(array('_score', 'Client.name' => array('missing' => '_first'), 'Client.age')) ;
 		$body = $request->body() ;
 		$this->assertEquals(array('_score', array('Client.name' => array('missing' => '_first')), 'Client.age'), $body['sort']) ;
+	}
+
+	public function testAggregates() {
+		$request = $this->client->search()->agg('user') ;
+		$res = $request->to('array') ;
+		$expected = array(
+			'query' => array(
+				'match_all' => new stdClass()
+			),
+			'aggs' => array(
+				'user' => array(
+					'terms' => array('field' => 'user')
+				)
+			)
+		) ;
+		$this->assertEquals($expected, $res) ;
 	}
 
 	public function testFluid() {
