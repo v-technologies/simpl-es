@@ -84,10 +84,10 @@ class Simples_Request_Search extends Simples_Request {
 	/**
 	 * Facet builder.
 	 * 
-	 * @var Simples_Request_Search_Builder_Facet
+	 * @var Simples_Request_Search_Builder_Facets
 	 */
-	protected $_facet ;
-	
+	protected $_facets;
+
 	/**
 	 * Request options.
 	 * 
