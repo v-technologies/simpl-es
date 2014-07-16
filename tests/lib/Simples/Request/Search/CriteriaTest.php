@@ -235,6 +235,19 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 		), array('type' => 'geo_distance')) ;
 		$res = $criteria->to('array') ;
 		$this->assertEquals($expected, $res) ;
+
+	}
+
+	public function testNested() {
+		$criteria = new TestCriteria(array(
+			'path' => 'nestedPath',
+		), array('type' => 'nested'));
+
+		$this->assertEquals(array(
+			'nested' => array(
+				'path' => 'nestedPath',
+			)
+		), $criteria->to('array'));
 	}
 }
 

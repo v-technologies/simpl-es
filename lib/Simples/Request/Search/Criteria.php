@@ -494,6 +494,12 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		) ;
 	}
 
+	protected function _prepare_nested() {
+		$data = $this->get();
+
+		return array('nested' => $data);
+	}
+
 	/**
 	 * Test if a criteria is mergeable with the current criteria.
 	 *
