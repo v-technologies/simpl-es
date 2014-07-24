@@ -178,6 +178,15 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	}
 
 	/**
+	 * Prepare for a "match" clause
+	 *
+	 * @return array
+	 */
+	protected function _prepare_match() {
+		return $this->get();
+	}
+
+	/**
 	 * Prepare for a "term" clause.
 	 *
 	 * @return array
