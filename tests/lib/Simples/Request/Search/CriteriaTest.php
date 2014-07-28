@@ -99,13 +99,39 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 
 		// Match
 		$criteria = new TestCriteria(array(
-			'values' => array('value1','value2')
+			'in' => 'field1',
+			'value' => 'value1'
 		), array('type' => 'match')) ;
 		$res = $criteria->to('array') ;
 		$expected = array(
-			'value' => array('value1','value2')
+			'match' => array(
+				'field1' => 'value1'
+			),
 		);
 		$this->assertEquals($expected, $res) ;
+
+		$criteria = new TestCriteria(array(
+			'in' => array('field1', 'field2'),
+			'value' => 'value1'
+		), array('type' => 'match'));
+		$res = $criteria->to('array');
+		$expected = array(
+			'bool' => array(
+				'should' => array(
+					array(
+						'match' => array(
+							'field1' => 'value1',
+						)
+					),
+					array(
+						'match' => array(
+							'field2' => 'value1',
+						),
+					)
+				),
+			),
+		);
+		$this->assertEquals($expected, $res);
 
 		// Missing
 		$criteria = new TestCriteria(array(

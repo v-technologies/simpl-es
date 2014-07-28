@@ -369,4 +369,38 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$res = $request->to('array') ;
 		$this->assertTrue(isset($res['query']['geo_distance'])) ;
 	}
+
+	public function testCriteriaMatch() {
+		$request = $this->client->search();
+		$request->query()->options(array('type' => 'match'))->in('field')->match('toto');
+		$this->assertEquals(array(
+			'query' => array(
+				'match' => array(
+					'field' => 'toto',
+				),
+			),
+		), $request->to('array'));
+
+		$request = $this->client->search();
+
+		$request->query()->options(array('type' => 'match'))->in(array('field1', 'field2'))->match('toto');
+		$this->assertEquals(array(
+			'query' => array(
+				'bool' => array(
+					'should' => array(
+						array(
+							'match' => array(
+								'field1' => 'toto',
+							),
+						),
+						array(
+							'match' => array(
+								'field2' => 'toto',
+							),
+						),
+					),
+				),
+			),
+		), $request->to('array'));
+	}
 }

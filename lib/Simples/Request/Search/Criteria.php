@@ -183,7 +183,36 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	 * @return array
 	 */
 	protected function _prepare_match() {
-		return $this->get();
+		$data = $this->get();
+
+		if (!isset($data['in']) || !isset($data['value'])) {
+			throw new Simples_Request_Exception('Key "in" or "value" empty', $data) ;
+		}
+
+		if(is_array($data['in'])) {
+			$return = array(
+				'bool' => array(
+					'should' => array(),
+				),
+			);
+
+			foreach($data['in'] as $in) {
+				$return['bool']['should'][] = array(
+					'match' => array(
+						$in => $data['value'],
+					),
+				);
+			}
+		}
+		else {
+			$return = array(
+				'match' => array(
+					$data['in'] => $data['value'],
+				),
+			);
+		}
+
+		return $return;
 	}
 
 	/**
