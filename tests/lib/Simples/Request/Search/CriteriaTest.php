@@ -241,23 +241,27 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 	public function testNested() {
 		$criteria = new TestCriteria(array(
 			'path' => 'nestedPath',
+			'query' => array(),
 		), array('type' => 'nested'));
 
 		$this->assertEquals(array(
 			'nested' => array(
 				'path'			=> 'nestedPath',
+				'query'			=> array(),
 				'score_mode'	=> 'avg'
 			)
 		), $criteria->to('array'));
 
 		$criteria = new TestCriteria(array(
 			'path'			=> 'nestedPath',
+			'query'			=> array(),
 			'score_mode'	=> 'total',
 		), array('type' => 'nested'));
 
 		$this->assertEquals(array(
 			'nested' => array(
 				'path'			=> 'nestedPath',
+				'query'			=> array(),
 				'score_mode'	=> 'total'
 			)
 		), $criteria->to('array'));

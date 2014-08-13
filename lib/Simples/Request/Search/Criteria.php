@@ -507,7 +507,11 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 			throw new Simples_Request_Exception('Key "score_mode" is not valid', $data) ;
 		}
 
-		return array('nested' => $data);
+		return array('nested' => array(
+			'path' => $data['path'],
+			'query' => $data['value'],
+			'score_mode' => $data['score_mode'],
+		));
 	}
 
 	/**
