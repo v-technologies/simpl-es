@@ -494,6 +494,34 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 		) ;
 	}
 
+	protected function _prepare_nested() {
+		$data = $this->get();
+
+		if (!isset($data['path'])) {
+			throw new Simples_Request_Exception('Key "path" empty', $data) ;
+		}
+
+		if (!isset($data['value'])) {
+			throw new Simples_Request_Exception('Key "query" empty', $data) ;
+		}
+
+		if (!isset($data['score_mode'])) {
+		    $data['score_mode'] = 'avg';
+		}
+
+		$availableScoreMode = array('avg', 'total', 'max', 'none');
+
+		if (!in_array($data['score_mode'], $availableScoreMode)) {
+			throw new Simples_Request_Exception('Key "score_mode" is not valid', $data) ;
+		}
+
+		return array('nested' => array(
+			'path' => $data['path'],
+			'query' => $data['value'],
+			'score_mode' => $data['score_mode'],
+		));
+	}
+
 	/**
 	 * Test if a criteria is mergeable with the current criteria.
 	 *
