@@ -268,12 +268,49 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * @dataProvider providerNestedException
 	 * @expectedException Simples_Request_Exception
 	 */
-	public function testNestedException() {
+	public function testNestedScoreModeException($options) {
+		$criteria = new TestCriteria($options, array('type' => 'nested'));
+
+		$criteria->to('array');
+	}
+
+	public function providerNestedException() {
+		return array(
+			array(array()),
+			array(array(
+				'query' => array(),
+			)),
+			array(array(
+				'path' => 'nestedPath',
+			)),
+			array(array(
+				'path'			=> 'nestedPath',
+				'query'			=> array(),
+				'score_mode'	=> 'wrong',
+			)),
+		);
+	}
+
+	/**
+	 * @expectedException Simples_Request_Exception
+	 */
+	public function testNestedPathException() {
 		$criteria = new TestCriteria(array(
-			'path' => 'nestedPath',
-			'score_mode' => 'wrong',
+			'query'		=> array(),
+		), array('type' => 'nested'));
+
+		$criteria->to('array');
+	}
+
+	/**
+	 * @expectedException Simples_Request_Exception
+	 */
+	public function testNestedQueryException() {
+		$criteria = new TestCriteria(array(
+			'query'		=> array(),
 		), array('type' => 'nested'));
 
 		$criteria->to('array');

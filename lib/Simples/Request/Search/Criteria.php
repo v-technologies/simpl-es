@@ -497,6 +497,14 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	protected function _prepare_nested() {
 		$data = $this->get();
 
+		if (!isset($data['path'])) {
+			throw new Simples_Request_Exception('Key "path" empty', $data) ;
+		}
+
+		if (!isset($data['value'])) {
+			throw new Simples_Request_Exception('Key "query" empty', $data) ;
+		}
+
 		if (!isset($data['score_mode'])) {
 		    $data['score_mode'] = 'avg';
 		}
