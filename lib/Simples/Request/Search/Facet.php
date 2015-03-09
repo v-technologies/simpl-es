@@ -183,16 +183,16 @@ class Simples_Request_Search_Facet extends Simples_Base {
 		if (is_string($definition)) {
 			$definition = array('in' => $definition) ;
 		} else {
-                        $in = $this->_in($definition) ;
-                        if (isset($in)) {
-                            $definition['in'] = $in ;
-                            if (isset($definition['field'])) {
-                                    unset($definition['field']) ;
-                            }
-                            if (isset($definition['fields'])) {
-                                    unset($definition['fields']) ;
-                            }
-                        }
+			$in = $this->_in($definition) ;
+			if (isset($in)) {
+				$definition['in'] = $in ;
+				if (isset($definition['field'])) {
+					unset($definition['field']) ;
+				}
+				if (isset($definition['fields'])) {
+					unset($definition['fields']) ;
+				}
+			}
 		}
 		return $definition ;
 	}
@@ -229,7 +229,13 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	 */
 	protected function _data(array $options = array()) {
 		$data = $this->_data ;
-		if (empty($data['in']) && empty($data['value_field'])) {
+		$type = $this->type() ;
+
+		if (
+			empty($data['in']) &&
+			empty($data['value_field']) &&
+			!in_array($type, array('filter', 'query', 'statistical'))
+		) {
 			throw new Simples_Request_Exception('Facet error : no scope (keys "field","fields","value_field" and "in" are empty)') ;
 		}
 		
@@ -244,16 +250,16 @@ class Simples_Request_Search_Facet extends Simples_Base {
 		}
 		
 		// Scope
-                if (isset($data['in'])) {
-                    if (is_array($data['in'])) {
-                            $data['fields'] = $data['in'] ;
-                    } else {
-                            $data['field'] = $data['in'] ;
-                    }
-                    unset($data['in']) ;
-                }
+		if (isset($data['in'])) {
+			if (is_array($data['in'])) {
+					$data['fields'] = $data['in'] ;
+			} else {
+					$data['field'] = $data['in'] ;
+			}
+			unset($data['in']) ;
+		}
 		
-		$return = array($this->type() => $data) ;
+		$return = array($type => $data) ;
 		
 		// Filters
 		if (count($this->_filters)) {
