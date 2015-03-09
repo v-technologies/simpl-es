@@ -183,16 +183,16 @@ class Simples_Request_Search_Facet extends Simples_Base {
 		if (is_string($definition)) {
 			$definition = array('in' => $definition) ;
 		} else {
-                        $in = $this->_in($definition) ;
-                        if (isset($in)) {
-                            $definition['in'] = $in ;
-                            if (isset($definition['field'])) {
-                                    unset($definition['field']) ;
-                            }
-                            if (isset($definition['fields'])) {
-                                    unset($definition['fields']) ;
-                            }
-                        }
+			$in = $this->_in($definition) ;
+			if (isset($in)) {
+				$definition['in'] = $in ;
+				if (isset($definition['field'])) {
+					unset($definition['field']) ;
+				}
+				if (isset($definition['fields'])) {
+					unset($definition['fields']) ;
+				}
+			}
 		}
 		return $definition ;
 	}
@@ -244,14 +244,14 @@ class Simples_Request_Search_Facet extends Simples_Base {
 		}
 		
 		// Scope
-                if (isset($data['in'])) {
-                    if (is_array($data['in'])) {
-                            $data['fields'] = $data['in'] ;
-                    } else {
-                            $data['field'] = $data['in'] ;
-                    }
-                    unset($data['in']) ;
-                }
+		if (isset($data['in'])) {
+			if (is_array($data['in'])) {
+					$data['fields'] = $data['in'] ;
+			} else {
+					$data['field'] = $data['in'] ;
+			}
+			unset($data['in']) ;
+		}
 		
 		$return = array($this->type() => $data) ;
 		
