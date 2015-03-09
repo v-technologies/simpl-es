@@ -214,7 +214,7 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $res) ;
 	}
 
-    public function testFacetsBuilder() {
+    public function testFacetsBuilderBase() {
 		// Base case
 		$request = $this->client->search()->facet('username') ;
 		$res = $request->to('array') ;
@@ -229,7 +229,9 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 			)
 		) ;
 		$this->assertEquals($expected, $res) ;
+	}
 
+	public function testFacetsBuilderRangeFiltered() {
 		// Range filtered facet
 		$request = $this->client->search()->facet('age')
 			->filtered(array('in' => 'age', 'ranges' => array(
@@ -253,6 +255,33 @@ class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
 								array('range' => array(
 									'age' => array('from' => '11', 'to' => '20')))
 							)
+						)
+					)
+				)
+			)
+		);
+		$this->assertEquals($expected, $res) ;
+	}
+
+	public function testFacetsBuilderFilter() {
+		// Range filtered facet
+		$request = $this->client->search()->facet(array(
+				'name' => 'today',
+				'term' => array('day' => '2015-03-03')
+			), array(
+				'type' => 'filter'
+			)) ;
+		$res = $request->to('array') ;
+
+		$expected = array(
+			'query' => array(
+				'match_all' => new stdClass()
+			),
+			'facets' => array(
+				'today' => array(
+					'filter' => array(
+						'term' => array(
+							'day' => '2015-03-03'
 						)
 					)
 				)

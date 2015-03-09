@@ -229,7 +229,13 @@ class Simples_Request_Search_Facet extends Simples_Base {
 	 */
 	protected function _data(array $options = array()) {
 		$data = $this->_data ;
-		if (empty($data['in']) && empty($data['value_field'])) {
+		$type = $this->type() ;
+
+		if (
+			empty($data['in']) &&
+			empty($data['value_field']) &&
+			!in_array($type, array('filter', 'query', 'statistical'))
+		) {
 			throw new Simples_Request_Exception('Facet error : no scope (keys "field","fields","value_field" and "in" are empty)') ;
 		}
 		
@@ -253,7 +259,7 @@ class Simples_Request_Search_Facet extends Simples_Base {
                     unset($data['in']) ;
                 }
 		
-		$return = array($this->type() => $data) ;
+		$return = array($type => $data) ;
 		
 		// Filters
 		if (count($this->_filters)) {
