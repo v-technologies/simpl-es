@@ -267,6 +267,26 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 		), $criteria->to('array'));
 	}
 
+	public function testNotTerms() {
+		$criteria = new TestCriteria(array(
+			'in' => 'ids',
+			'values' => array('1', '2', '3')
+		), array('type' => 'not_terms'));
+		$res = $criteria->to('array') ;
+		$expected = array(
+			'bool' => array(
+				'must_not' => array(
+					array(
+						'terms' => array(
+							'ids' => array('1', '2', '3')
+						)
+					)
+				),
+			),
+		);
+		$this->assertEquals($expected, $res) ;
+	}
+
 	/**
 	 * @dataProvider providerNestedException
 	 * @expectedException Simples_Request_Exception

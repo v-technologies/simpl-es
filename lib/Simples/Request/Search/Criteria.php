@@ -216,6 +216,35 @@ abstract class Simples_Request_Search_Criteria extends Simples_Base {
 	}
 
 	/**
+	 * Prepare for a "not_terms" clause
+	 *
+	 * @return array
+	 */
+	protected function _prepare_not_terms() {
+		$data = $this->get();
+
+		if (!isset($data['in']) || !isset($data['value'])) {
+			throw new Simples_Request_Exception('Key "in" or "value" empty', $data) ;
+		}
+
+		$return = array(
+			'bool' => array(
+				'must_not' => array(),
+			),
+		);
+
+		foreach((array)$data['in'] as $in) {
+			$return['bool']['must_not'][] = array(
+				'terms' => array(
+					$in => $data['value'],
+				),
+			);
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Prepare for a "term" clause.
 	 *
 	 * @return array
