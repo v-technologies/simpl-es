@@ -89,8 +89,13 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCallCurlHttpCode() {
 		$transport = new Simples_Transport_Http();
-		$transport->call('/test', 'PUT');
-		$res = $transport->call('/test', 'PATCH');
+
+		try {
+			$transport->call('/test', 'DELETE');
+			$transport->call('/test', 'PUT');
+		} catch(Exception $e) {}
+
+		$transport->call('/test', 'POST');
 	}
 
 	public function testMagicCall() {
