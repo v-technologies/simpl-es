@@ -83,6 +83,16 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 		$res = $transport->call('/test', 'HEAD');
 	}
 
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Error during the request (HTTP CODE: 400)
+	 */
+	public function testCallCurlHttpCode() {
+		$transport = new Simples_Transport_Http();
+		$transport->call('/test', 'PUT');
+		$res = $transport->call('/test', 'PATCH');
+	}
+
 	public function testMagicCall() {
 		$transport = new Simples_Transport_Http() ;
 		$status = $transport->status() ;
