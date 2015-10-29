@@ -1,5 +1,4 @@
 <?php
-require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
 class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 
@@ -15,17 +14,19 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 		} catch (Exception $e) {
 			$this->markTestSkipped($e->getMessage()) ;
 		}
+	}
 		
-		try {
-			$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
-			$transport->connect() ;
-			$this->fail();
-		} catch (Exception $e) {
-		}
-		
-		
+	/**
+	 * @expectedException Exception
+	 */
+	public function testConnectionException() {
+		$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
+		$transport->connect() ;
 	}
 	
+	/**
+	 * @expectedException Exception
+	 */
 	public function testCheck() {
 		$transport = new Simples_Transport_Http() ;
 		
@@ -34,13 +35,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 			'port' => 80
 		)) ;
 		
-		try {
-			$transport->connect() ;
-		} catch(Exception $e) {
-			return ;
-		}
-		
-		$this->fail() ;
+		$transport->connect() ;
 	}
 	
 	public function testUrl() {
