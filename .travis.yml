@@ -15,4 +15,4 @@ matrix:
 before_script:
   - ./tests/bin/elasticsearch.sh
 
-script: phpunit tests/
+script: phpunit --bootstrap tests/lib/bootstrap.php tests/
