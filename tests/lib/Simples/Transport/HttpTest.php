@@ -55,7 +55,34 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($res['ok']);
 		$this->assertTrue(isset($res['version']['number'])) ;
 	}
-	
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Cannot JSON decode the response : No handler found for uri [/test] and method [GET]
+	 */
+	public function testCallCannotJsonDecodeException() {
+		$transport = new Simples_Transport_Http();
+		$res = $transport->call('/test');
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Error during the request (6)
+	 */
+	public function testCallCurlReturnFalse() {
+		$transport = new Simples_Transport_Http(array( 'host' => 'nowhere' ));
+		$res = $transport->call('/test');
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage The ES server returned an empty response.
+	 */
+	public function testCallEmptyResponse() {
+		$transport = new Simples_Transport_Http();
+		$res = $transport->call('/test', 'HEAD');
+	}
+
 	public function testMagicCall() {
 		$transport = new Simples_Transport_Http() ;
 		$status = $transport->status() ;
