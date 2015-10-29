@@ -62,7 +62,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCallCannotJsonDecodeException() {
 		$transport = new Simples_Transport_Http();
-		$res = $transport->call('/test');
+		$transport->call('/test');
 	}
 
 	/**
@@ -71,7 +71,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCallCurlReturnFalse() {
 		$transport = new Simples_Transport_Http(array( 'host' => 'nowhere' ));
-		$res = $transport->call('/test');
+		$transport->call('/test');
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCallEmptyResponse() {
 		$transport = new Simples_Transport_Http();
-		$res = $transport->call('/test', 'HEAD');
+		$transport->call('/test', 'HEAD');
 	}
 
 	/**
