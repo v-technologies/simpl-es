@@ -1,5 +1,4 @@
 <?php
-require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
 class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 
@@ -15,17 +14,19 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 		} catch (Exception $e) {
 			$this->markTestSkipped($e->getMessage()) ;
 		}
+	}
 		
-		try {
-			$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
-			$transport->connect() ;
-			$this->fail();
-		} catch (Exception $e) {
-		}
-		
-		
+	/**
+	 * @expectedException Exception
+	 */
+	public function testConnectionException() {
+		$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
+		$transport->connect() ;
 	}
 	
+	/**
+	 * @expectedException Exception
+	 */
 	public function testCheck() {
 		$transport = new Simples_Transport_Http() ;
 		
@@ -34,13 +35,7 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 			'port' => 80
 		)) ;
 		
-		try {
-			$transport->connect() ;
-		} catch(Exception $e) {
-			return ;
-		}
-		
-		$this->fail() ;
+		$transport->connect() ;
 	}
 	
 	public function testUrl() {
@@ -60,7 +55,49 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($res['ok']);
 		$this->assertTrue(isset($res['version']['number'])) ;
 	}
-	
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Cannot JSON decode the response : No handler found for uri [/test] and method [GET]
+	 */
+	public function testCallCannotJsonDecodeException() {
+		$transport = new Simples_Transport_Http();
+		$transport->call('/test');
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Error during the request (6)
+	 */
+	public function testCallCurlReturnFalse() {
+		$transport = new Simples_Transport_Http(array( 'host' => 'nowhere' ));
+		$transport->call('/test');
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage The ES server returned an empty response.
+	 */
+	public function testCallEmptyResponse() {
+		$transport = new Simples_Transport_Http();
+		$transport->call('/test', 'HEAD');
+	}
+
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Error during the request (HTTP CODE: 400)
+	 */
+	public function testCallCurlHttpCode() {
+		$transport = new Simples_Transport_Http();
+
+		try {
+			$transport->call('/test', 'DELETE');
+			$transport->call('/test', 'PUT');
+		} catch(Exception $e) {}
+
+		$transport->call('/test', 'POST');
+	}
+
 	public function testMagicCall() {
 		$transport = new Simples_Transport_Http() ;
 		$status = $transport->status() ;

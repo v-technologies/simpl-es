@@ -14,12 +14,7 @@ class Simples_Request_IndexTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testIndex() {
-		try {
-			$request = new Simples_Request_Index(new Simples_Transport_Http());
-			$this->fail();
-		} catch (Exception $e) {
-			
-		}
+		$request = new Simples_Request_Index(null, null, new Simples_Transport_Http());
 
 		$request = $this->client->index(array(
 				'user' => 'scharrier',

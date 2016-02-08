@@ -32,6 +32,14 @@ class Simples_Transport_Http extends Simples_Transport {
 	 * @var Simples_Transport
 	 */
 	protected $_connection ;
+
+	/**
+	 * Bad HTTP code on curl call
+	 */
+	private static $badHttCode = array(
+		400,
+		500
+	);
 	
 	/**
 	 * Constructor.
@@ -142,16 +150,21 @@ class Simples_Transport_Http extends Simples_Transport {
 				curl_error($this->_connection)
 			);
 		}
+
 		if (!strlen($response)) {
 			throw new Simples_Transport_Exception('The ES server returned an empty response.') ;
 		}
 		
 		$return = json_decode($response, true) ;
-		
 		if ($return === null) {
 			throw new Simples_Transport_Exception('Cannot JSON decode the response : ' . $response) ;
 		}
 		
+		$httpCode = curl_getinfo($this->_connection, CURLINFO_HTTP_CODE);
+		if (in_array($httpCode, self::$badHttCode)) {
+			throw new Simples_Transport_Exception('Error during the request (HTTP CODE: ' . $httpCode . ')');
+		}
+
 		return $return ;
 	}
 }

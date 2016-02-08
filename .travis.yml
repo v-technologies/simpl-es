@@ -1,3 +1,5 @@
+sudo: false
+
 language: php
 
 php:
@@ -5,8 +7,15 @@ php:
   - 5.3
   - 5.4
   - 5.5
+  - 5.6
+  - 7
+
+matrix:
+  allow_failures:
+    - php: 5.2
+    - php: 7
 
 before_script:
   - ./tests/bin/elasticsearch.sh
 
-script: phpunit tests/
+script: phpunit --bootstrap tests/lib/bootstrap.php tests/
