@@ -123,4 +123,17 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$res = $document->to('array', array('clean' => true, 'cast' => array('sub.string' => 'float'))) ;
 		$this->assertTrue($res['sub'][0]['string'] === 9.0);
 	}
+
+	public function testCleanFloatInf() {
+		// Test clean
+		$document = new Simples_Document(array(
+			'string' => '3E7210'
+		)) ;
+		$res = $document->to('array', array('clean' => true)) ;
+
+		$this->assertTrue($res['string'] === '3E7210');
+
+		$res = $document->to('json', array('clean' => true)) ;
+		$this->assertEquals($res, '{"string":"3E7210"}');
+	}
 }

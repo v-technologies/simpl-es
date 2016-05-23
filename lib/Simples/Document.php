@@ -329,7 +329,7 @@ class Simples_Document extends Simples_Base {
 					} else {
 						unset($data[$key]) ;
 					}
-				} elseif (is_numeric($value)) {
+				} elseif (is_numeric($value) && (float)$value !== INF) {
 					$data[$key] = (float) $value ;
 				}
 			}
