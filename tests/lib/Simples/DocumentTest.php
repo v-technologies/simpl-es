@@ -76,7 +76,7 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 		$document->a = null;
 
 		// we don't want null values... nor strange behaviors
-		$this->assertEquals([], $document->get());
+		$this->assertEquals(array(), $document->get());
 	}
 
 	public function testToArray() {
