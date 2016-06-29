@@ -62,6 +62,22 @@ class Simples_DocumentTest extends PHPUnit_Framework_TestCase {
 
 
 	}
+	
+	
+	/**
+	 * BUG TEST
+	 * when setting a property to null, SimplesDocument would set the whole
+	 * data to the property name!
+	 * !16
+	 */
+	public function testNullAffectation() {
+		$document = new Simples_Document();
+		
+		$document->a = null;
+
+		// we don't want null values... nor strange behaviors
+		$this->assertEquals([], $document->get());
+	}
 
 	public function testToArray() {
 		$document = new Simples_Document($this->data['standard']) ;

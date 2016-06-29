@@ -240,7 +240,9 @@ class Simples_Document extends Simples_Base {
 	 * @param mixed $value  Property value
 	 */
 	public function __set($name, $value) {
-		$this->set($name, $value) ;
+		if (!is_null($value)) {
+			$this->set($name, $value) ;
+		}
 	}
 
 	/**
