@@ -13,7 +13,7 @@ if (!defined('SIMPLES_ROOT')) {
  * 
  * @param string	$class		Class name to load
  */
-function __autoload_simples ($class) {
+function autoload_simples ($class) {
     $path = str_replace('_', DIRECTORY_SEPARATOR , $class);
 
     if (file_exists(SIMPLES_ROOT . $path . '.php')) {
@@ -22,4 +22,4 @@ function __autoload_simples ($class) {
 }
 
 // Register our custom autoload method
-spl_autoload_register('__autoload_simples');
+spl_autoload_register('autoload_simples');
