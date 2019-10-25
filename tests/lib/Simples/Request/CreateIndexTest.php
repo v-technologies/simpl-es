@@ -1,15 +1,7 @@
 <?php
 
-require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
+class Simples_Request_CreateIndexTest extends Simples_HttpTestCase {
 
-use PHPUnit\Framework\TestCase;
-
-class Simples_Request_CreateIndexTest extends TestCase {
-
-	protected function setUp() : void {
-		$this->client = new Simples_Transport_Http() ;
-	}
-	
 	public function testCreate() {
 		$this->client->config('index','test_index') ;
 		$request = $this->client->createIndex() ;

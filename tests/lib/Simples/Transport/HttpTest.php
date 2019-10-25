@@ -1,18 +1,15 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+class Simples_Transport_HttpTest extends Simples_HttpTestCase {
 
-class Simples_Transport_HttpTest extends TestCase {
-
-    public function testConnection() {
+	public function testConnection() {
 		try {
-			$transport = new Simples_Transport_Http() ;
-			$transport->connect() ;
-			$this->assertTrue($transport->connected()) ;
-			$this->assertTrue($transport instanceof Simples_Transport_Http) ;
+			$this->client->connect() ;
+			$this->assertTrue($this->client->connected()) ;
+			$this->assertTrue($this->client instanceof Simples_Transport_Http) ;
 			
-			$transport->disconnect() ;
-			$this->assertFalse($transport->connected()) ;
+			$this->client->disconnect() ;
+			$this->assertFalse($this->client->connected()) ;
 		} catch (Exception $e) {
 			$this->markTestSkipped($e->getMessage()) ;
 		}
@@ -22,38 +19,37 @@ class Simples_Transport_HttpTest extends TestCase {
 	 */
 	public function testConnectionException() {
 		$this->expectException(\Exception::class);
-		$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
-		$transport->connect() ;
+		$this->client->config('host', 'www.google.com');
+		$this->client->config('port', '80');
+		$this->client->connect() ;
 	}
 	
 	/**
 	 */
 	public function testCheck() {
 		$this->expectException(\Exception::class);
-		$transport = new Simples_Transport_Http() ;
-		
-		$transport->config(array(
+	
+		$this->client->config(array(
 			'host' => 'www.google.com',
 			'port' => 80
 		)) ;
 		
-		$transport->connect() ;
+		$this->client->connect() ;
 	}
 	
 	public function testUrl() {
-		$transport = new Simples_Transport_Http() ;
-		$this->assertEquals('http://127.0.0.1/', $transport->url()) ;
+		$this->client->config('host', '127.0.0.1');
+		$this->assertEquals('http://127.0.0.1/', $this->client->url()) ;
 		
-		$transport->config('host', 'farhost') ;
-		$this->assertEquals('http://farhost/', $transport->url()) ;
+		$this->client->config('host', 'farhost');
+		$this->assertEquals('http://farhost/', $this->client->url()) ;
 		
-		$this->assertEquals('http://farhost/_status', $transport->url('_status')) ;
-		$this->assertEquals('http://farhost/_status', $transport->url('/_status')) ;
+		$this->assertEquals('http://farhost/_status', $this->client->url('_status')) ;
+		$this->assertEquals('http://farhost/_status', $this->client->url('/_status')) ;
 	}
 	
 	public function testCall() {
-		$transport = new Simples_Transport_Http() ;
-		$res = $transport->call() ;
+		$res = $this->client->call() ;
 		$this->assertTrue($res['ok']);
 		$this->assertTrue(isset($res['version']['number'])) ;
 	}
@@ -63,8 +59,8 @@ class Simples_Transport_HttpTest extends TestCase {
 	public function testCallCannotJsonDecodeException() {
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Cannot JSON decode the response : No handler found for uri [/test] and method [GET]');
-		$transport = new Simples_Transport_Http();
-		$transport->call('/test');
+		
+		$this->client->call('/test');
 	}
 
 	/**
@@ -72,8 +68,8 @@ class Simples_Transport_HttpTest extends TestCase {
 	public function testCallCurlReturnFalse() {
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Error during the request (6)');
-		$transport = new Simples_Transport_Http(array( 'host' => 'nowhere' ));
-		$transport->call('/test');
+		$this->client->config(array( 'host' => 'nowhere' ));
+		$this->client->call('/test');
 	}
 
 	/**
@@ -81,8 +77,8 @@ class Simples_Transport_HttpTest extends TestCase {
 	public function testCallEmptyResponse() {
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('The ES server returned an empty response.');
-		$transport = new Simples_Transport_Http();
-		$transport->call('/test', 'HEAD');
+
+		$this->client->call('/test', 'HEAD');
 	}
 
 	/**
@@ -90,21 +86,19 @@ class Simples_Transport_HttpTest extends TestCase {
 	public function testCallCurlHttpCode() {
 		$this->expectException(\Exception::class);
 		$this->expectExceptionMessage('Error during the request (HTTP CODE: 400)');
-		$transport = new Simples_Transport_Http();
 
 		try {
-			$transport->call('/test', 'DELETE');
-			$transport->call('/test', 'PUT');
+			$this->client->call('/test', 'DELETE');
+			$this->client->call('/test', 'PUT');
 		} catch(Exception $e) {}
 
-		$transport->call('/test', 'POST');
+		$this->client->call('/test', 'POST');
 	}
 
 	public function testMagicCall() {
-		$transport = new Simples_Transport_Http() ;
-		$status = $transport->status() ;
+		$status = $this->client->status() ;
 		$this->assertTrue($status instanceof Simples_Request_Status) ; 
-		$response = $transport->status()->execute() ;
+		$response = $this->client->status()->execute() ;
 		$this->assertTrue($response instanceof Simples_Response) ; 
 	}
 }

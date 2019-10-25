@@ -1,17 +1,12 @@
 <?php
 
-require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
-
-use PHPUnit\Framework\TestCase;
-
-class Simples_Request_MappingTest extends TestCase {
+class Simples_Request_MappingTest extends Simples_HttpTestCase {
 
 	protected function setUp() : void {
-		$this->client = new Simples_Transport_Http(array(
-			'index' => 'music',
-			'type' => 'composers',
-			'log' => true
-		));
+		parent::setUp();
+		$this->client->config('index', 'music');
+		$this->client->config('type', 'composers');
+		$this->client->config('log', true);
 		$this->client->createIndex()->execute() ;
 	}
 	

@@ -6,8 +6,9 @@ use PHPUnit\Framework\TestCase;
 class SimplesTest extends TestCase {
 	
 	public function testStaticUsage() {
+		$host = getenv('host') ?: '127.0.0.1';
 		$client = Simples::connect(array(
-			'host' => '127.0.0.1',
+			'host' => $host,
 		)) ;
 		$this->assertTrue(Simples::connected()) ;
 		$this->assertTrue($client->connected()) ;
@@ -16,7 +17,7 @@ class SimplesTest extends TestCase {
 		$this->assertFalse(Simples::connected()) ; 
 		
 		$client = Simples::connect() ;
-		$this->assertEquals('127.0.0.1', $client->config('host')) ;
+		$this->assertEquals($host, $client->config('host')) ;
 		$this->assertEquals(true, Simples::current()->status()->ok) ;
 		
 		Simples::current()->config(array(

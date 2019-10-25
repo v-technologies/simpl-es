@@ -1,9 +1,6 @@
 <?php
-require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
-use PHPUnit\Framework\TestCase;
-
-class Simples_RequestTest extends TestCase {
+class Simples_RequestTest extends Simples_HttpTestCase {
 	
 	public function testConstruct() {
 		$request = new Simples_Request_Custom() ;
@@ -33,7 +30,7 @@ class Simples_RequestTest extends TestCase {
 		$res = $request->execute() ;
 		$this->assertTrue($request->execute() instanceof Simples_Response) ;
 		
-		$res = $request->client(new Simples_Transport_Http())->execute() ;
+		$res = $request->client($this->client)->execute() ;
 		$this->assertTrue($res->get('ok') === true) ;
 	}
 	

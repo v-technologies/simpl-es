@@ -22,6 +22,7 @@ class Simples_Request_Search_FacetTest extends TestCase {
 				)
 			)
 		) ;
+		$this->assertEquals($expected, $res);
 		
 		$facet = new Simples_Request_Search_Facet(array('in' => 'category_id')) ;
 		$res = $facet->to('array') ;
@@ -32,6 +33,7 @@ class Simples_Request_Search_FacetTest extends TestCase {
 				)
 			)
 		) ;
+		$this->assertEquals($expected, $res);
 		
 		$facet = new Simples_Request_Search_Facet(array('field' => 'category_id')) ;
 		$res = $facet->to('array') ;
@@ -42,6 +44,7 @@ class Simples_Request_Search_FacetTest extends TestCase {
 				)
 			)
 		) ;
+		$this->assertEquals($expected, $res);
 	}
 	
 	public function testMultipleFields() {

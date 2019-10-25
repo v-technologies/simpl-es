@@ -1,15 +1,13 @@
 <?php
 
-require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
-
-use PHPUnit\Framework\TestCase;
-
-class Simples_Request_DeleteTypeTest extends TestCase {
+class Simples_Request_DeleteTypeTest extends Simples_HttpTestCase {
 	
 	public $client ;
 	
 	protected function setUp() : void {
-		$this->client = new Simples_Transport_Http(array('index' => 'test_delete', 'type' => 'test_delete_type'));			
+		parent::setUp();
+		$this->client->config('index', 'test_delete');
+		$this->client->config('type', 'test_delete_type');
 		$this->client->createIndex()->execute() ;
 	}
 
@@ -31,5 +29,4 @@ class Simples_Request_DeleteTypeTest extends TestCase {
 			$this->client->deleteIndex()->execute() ;
 		}
 	}
-
 }

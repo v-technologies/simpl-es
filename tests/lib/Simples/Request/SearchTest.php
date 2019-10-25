@@ -1,18 +1,13 @@
 <?php
 
-require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
-
-use PHPUnit\Framework\TestCase;
-
-class Simples_Request_SearchTest extends TestCase {
+class Simples_Request_SearchTest extends Simples_HttpTestCase {
 
 	public $client ;
 
 	protected function setUp() : void {
-		$this->client = new Simples_Transport_Http(array(
-			'index' => 'twitter',
-			'type' => 'tweet'
-		));
+		parent::setUp();
+		$this->client->config('index', 'twitter');
+		$this->client->config('type', 'tweet');
 
 		$this->client->deleteIndex()->execute() ;
 

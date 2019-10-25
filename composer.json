@@ -19,5 +19,8 @@
 	},
 	"autoload": {
 		"psr-0": {"Simples": "lib/"}
-	}
+	},
+        "autoload-dev": {
+          "psr-0": { "Tests_Simples": "tests/lib" }
+        }
 }

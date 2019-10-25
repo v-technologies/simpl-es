@@ -1,14 +1,13 @@
 <?php
-require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
-use PHPUnit\Framework\TestCase;
-
-class Simples_DocumentTest extends TestCase {
+class Simples_DocumentTest extends Simples_HttpTestCase {
 
 	/**
 	 * Set up some fixtures.
 	 */
 	protected function setUp() : void {
+		parent::setUp();
+
 		$this->data['standard'] = array(
 			'firstname' => 'Jim',
 			'lastname' => 'Morrison',

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    bootstrap="./tests/lib/Autoload.php"
+    backupGlobals="false"
+    backupStaticAttributes="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+>
+    <php>
+        <ini name="memory_limit" value="-1"/>
+        <env name="host" value="127.0.0.1" force="true" />
+        <env name="port" value="9200" force="true" />
+        <env name="protocol" value="http" force="true" />
+    </php>
+    <testsuites>
+        <testsuite name="AllTests">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

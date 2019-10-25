@@ -1,13 +1,9 @@
 <?php
 
-require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
-
-use PHPUnit\Framework\TestCase;
-
-class Simples_Request_DeleteTest extends TestCase {
+class Simples_Request_DeleteTest extends Simples_HttpTestCase {
 
 	public function testDelete() {
-		$client = new Simples_Transport_Http();
+		$client = $this->client;
 		$this->assertTrue($client->index(
 			array(
 				'content' => 'Pliz, pliz, delete me !'
