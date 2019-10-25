@@ -1,7 +1,9 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
-class Simples_PathTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_PathTest extends TestCase {
 	
 	public function testPath() {
 		$path = new Simples_Path('/root/') ;

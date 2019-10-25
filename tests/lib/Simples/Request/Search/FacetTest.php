@@ -2,14 +2,16 @@
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Request_Search_FacetTest extends TestCase {
 
 	public function testBase() {
 		$facet = new Simples_Request_Search_Facet('category_id') ;
 		$this->assertEquals('terms',$facet->type()) ;
 		$this->assertEquals('category_id',$facet->get('in')) ;
 	}
-	
+
 	public function testIn() { 
 		$facet = new Simples_Request_Search_Facet('category_id') ;
 		$res = $facet->to('array') ;
@@ -70,23 +72,23 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(3, count($res['category']['facet_filter']['bool']['must'])) ;
 	}
 
-    /**
-     * @expectedException Simples_Request_Exception
-     */
-    public function testTermsException() {
+	/**
+	 */
+	public function testTermsException() {
+		$this->expectException(Simples_Request_Exception::class);
 		$facet = new Simples_Request_Search_Facet(array(
 				'name' => 'termsFacet',
-                'size' => 20
+				'size' => 20
 			), array(
 				'type' => 'terms'
-            )) ;
+			)) ;
 		$res = $facet->to('array') ;
-    }
+	}
 
-    public function testValueField() {
+	public function testValueField() {
 		$facet = new Simples_Request_Search_Facet(array(
-            'name' => 'test_value_field','value_field' => 'category_id'
-        )) ;
+			'name' => 'test_value_field','value_field' => 'category_id'
+		)) ;
 		$res = $facet->to('array') ;
 		$expected = array(
 			'test_value_field' => array(
@@ -97,7 +99,7 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 		) ;
 
 		$this->assertEquals($expected, $res) ;
-    }
+	}
 
 	public function testFilter() {
 		$facet = new Simples_Request_Search_Facet(array(
@@ -105,16 +107,16 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 				'term' => array('day' => '2015-03-03')
 			), array(
 				'type' => 'filter'
-            )) ;
+			)) ;
 		$res = $facet->to('array') ;
 
-        $expected = array(
-            'today' => array(
-                'filter' => array(
-                    'term' => array('day' => '2015-03-03')
-                )
-            )
-        );
+		$expected = array(
+			'today' => array(
+				'filter' => array(
+					'term' => array('day' => '2015-03-03')
+				)
+			)
+		);
 
 		$this->assertEquals($expected, $res) ;
 	}
@@ -125,37 +127,37 @@ class Simples_Request_Search_FacetTest extends PHPUnit_Framework_TestCase {
 				'term' => array('day' => '2015-03-03')
 			), array(
 				'type' => 'query'
-            )) ;
+			)) ;
 		$res = $facet->to('array') ;
 
-        $expected = array(
-            'today' => array(
-                'query' => array(
-                    'term' => array('day' => '2015-03-03')
-                )
-            )
-        );
+		$expected = array(
+			'today' => array(
+				'query' => array(
+					'term' => array('day' => '2015-03-03')
+				)
+			)
+		);
 
 		$this->assertEquals($expected, $res) ;
 	}
 
-    public function testStastistical() {
+	public function testStastistical() {
 
 		$facet = new Simples_Request_Search_Facet(array(
-            'name' => 'stat1',
-            'script' => 'doc[\'num1\'].value + doc[\'num2\'].value'
-        ), array('type' => 'statistical')) ;
+			'name' => 'stat1',
+			'script' => 'doc[\'num1\'].value + doc[\'num2\'].value'
+		), array('type' => 'statistical')) ;
 
 		$res = $facet->to('array') ;
 
-        $expected = array(
-            'stat1' => array(
-                'statistical' => array(
-                    'script' => 'doc[\'num1\'].value + doc[\'num2\'].value'
-                )
-            )
-        );
+		$expected = array(
+			'stat1' => array(
+				'statistical' => array(
+					'script' => 'doc[\'num1\'].value + doc[\'num2\'].value'
+				)
+			)
+		);
 
 		$this->assertEquals($expected, $res) ;
-    }
+	}
 }

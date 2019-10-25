@@ -2,7 +2,9 @@
 
 require_once(dirname(dirname(dirname(dirname(__FILE__)))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Request_Search_CriteriaTest extends TestCase {
 
 	public function testNormalize() {
 		$criteria = new TestCriteria(array(
@@ -289,9 +291,9 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @dataProvider providerNestedException
-	 * @expectedException Simples_Request_Exception
 	 */
 	public function testNestedScoreModeException($options) {
+		$this->expectException(Simples_Request_Exception::class);
 		$criteria = new TestCriteria($options, array('type' => 'nested'));
 
 		$criteria->to('array');
@@ -315,9 +317,9 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException Simples_Request_Exception
 	 */
 	public function testNestedPathException() {
+		$this->expectException(Simples_Request_Exception::class);
 		$criteria = new TestCriteria(array(
 			'query'		=> array(),
 		), array('type' => 'nested'));
@@ -326,9 +328,9 @@ class Simples_Request_Search_CriteriaTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException Simples_Request_Exception
 	 */
 	public function testNestedQueryException() {
+		$this->expectException(Simples_Request_Exception::class);
 		$criteria = new TestCriteria(array(
 			'query'		=> array(),
 		), array('type' => 'nested'));

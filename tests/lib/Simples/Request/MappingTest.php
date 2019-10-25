@@ -2,9 +2,11 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_MappingTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
 
-	public function setUp() {
+class Simples_Request_MappingTest extends TestCase {
+
+	protected function setUp() : void {
 		$this->client = new Simples_Transport_Http(array(
 			'index' => 'music',
 			'type' => 'composers',
@@ -72,7 +74,7 @@ class Simples_Request_MappingTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($mapping, $response->to('array')) ;
 	}
 	
-	public function tearDown() {
+	protected function tearDown() : void {
 		$this->client->deleteIndex()->execute() ;
 	}
 }

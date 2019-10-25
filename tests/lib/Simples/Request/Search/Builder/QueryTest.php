@@ -2,7 +2,9 @@
 
 require_once(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_Search_Builder_QueryTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Request_Search_Builder_QueryTest extends TestCase {
 
 	public function testConstruct() {
 		$query = new Simples_Request_Search_Builder_Query() ;

@@ -1,7 +1,9 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
-class Simples_FactoryTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_FactoryTest extends TestCase {
 	
 	public function testConstruct() {
 		$factory = new Simples_Factory() ;

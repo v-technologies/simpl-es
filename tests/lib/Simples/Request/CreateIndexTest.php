@@ -2,9 +2,11 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_CreateIndexTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
 
-	public function setUp() {
+class Simples_Request_CreateIndexTest extends TestCase {
+
+	protected function setUp() : void {
 		$this->client = new Simples_Transport_Http() ;
 	}
 	

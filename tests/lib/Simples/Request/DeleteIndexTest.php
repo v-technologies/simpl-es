@@ -2,7 +2,9 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_DeleteIndexTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Request_DeleteIndexTest extends TestCase {
 
 	public function testDelete() {
 		$client = new Simples_Transport_Http();		

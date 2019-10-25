@@ -2,11 +2,13 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Request_SearchTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Request_SearchTest extends TestCase {
 
 	public $client ;
 
-	public function setUp() {
+	protected function setUp() : void {
 		$this->client = new Simples_Transport_Http(array(
 			'index' => 'twitter',
 			'type' => 'tweet'

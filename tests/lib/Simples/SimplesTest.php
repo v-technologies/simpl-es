@@ -1,7 +1,9 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
-class SimplesTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class SimplesTest extends TestCase {
 	
 	public function testStaticUsage() {
 		$client = Simples::connect(array(

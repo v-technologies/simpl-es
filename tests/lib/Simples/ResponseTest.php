@@ -1,7 +1,9 @@
 <?php
 require_once(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'bootstrap.php') ;
 
-class Simples_ResponseTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_ResponseTest extends TestCase {
 	
 	public function testConstruct() {
 		$response = new Simples_Response(array()) ;

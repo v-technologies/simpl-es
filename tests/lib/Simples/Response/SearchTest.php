@@ -2,7 +2,9 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Response_SearchTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Response_SearchTest extends TestCase {
 	
 	public function testHighlight() {
 		$response = new Simples_Response_Search(array(

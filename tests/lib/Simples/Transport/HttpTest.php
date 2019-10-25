@@ -1,6 +1,8 @@
 <?php
 
-class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Transport_HttpTest extends TestCase {
 
     public function testConnection() {
 		try {
@@ -17,17 +19,17 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	}
 		
 	/**
-	 * @expectedException Exception
 	 */
 	public function testConnectionException() {
+		$this->expectException(\Exception::class);
 		$transport = new Simples_Transport_Http(array('host' => 'www.google.com', 'port' => '80')) ;
 		$transport->connect() ;
 	}
 	
 	/**
-	 * @expectedException Exception
 	 */
 	public function testCheck() {
+		$this->expectException(\Exception::class);
 		$transport = new Simples_Transport_Http() ;
 		
 		$transport->config(array(
@@ -57,37 +59,37 @@ class Simples_Transport_HttpTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Cannot JSON decode the response : No handler found for uri [/test] and method [GET]
 	 */
 	public function testCallCannotJsonDecodeException() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Cannot JSON decode the response : No handler found for uri [/test] and method [GET]');
 		$transport = new Simples_Transport_Http();
 		$transport->call('/test');
 	}
 
 	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Error during the request (6)
 	 */
 	public function testCallCurlReturnFalse() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Error during the request (6)');
 		$transport = new Simples_Transport_Http(array( 'host' => 'nowhere' ));
 		$transport->call('/test');
 	}
 
 	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage The ES server returned an empty response.
 	 */
 	public function testCallEmptyResponse() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('The ES server returned an empty response.');
 		$transport = new Simples_Transport_Http();
 		$transport->call('/test', 'HEAD');
 	}
 
 	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Error during the request (HTTP CODE: 400)
 	 */
 	public function testCallCurlHttpCode() {
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Error during the request (HTTP CODE: 400)');
 		$transport = new Simples_Transport_Http();
 
 		try {

@@ -2,7 +2,9 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Response_BulkTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Response_BulkTest extends TestCase {
 	
 	/**
 	 * Good response. 
@@ -13,9 +15,9 @@ class Simples_Response_BulkTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 *@expectedException Simples_Response_Exception
 	 */
 	public function testException() {
+		$this->expectException(Simples_Response_Exception::class);
 		$response = new Simples_Response_Bulk(array(
 			'took' => '1',
 			'items' => array(					

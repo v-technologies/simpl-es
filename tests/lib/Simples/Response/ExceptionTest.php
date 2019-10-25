@@ -2,7 +2,9 @@
 
 require_once(dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'bootstrap.php');
 
-class Simples_Response_ExceptionTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Simples_Response_ExceptionTest extends TestCase {
 	
 	public function testUsage() {
 		// String
