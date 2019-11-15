@@ -144,7 +144,8 @@ class Simples_Document extends Simples_Base {
 	 */
 	protected function _options($key, array & $options) {
 		foreach($options['cast'] as $path => $_value) {
-			$_path = preg_replace('/^' . $key . '\./', '', $path) ;
+			$pattern = '/^' . preg_quote($key) . '\./';
+			$_path = preg_replace($pattern, '', $path) ;
 			if ($_path !== $path) {
 				$options['cast'][$_path] = $_value ;
 				unset($options['cast'][$path]) ;
