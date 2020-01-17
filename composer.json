@@ -12,10 +12,10 @@
 	"licence" : "MIT",
 	"homepage" : "http://github.com/v-technologies/simpl-es/",
 	"require": {
-		"php" : ">=7.3.0"
+		"php" : ">=7.4.0"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^8.4"
+		"phpunit/phpunit": "^8.5"
 	},
 	"autoload": {
 		"psr-0": {"Simples": "lib/"}
